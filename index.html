@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PPMP Pharmacy Product Evaluation System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1B365D;
+      --primary-hover: #142846;
+      --primary-light: #EBF2FA;
+      --accent: #0D9488;
+      --accent-hover: #0F766E;
+      --accent-light: #F0FDFA;
+      --bg: #F1F5F9;
+      --card-bg: #FFFFFF;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --success: #10B981;
+      --success-light: #ECFDF5;
+      --danger: #EF4444;
+      --danger-light: #FEF2F2;
+      --warning: #F59E0B;
+      --warning-light: #FFFBEB;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 72px;
+      /* space for bottom nav on mobile */
+    }
+
+    /* Top App Bar */
+    .app-header {
+      background: linear-gradient(135deg, #1B365D 0%, #0D9488 100%);
+      color: white;
+      padding: 12px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: var(--shadow);
+    }
+
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .app-branding {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .app-icon {
+      font-size: 26px;
+      background: rgba(255, 255, 255, 0.18);
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    .app-title h1 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .app-title p {
+      font-size: 0.72rem;
+      opacity: 0.85;
+      font-weight: 500;
+    }
+
+    /* User Profile Chip */
+    .user-profile-badge {
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 30px;
+      padding: 5px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .user-profile-badge:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .user-avatar {
+      width: 24px;
+      height: 24px;
+      background: white;
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-name {
+      font-size: 0.76rem;
+      font-weight: 700;
+      max-width: 140px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-role-tag {
+      font-size: 0.65rem;
+      color: #99F6E4;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Desktop Navigation Tabs */
+    .desktop-nav {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .desktop-nav {
+        display: block;
+      }
+
+      body {
+        padding-bottom: 24px;
+      }
+    }
+
+    .nav-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      gap: 8px;
+      padding: 0 16px;
+      overflow-x: auto;
+    }
+
+    .nav-tab {
+      padding: 12px 18px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover {
+      color: var(--primary);
+    }
+
+    .nav-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--accent);
+      background-color: #F8FAFC;
+    }
+
+    /* Mobile Bottom Navigation */
+    .mobile-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 6px 4px;
+      z-index: 50;
+      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    @media (min-width: 768px) {
+      .mobile-nav {
+        display: none;
+      }
+    }
+
+    .mobile-nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      padding: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .mobile-nav-btn span.icon {
+      font-size: 1.25rem;
+      margin-bottom: 2px;
+    }
+
+    .mobile-nav-btn.active {
+      color: var(--accent);
+    }
+
+    /* Container */
+    .main-wrapper {
+      max-width: 900px;
+      width: 100%;
+      margin: 16px auto;
+      padding: 0 16px;
+      flex: 1;
+    }
+
+    /* Views */
+    .view-panel {
+      display: none;
+    }
+
+    .view-panel.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Card System */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Role Lockdown Notice */
+    .lockdown-banner {
+      background: var(--accent-light);
+      border: 1px solid #99F6E4;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      font-size: 0.82rem;
+    }
+
+    .lockdown-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #0F766E;
+      font-weight: 600;
+    }
+
+    .lockdown-switch-btn {
+      background: white;
+      border: 1px solid #99F6E4;
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: #0D9488;
+      font-weight: 700;
+      font-size: 0.72rem;
+      cursor: pointer;
+    }
+
+    /* Stepper / Progress Bar */
+    .stepper {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin-bottom: 24px;
+      padding: 0 8px;
+    }
+
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 24px;
+      right: 24px;
+      height: 3px;
+      background: var(--border);
+      z-index: 1;
+    }
+
+    .stepper-progress {
+      position: absolute;
+      top: 18px;
+      left: 24px;
+      height: 3px;
+      background: var(--accent);
+      z-index: 1;
+      transition: width 0.3s ease;
+    }
+
+    .step-item {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .step-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+    }
+
+    .step-item.active .step-circle {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 0 4px var(--accent-light);
+    }
+
+    .step-item.completed .step-circle {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+    }
+
+    .step-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+      display: none;
+    }
+
+    @media (min-width: 500px) {
+      .step-label {
+        display: block;
+      }
+    }
+
+    .step-item.active .step-label {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .form-label span.req {
+      color: var(--danger);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.95rem;
+      font-family: inherit;
+      color: var(--text);
+      background: white;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 640px) {
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Evaluator Role Selector (Locked State) */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .role-card {
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 8px;
+      text-align: center;
+      transition: all 0.2s ease;
+      background: white;
+      opacity: 0.5;
+      cursor: not-allowed;
+      position: relative;
+    }
+
+    .role-card.selected {
+      border-color: var(--accent);
+      background-color: var(--accent-light);
+      box-shadow: 0 2px 4px rgba(13, 148, 136, 0.12);
+      opacity: 1;
+      cursor: default;
+    }
+
+    .role-card .role-icon {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .role-card .role-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .role-lock-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      font-size: 0.65rem;
+      color: var(--accent);
+    }
+
+    /* Checklist Item Component */
+    .checklist-row {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+
+    @media (min-width: 640px) {
+      .checklist-row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .checklist-text {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: #1E293B;
+      flex: 1;
+    }
+
+    .checklist-num {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      background: #E2E8F0;
+      color: #475569;
+      border-radius: 50%;
+      text-align: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      line-height: 22px;
+      margin-right: 8px;
+    }
+
+    /* Segmented Buttons (Yes / No / N/A) */
+    .btn-group {
+      display: inline-flex;
+      border-radius: 8px;
+      background: #E2E8F0;
+      padding: 3px;
+      width: 100%;
+      max-width: 260px;
+    }
+
+    .btn-group-item {
+      flex: 1;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      color: #475569;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+
+    .btn-group-item:hover {
+      color: #0F172A;
+    }
+
+    .btn-group-item.selected-yes {
+      background: var(--success);
+      color: white;
+      box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-group-item.selected-no {
+      background: var(--danger);
+      color: white;
+      box-shadow: 0 1px 3px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-group-item.selected-na {
+      background: #64748B;
+      color: white;
+      box-shadow: 0 1px 3px rgba(100, 116, 139, 0.3);
+    }
+
+    /* Sticky Score Banner */
+    .score-banner {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      color: white;
+      padding: 12px 18px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .score-banner-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      opacity: 0.85;
+    }
+
+    .score-pill {
+      font-size: 1.15rem;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.15);
+      padding: 4px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .btn-quick {
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: white;
+      color: #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s;
+    }
+
+    .btn-quick:hover {
+      background: #F1F5F9;
+    }
+
+    /* Recommendation Choice Cards */
+    .rec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .rec-card {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      background: white;
+      transition: all 0.2s;
+    }
+
+    .rec-card.recommended.selected {
+      border-color: var(--success);
+      background: var(--success-light);
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+    }
+
+    .rec-card.not-recommended.selected {
+      border-color: var(--danger);
+      background: var(--danger-light);
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+    }
+
+    .rec-icon {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+    }
+
+    .rec-label {
+      font-size: 0.95rem;
+      font-weight: 800;
+    }
+
+    /* Signature Canvas Pad */
+    .signature-container {
+      background: white;
+      border: 2px dashed #CBD5E1;
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .signature-container.active {
+      border-color: var(--accent);
+    }
+
+    #signaturePad {
+      width: 100%;
+      height: 180px;
+      border-radius: 8px;
+      background: #FAFBFD;
+      touch-action: none;
+      display: block;
+      cursor: crosshair;
+    }
+
+    .signature-tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      padding: 0 4px;
+    }
+
+    .signature-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Stepper Action Buttons */
+    .stepper-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary {
+      background: #E2E8F0;
+      color: #334155;
+    }
+
+    .btn-secondary:hover {
+      background: #CBD5E1;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-submit {
+      background: var(--primary);
+      color: white;
+      padding: 14px 28px;
+      font-size: 1rem;
+    }
+
+    .btn-submit:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* List & Deck Views */
+    .deck-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    @media (min-width: 640px) {
+      .deck-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .eval-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .eval-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .eval-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .eval-card-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.3;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .badge-success {
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .badge-danger {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .badge-warning {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
+
+    .badge-neutral {
+      background: #F1F5F9;
+      color: #475569;
+    }
+
+    .eval-meta {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .eval-scores-row {
+      display: flex;
+      justify-content: space-between;
+      background: #F8FAFC;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    /* Modal for Detailed Inspection / Account Switching */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 650px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      padding: 24px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* Account Selection List inside Modal */
+    .account-picker-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 380px;
+      overflow-y: auto;
+    }
+
+    .account-item-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .account-item-card:hover {
+      background: #F8FAFC;
+      border-color: var(--accent);
+    }
+
+    .account-item-card.current {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      background: #0F172A;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      z-index: 200;
+      display: none;
+      animation: slideUp 0.2s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Filter Bar */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="app-branding">
+        <div class="app-icon">🏥</div>
+        <div class="app-title">
+          <h1>PPMP Pharmacy Evaluation</h1>
+          <p>Product Technical Evaluation Portal</p>
+        </div>
+      </div>
+
+      <!-- User Profile Badge & Switcher -->
+      <div class="user-profile-badge" onclick="openAccountSwitcher()"
+        title="Click to switch profile or view registered account">
+        <div class="user-avatar" id="headerAvatar">?</div>
+        <div class="user-info">
+          <div class="user-name" id="headerUserName">Connecting...</div>
+          <div class="user-role-tag" id="headerUserRole">Authenticating</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Desktop Navigation -->
+  <nav class="desktop-nav">
+    <div class="nav-container">
+      <button class="nav-tab active" onclick="switchTab('new-eval')">📝 New Evaluation</button>
+      <button class="nav-tab" id="navTabEndUser" onclick="switchTab('end-user')">👨‍⚕️ End-user (Eval 1)</button>
+      <button class="nav-tab" id="navTabNurse" onclick="switchTab('nurse')">👩‍⚕️ Nurse (Eval 2)</button>
+      <button class="nav-tab" id="navTabPharma" onclick="switchTab('pharmacist')">💊 Pharmacist (Eval 3)</button>
+      <button class="nav-tab" onclick="switchTab('summary')">📊 Consolidated Summary</button>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <div class="main-wrapper">
+
+    <!-- VIEW 1: NEW EVALUATION WIZARD -->
+    <div id="view-new-eval" class="view-panel active">
+
+      <!-- Stepper Header -->
+      <div class="stepper">
+        <div class="stepper-progress" id="stepperProgress" style="width: 0%;"></div>
+        <div class="step-item active" onclick="goToStep(1)">
+          <div class="step-circle" id="circle-1">1</div>
+          <span class="step-label">Basic Info</span>
+        </div>
+        <div class="step-item" onclick="goToStep(2)">
+          <div class="step-circle" id="circle-2">2</div>
+          <span class="step-label">Part I (19)</span>
+        </div>
+        <div class="step-item" onclick="goToStep(3)">
+          <div class="step-circle" id="circle-3">3</div>
+          <span class="step-label">Part II (6)</span>
+        </div>
+        <div class="step-item" onclick="goToStep(4)">
+          <div class="step-circle" id="circle-4">4</div>
+          <span class="step-label">Part III</span>
+        </div>
+        <div class="step-item" onclick="goToStep(5)">
+          <div class="step-circle" id="circle-5">5</div>
+          <span class="step-label">Verdict & Sign</span>
+        </div>
+      </div>
+
+      <!-- FORM WIZARD PAGES -->
+      <form id="evalForm" onsubmit="handleFormSubmit(event)">
+
+        <!-- STEP 1: BASIC INFORMATION -->
+        <div id="step-1" class="wizard-step">
+          <div class="card">
+
+            <!-- Account & Role Lockdown Notice -->
+            <div class="lockdown-banner">
+              <div class="lockdown-left">
+                <span>🔒</span>
+                <span>Role locked to active account: <strong id="lockdownAccountLabel">Detecting...</strong></span>
+              </div>
+              <button type="button" class="lockdown-switch-btn" onclick="openAccountSwitcher()">Switch Profile</button>
+            </div>
+
+            <div class="card-title">
+              <span>👤 Evaluator Role (Assigned)</span>
+              <span class="badge badge-success" id="roleAssignedBadge">Locked to Profile</span>
+            </div>
+
+            <div class="role-grid">
+              <div id="roleCardEndUser" class="role-card">
+                <span class="role-lock-badge">🔒</span>
+                <div class="role-icon">👨‍⚕️</div>
+                <div class="role-name">End-user</div>
+              </div>
+              <div id="roleCardNurse" class="role-card">
+                <span class="role-lock-badge">🔒</span>
+                <div class="role-icon">👩‍⚕️</div>
+                <div class="role-name">Nurse</div>
+              </div>
+              <div id="roleCardPharma" class="role-card">
+                <span class="role-lock-badge">🔒</span>
+                <div class="role-icon">💊</div>
+                <div class="role-name">Pharmacist</div>
+              </div>
+            </div>
+            <input type="hidden" id="field_Evaluator" name="Evaluator" value="Pharmacist">
+            <input type="hidden" id="field_evaluatorName" name="evaluatorName" value="">
+            <input type="hidden" id="field_evaluatorEmail" name="evaluatorEmail" value="">
+
+            <div class="form-group">
+              <label class="form-label">Generic Name / Drug <span class="req">*</span></label>
+              <input type="text" id="field_Generic_Name" name="Generic_Name" class="form-control" list="medicineOptions"
+                placeholder="Type to search generic medicine..." required autocomplete="off">
+              <datalist id="medicineOptions"></datalist>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Brand Name</label>
+                <input type="text" id="field_Brand_Name" name="Brand_Name" class="form-control"
+                  placeholder="e.g., Rocephin">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Price per Unit (₱) <span class="req">*</span></label>
+                <input type="number" step="0.01" id="field_Price" name="Price" class="form-control" placeholder="0.00"
+                  required>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Supplier / Bidder <span class="req">*</span></label>
+                <input type="text" id="field_Supplier" name="Supplier" class="form-control" list="supplierOptions"
+                  placeholder="e.g., 2EZ TRADING OPC" required>
+                <datalist id="supplierOptions"></datalist>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Manufacturer</label>
+                <input type="text" id="field_Manufacturer" name="Manufacturer" class="form-control"
+                  placeholder="e.g., Roche Ltd.">
+              </div>
+            </div>
+
+            <div class="stepper-actions">
+              <div></div>
+              <button type="button" class="btn btn-primary" onclick="goToStep(2)">Proceed to Part I →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: PART I (TECHNICAL & LABELING - 19 ITEMS) -->
+        <div id="step-2" class="wizard-step" style="display: none;">
+          <div class="score-banner">
+            <div>
+              <div class="score-banner-title">Part I: Technical & Labeling Checklist</div>
+              <div style="font-size: 0.78rem; opacity: 0.85;">19 Technical Requirements</div>
+            </div>
+            <div class="score-pill" id="p1ScoreBadge">100.0%</div>
+          </div>
+
+          <div class="quick-actions">
+            <button type="button" class="btn-quick" onclick="setAllValues('P1', 'Yes')">⚡ Mark All Yes</button>
+            <button type="button" class="btn-quick" onclick="setAllValues('P1', 'N/A')">Set All N/A</button>
+          </div>
+
+          <div class="card" id="part1Container">
+            <!-- 19 items dynamically generated -->
+          </div>
+
+          <div class="stepper-actions">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(1)">← Back to Info</button>
+            <button type="button" class="btn btn-primary" onclick="goToStep(3)">Proceed to Part II →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: PART II (PACKAGING INTEGRITY - 6 ITEMS) -->
+        <div id="step-3" class="wizard-step" style="display: none;">
+          <div class="score-banner">
+            <div>
+              <div class="score-banner-title">Part II: Packaging & Container Integrity</div>
+              <div style="font-size: 0.78rem; opacity: 0.85;">6 Physical Integrity Parameters</div>
+            </div>
+            <div class="score-pill" id="p2ScoreBadge">100.0%</div>
+          </div>
+
+          <div class="quick-actions">
+            <button type="button" class="btn-quick" onclick="setAllValues('P2', 'Yes')">⚡ Mark All Yes</button>
+            <button type="button" class="btn-quick" onclick="setAllValues('P2', 'N/A')">Set All N/A</button>
+          </div>
+
+          <div class="card" id="part2Container">
+            <!-- 6 items dynamically generated -->
+          </div>
+
+          <div class="stepper-actions">
+            <button type="button" class="btn btn-secondary" onclick="goToStep(2)">← Back to Part I</button>
+            <button type="button" class="btn btn-primary" onclick="goToStep(4)">Proceed to Part III →</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: PART III (RECONSTITUTION - 9 ITEMS) -->
+        <div id="step-4" class="wizard-step" style="display: none;">
+          <div class="card">
+            <div class="card-title">
+              <span>💉 Part III: Reconstitution & Performance</span>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 20px;">
+              <label class="form-label">Does this product require reconstitution / dilution?</label>
+              <div class="btn-group" style="max-width: 320px;">
+                <button type="button" id="recon-no" class="btn-group-item selected-na"
+                  onclick="setReconstitution(false)">No (Not Applicable)</button>
+                <button type="button" id="recon-yes" class="btn-group-item" onclick="setReconstitution(true)">Yes
+                  (Reconstitution Required)</button>
+              </div>
+              <input type="hidden" id="field_Requires_Reconstitution" name="Requires_Reconstitution" value="No">
+            </div>
+
+            <!-- Inactive notice when 'No' -->
+            <div id="reconInactiveNotice"
+              style="background: #F8FAFC; border: 1px dashed var(--border); border-radius: 10px; padding: 20px; text-align: center; color: var(--text-muted);">
+              <div style="font-size: 2rem; margin-bottom: 6px;">🧴</div>
+              <p style="font-weight: 600;">Part III is marked as Not Applicable</p>
+              <p style="font-size: 0.8rem; margin-top: 4px;">Oral solids, ointments, and ready-to-administer liquid
+                preparations skip reconstitution evaluation.</p>
+            </div>
+
+            <!-- Active questions when 'Yes' -->
+            <div id="reconActiveContainer" style="display: none;">
+              <div class="quick-actions">
+                <button type="button" class="btn-quick" onclick="setAllValues('P3', 'Yes')">⚡ Mark All Yes</button>
+                <button type="button" class="btn-quick" onclick="setAllValues('P3', 'N/A')">Set All N/A</button>
+              </div>
+              <div id="part3Questions">
+                <!-- 9 items dynamically generated -->
+              </div>
+            </div>
+
+            <div class="stepper-actions">
+              <button type="button" class="btn btn-secondary" onclick="goToStep(3)">← Back to Part II</button>
+              <button type="button" class="btn btn-primary" onclick="goToStep(5)">Proceed to Verdict & Sign →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5: VERDICT, REMARKS & SIGNATURE -->
+        <div id="step-5" class="wizard-step" style="display: none;">
+          <div class="card">
+            <div class="card-title">
+              <span>📋 Evaluation Summary & Recommendation</span>
+            </div>
+
+            <!-- Live Calculated Score Recap -->
+            <div class="eval-scores-row" style="margin-bottom: 18px; padding: 12px;">
+              <div>
+                <span style="color: var(--text-muted); font-size: 0.75rem; display: block;">PART I SCORE</span>
+                <strong id="summaryP1Score" style="font-size: 1.1rem; color: var(--primary);">100.0%</strong>
+              </div>
+              <div>
+                <span style="color: var(--text-muted); font-size: 0.75rem; display: block;">PART II SCORE</span>
+                <strong id="summaryP2Score" style="font-size: 1.1rem; color: var(--primary);">100.0%</strong>
+              </div>
+              <div>
+                <span style="color: var(--text-muted); font-size: 0.75rem; display: block;">ASSIGNED ROLE</span>
+                <strong id="summaryRoleBadge" style="font-size: 1.1rem; color: var(--accent);">Pharmacist</strong>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Observations & Remarks</label>
+              <textarea id="field_Remarks" name="Remarks" class="form-control" rows="3"
+                placeholder="Enter any qualitative observations, package seal notes, or defects..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Final Recommendation <span class="req">*</span></label>
+              <div class="rec-grid">
+                <div class="rec-card recommended selected" onclick="selectRecommendation('Recommended', this)">
+                  <div class="rec-icon">✅</div>
+                  <div class="rec-label">Recommended</div>
+                </div>
+                <div class="rec-card not-recommended" onclick="selectRecommendation('Not Recommended', this)">
+                  <div class="rec-icon">❌</div>
+                  <div class="rec-label">Not Recommended</div>
+                </div>
+              </div>
+              <input type="hidden" id="field_Recommendation" name="Recommendation" value="Recommended">
+            </div>
+
+            <!-- Digital Signature Canvas -->
+            <div class="form-group">
+              <label class="form-label">Evaluator Digital Signature <span class="req">*</span></label>
+              <div class="signature-container" id="signatureContainer">
+                <canvas id="signaturePad"></canvas>
+                <div class="signature-tools">
+                  <span class="signature-hint">✍️ Sign with finger (mobile) or mouse (PC)</span>
+                  <button type="button" class="btn-quick" onclick="clearSignature()">Clear Pad</button>
+                </div>
+              </div>
+              <input type="hidden" id="field_Evaluator_Signature" name="Evaluator_Signature">
+            </div>
+
+            <div class="form-group" style="margin-top: 14px;">
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; cursor: pointer;">
+                <input type="checkbox" id="field_Accuracy_Consent" name="Accuracy_Consent" value="Yes" checked required>
+                <span>I confirm that the technical evaluation responses provided above are accurate and observed
+                  firsthand.</span>
+              </label>
+            </div>
+
+            <div class="stepper-actions">
+              <button type="button" class="btn btn-secondary" onclick="goToStep(4)">← Back to Part III</button>
+              <button type="submit" id="btnSubmit" class="btn btn-submit">
+                <span>🚀 Submit Official Evaluation</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- VIEW 2: EVALUATOR 1 (END-USER) DECK -->
+    <div id="view-end-user" class="view-panel">
+      <div class="card">
+        <div class="card-title">
+          <span>👨‍⚕️ End-user Evaluations</span>
+          <span class="badge badge-neutral" id="endUserCount">0 items</span>
+        </div>
+        <div class="filter-bar">
+          <input type="text" class="form-control" placeholder="Search by medicine, brand or supplier..."
+            oninput="filterDeck('End-user', this.value)">
+        </div>
+        <div class="deck-grid" id="deck-End-user">
+          <!-- Evaluation cards injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: EVALUATOR 2 (NURSE) DECK -->
+    <div id="view-nurse" class="view-panel">
+      <div class="card">
+        <div class="card-title">
+          <span>👩‍⚕️ Nurse Evaluations</span>
+          <span class="badge badge-neutral" id="nurseCount">0 items</span>
+        </div>
+        <div class="filter-bar">
+          <input type="text" class="form-control" placeholder="Search by medicine, brand or supplier..."
+            oninput="filterDeck('Nurse', this.value)">
+        </div>
+        <div class="deck-grid" id="deck-Nurse">
+          <!-- Evaluation cards injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: EVALUATOR 3 (PHARMACIST) DECK -->
+    <div id="view-pharmacist" class="view-panel">
+      <div class="card">
+        <div class="card-title">
+          <span>💊 Pharmacist Evaluations</span>
+          <span class="badge badge-neutral" id="pharmacistCount">0 items</span>
+        </div>
+        <div class="filter-bar">
+          <input type="text" class="form-control" placeholder="Search by medicine, brand or supplier..."
+            oninput="filterDeck('Pharmacist', this.value)">
+        </div>
+        <div class="deck-grid" id="deck-Pharmacist">
+          <!-- Evaluation cards injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 5: CONSOLIDATED SUMMARY DASHBOARD -->
+    <div id="view-summary" class="view-panel">
+      <div class="card">
+        <div class="card-title">
+          <span>📊 Consolidated Consensus Summary</span>
+          <button class="btn-quick" onclick="loadInitialData()">🔄 Refresh Data</button>
+        </div>
+        <div class="filter-bar">
+          <input type="text" class="form-control" placeholder="Search consolidated products..."
+            oninput="filterSummary(this.value)">
+        </div>
+        <div id="summaryTableContainer">
+          <!-- Summary rows injected here -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <div class="mobile-nav">
+    <button class="mobile-nav-btn active" onclick="switchTab('new-eval')">
+      <span class="icon">📝</span>
+      <span>New Eval</span>
+    </button>
+    <button class="mobile-nav-btn" id="mNavEndUser" onclick="switchTab('end-user')">
+      <span class="icon">👨‍⚕️</span>
+      <span>End-user</span>
+    </button>
+    <button class="mobile-nav-btn" id="mNavNurse" onclick="switchTab('nurse')">
+      <span class="icon">👩‍⚕️</span>
+      <span>Nurse</span>
+    </button>
+    <button class="mobile-nav-btn" id="mNavPharma" onclick="switchTab('pharmacist')">
+      <span class="icon">💊</span>
+      <span>Pharma</span>
+    </button>
+    <button class="mobile-nav-btn" onclick="switchTab('summary')">
+      <span class="icon">📊</span>
+      <span>Summary</span>
+    </button>
+  </div>
+
+  <!-- Detail Inspection Modal -->
+  <div id="detailModal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="modalTitle" style="color: var(--primary); font-size: 1.1rem; font-weight: 800;">Evaluation Details</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div id="modalBody">
+        <!-- Content injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Switcher Modal -->
+  <div id="accountModal" class="modal-overlay" onclick="closeAccountModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 480px;">
+      <div class="modal-header">
+        <div>
+          <h3 style="color: var(--primary); font-size: 1.1rem; font-weight: 800;">Select Evaluator Profile</h3>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Profiles loaded from
+            Evaluator_Accounts sheet</p>
+        </div>
+        <button class="modal-close" onclick="closeAccountModal()">&times;</button>
+      </div>
+      <div class="account-picker-list" id="accountPickerList">
+        <!-- Roster injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="appToast" class="toast">Action completed</div>
+
+  <!-- APPLICATION LOGIC SCRIPT -->
+  <script>
+    // Checklist Definitions (Synchronized with Code.gs)
+    const PART1_QUESTIONS = [
+      { id: "P1_01_Brand_Name", text: "Product Name" },
+      { id: "P1_02_Generic_Name", text: "Dosage Form and Strength" },
+      { id: "P1_03_Dosage_Form_Strength", text: "Pharmacologic Category" },
+      { id: "P1_04_Manufacturer_Details", text: "Formulation / Composition" },
+      { id: "P1_05_CPR_FDA_Registration", text: "Indication(s)" },
+      { id: "P1_06_Batch_Lot_Number", text: "Dosage and Mode of Administration" },
+      { id: "P1_07_Manufacturing_Date", text: "Contraindication(s), Precaution(s), Warning(s)" },
+      { id: "P1_08_Expiration_Date", text: "Drug–Drug / Drug–Food Interactions" },
+      { id: "P1_09_Storage_Conditions", text: "Adverse Drug Reaction(s)" },
+      { id: "P1_10_Rx_Symbol", text: "Overdose and Treatment Information" },
+      { id: "P1_11_Net_Content", text: "Storage Condition(s)" },
+      { id: "P1_12_Language_Legibility", text: "Net Content / Pack Size" },
+      { id: "P1_13_Outer_Package", text: "Name & Address of Marketing Authorization Holder" },
+      { id: "P1_14_Inner_Package", text: "Name & Address of Manufacturer" },
+      { id: "P1_15_Package_Insert", text: "Rx Symbol & Prescription Caution Statement (if applicable)" },
+      { id: "P1_16_Barcode_QR", text: "ADR Reporting Statement" },
+      { id: "P1_17_Tamper_Evident_Seal", text: "Registration Number" },
+      { id: "P1_18_Special_Warnings", text: "Batch / Lot Number" },
+      { id: "P1_19_FDA_Compliance", text: "Date of Manufacture & Expiration Date" }
+    ];
+
+    const PART2_QUESTIONS = [
+      { id: "P2_01_Container_Integrity", text: "Inner label is identical to the outer label" },
+      { id: "P2_02_Closure_Seal", text: "Drug name, dosage form, strength, batch/lot number, manufacture date, and expiry date are clearly readable on the container or inner packaging" },
+      { id: "P2_03_Blister_Packaging", text: "For blister or aluminum foil packs, expiry date, drugs name and dosage form is printed on each individual unit" },
+      { id: "P2_04_Physical_Appearance", text: "No leakage observed in IV fluids or other parenteral products through closures (rubber stoppers, caps, seals) or infusion sets" },
+      { id: "P2_05_Dosing_Graduation", text: "Rubber stoppers (single-port and dual/twin-port) of IV fluid containers are durable yet easy to puncture" },
+      { id: "P2_06_Dispensing_Ease", text: "Ease of opening, dispensing, and overall container integrity" }
+    ];
+
+    const PART3_QUESTIONS = [
+      { id: "P3_01_Reconstitution_Clarity", text: "Clarity of reconstituted solution without cloudiness or haze" },
+      { id: "P3_02_Dissolution_Time", text: "Fast and uniform dissolution time upon gentle swirling" },
+      { id: "P3_03_Foaming_Behavior", text: "Absence of excessive or persistent foaming" },
+      { id: "P3_04_Solution_Color", text: "Expected normal solution color without discoloration" },
+      { id: "P3_05_Diluent_Compatibility", text: "Proper compatibility with specified diluent" },
+      { id: "P3_06_Syringe_Passability", text: "Smooth syringe aspirability through standard gauge needles" },
+      { id: "P3_07_Post_Reconstitution_Stability", text: "Stability maintained within manufacturer specified post-reconstitution window" },
+      { id: "P3_08_Filter_Needle_Req", text: "Clear instructions if filter needle is required" },
+      { id: "P3_09_Particulate_Absence", text: "Total absence of visible foreign particles, glass shards, or precipitates" }
+    ];
+
+    // Global Store
+    let allEvaluations = [];
+    let allSummary = [];
+    let registeredAccounts = [];
+    let currentAccount = null; // { name, role, email, accountId }
+    let currentStep = 1;
+    let canvas, ctx, isDrawing = false, hasSignature = false;
+
+    // HTML Sanitizer
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Initialization
+    window.addEventListener("DOMContentLoaded", () => {
+      buildChecklistUI();
+      setReconstitution(false);
+      initSignaturePad();
+      loadInitialData();
+    });
+
+    // Render Checklist UI
+    function buildChecklistUI() {
+      // Part 1
+      const p1Container = document.getElementById("part1Container");
+      p1Container.innerHTML = PART1_QUESTIONS.map((q, idx) => createChecklistRowHtml(q, idx + 1, "P1")).join("");
+
+      // Part 2
+      const p2Container = document.getElementById("part2Container");
+      p2Container.innerHTML = PART2_QUESTIONS.map((q, idx) => createChecklistRowHtml(q, idx + 1, "P2")).join("");
+
+      // Part 3
+      const p3Container = document.getElementById("part3Questions");
+      p3Container.innerHTML = PART3_QUESTIONS.map((q, idx) => createChecklistRowHtml(q, idx + 1, "P3")).join("");
+    }
+
+    function createChecklistRowHtml(q, num, group) {
+      return `
+        <div class="checklist-row">
+          <div class="checklist-text">
+            <span class="checklist-num">${num}</span>
+            <span>${q.text}</span>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn-group-item selected-yes" onclick="setChoice('${q.id}', 'Yes', '${group}', this)">Yes</button>
+            <button type="button" class="btn-group-item" onclick="setChoice('${q.id}', 'No', '${group}', this)">No</button>
+            <button type="button" class="btn-group-item" onclick="setChoice('${q.id}', 'N/A', '${group}', this)">N/A</button>
+          </div>
+          <input type="hidden" id="field_${q.id}" name="${q.id}" value="Yes">
+        </div>
+      `;
+    }
+
+    function setChoice(fieldId, val, group, btn) {
+      document.getElementById(`field_${fieldId}`).value = val;
+      const groupEl = btn.parentElement;
+      Array.from(groupEl.children).forEach(b => {
+        b.className = "btn-group-item";
+      });
+      if (val === "Yes") btn.classList.add("selected-yes");
+      else if (val === "No") btn.classList.add("selected-no");
+      else if (val === "N/A") btn.classList.add("selected-na");
+      updateScores();
+    }
+
+    function setAllValues(group, val) {
+      let list = group === "P1" ? PART1_QUESTIONS : (group === "P2" ? PART2_QUESTIONS : PART3_QUESTIONS);
+      list.forEach(q => {
+        const input = document.getElementById(`field_${q.id}`);
+        if (input) {
+          input.value = val;
+          const row = input.closest(".checklist-row");
+          if (row) {
+            const btns = row.querySelectorAll(".btn-group-item");
+            btns.forEach(b => {
+              b.className = "btn-group-item";
+              if (b.innerText.trim() === val) {
+                if (val === "Yes") b.classList.add("selected-yes");
+                else if (val === "No") b.classList.add("selected-no");
+                else if (val === "N/A") b.classList.add("selected-na");
+              }
+            });
+          }
+        }
+      });
+      updateScores();
+    }
+
+    function updateScores() {
+      // P1 Score
+      let p1Yes = 0, p1NA = 0;
+      PART1_QUESTIONS.forEach(q => {
+        const v = document.getElementById(`field_${q.id}`).value;
+        if (v === "Yes") p1Yes++;
+        else if (v === "N/A") p1NA++;
+      });
+      let p1Eligible = 19 - p1NA;
+      let p1Score = p1Eligible > 0 ? ((p1Yes / p1Eligible) * 100).toFixed(1) + "%" : "100.0%";
+      document.getElementById("p1ScoreBadge").innerText = p1Score;
+      document.getElementById("summaryP1Score").innerText = p1Score;
+
+      // P2 Score
+      let p2Yes = 0, p2NA = 0;
+      PART2_QUESTIONS.forEach(q => {
+        const v = document.getElementById(`field_${q.id}`).value;
+        if (v === "Yes") p2Yes++;
+        else if (v === "N/A") p2NA++;
+      });
+      let p2Eligible = 6 - p2NA;
+      let p2Score = p2Eligible > 0 ? ((p2Yes / p2Eligible) * 100).toFixed(1) + "%" : "100.0%";
+      document.getElementById("p2ScoreBadge").innerText = p2Score;
+      document.getElementById("summaryP2Score").innerText = p2Score;
+    }
+
+    // Role Lockdown & Account Binding
+    function applyUserAccount(acc) {
+      if (!acc) return;
+      currentAccount = acc;
+      localStorage.setItem("ppmp_saved_account", JSON.stringify(acc));
+
+      // Update Header
+      document.getElementById("headerAvatar").innerText = (acc.name || "U").charAt(0).toUpperCase();
+      document.getElementById("headerUserName").innerText = acc.name || acc.accountId;
+      document.getElementById("headerUserRole").innerText = acc.role || "Evaluator";
+
+      // Update Form Fields
+      document.getElementById("field_Evaluator").value = acc.role;
+      document.getElementById("field_evaluatorName").value = acc.name;
+      document.getElementById("field_evaluatorEmail").value = acc.accountId || acc.email;
+
+      // Update UI Banner & Summary Badges
+      document.getElementById("lockdownAccountLabel").innerText = `${acc.name} (${acc.role})`;
+      document.getElementById("summaryRoleBadge").innerText = `${acc.name} • ${acc.role}`;
+
+      // Lock Role Cards
+      const roleCards = {
+        "End-user": document.getElementById("roleCardEndUser"),
+        "Nurse": document.getElementById("roleCardNurse"),
+        "Pharmacist": document.getElementById("roleCardPharma")
+      };
+
+      Object.keys(roleCards).forEach(r => {
+        const card = roleCards[r];
+        if (card) {
+          card.classList.toggle("selected", r.toLowerCase() === acc.role.toLowerCase());
+        }
+      });
+    }
+
+    function openAccountSwitcher() {
+      const listEl = document.getElementById("accountPickerList");
+      if (registeredAccounts.length === 0) {
+        listEl.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 20px;">No registered accounts found in Evaluator_Accounts sheet.</p>`;
+      } else {
+        listEl.innerHTML = registeredAccounts.map(acc => {
+          const isCurrent = currentAccount && (currentAccount.accountId === acc.accountId || currentAccount.email === acc.email);
+          return `
+            <div class="account-item-card ${isCurrent ? 'current' : ''}" onclick="selectAccountFromPicker('${acc.accountId}')">
+              <div>
+                <strong style="color: var(--primary); font-size: 0.9rem;">${acc.name || acc.accountId}</strong>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">${acc.accountId}</div>
+              </div>
+              <span class="badge ${acc.role === 'Pharmacist' ? 'badge-success' : (acc.role === 'Nurse' ? 'badge-warning' : 'badge-neutral')}">
+                ${acc.role}
+              </span>
+            </div>
+          `;
+        }).join("");
+      }
+      document.getElementById("accountModal").classList.add("active");
+    }
+
+    function closeAccountModal() {
+      document.getElementById("accountModal").classList.remove("active");
+    }
+
+    function selectAccountFromPicker(accId) {
+      const found = registeredAccounts.find(a => a.accountId === accId);
+      if (found) {
+        applyUserAccount(found);
+        showToast(`✅ Profile switched to ${found.name} (${found.role})`);
+      }
+      closeAccountModal();
+    }
+
+    // Recommendation Selection
+    function selectRecommendation(rec, card) {
+      document.getElementById("field_Recommendation").value = rec;
+      document.querySelectorAll(".rec-card").forEach(c => c.classList.remove("selected"));
+      card.classList.add("selected");
+    }
+
+    // Reconstitution Toggle
+    function setReconstitution(required) {
+      document.getElementById("field_Requires_Reconstitution").value = required ? "Yes" : "No";
+      const noBtn = document.getElementById("recon-no");
+      const yesBtn = document.getElementById("recon-yes");
+      const notice = document.getElementById("reconInactiveNotice");
+      const activeDiv = document.getElementById("reconActiveContainer");
+
+      if (required) {
+        noBtn.className = "btn-group-item";
+        yesBtn.className = "btn-group-item selected-yes";
+        notice.style.display = "none";
+        activeDiv.style.display = "block";
+      } else {
+        noBtn.className = "btn-group-item selected-na";
+        yesBtn.className = "btn-group-item";
+        notice.style.display = "block";
+        activeDiv.style.display = "none";
+        setAllValues("P3", "N/A");
+      }
+    }
+
+    // Stepper Navigation
+    function goToStep(step) {
+      if (step < 1 || step > 5) return;
+
+      // Basic validation when advancing from Step 1
+      if (currentStep === 1 && step > 1) {
+        const drug = document.getElementById("field_Generic_Name").value.trim();
+        const price = document.getElementById("field_Price").value.trim();
+        const sup = document.getElementById("field_Supplier").value.trim();
+        if (!drug || !price || !sup) {
+          showToast("⚠️ Please fill in Drug Name, Supplier, and Price.");
+          return;
+        }
+      }
+
+      currentStep = step;
+      for (let s = 1; s <= 5; s++) {
+        const stepDiv = document.getElementById(`step-${s}`);
+        const circle = document.getElementById(`circle-${s}`);
+        const stepItem = circle.parentElement;
+
+        if (s === step) {
+          stepDiv.style.display = "block";
+          stepItem.className = "step-item active";
+        } else if (s < step) {
+          stepDiv.style.display = "none";
+          stepItem.className = "step-item completed";
+        } else {
+          stepDiv.style.display = "none";
+          stepItem.className = "step-item";
+        }
+      }
+      document.getElementById("stepperProgress").style.width = ((step - 1) / 4 * 100) + "%";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (step === 5) {
+        resizeCanvas();
+      }
+    }
+
+    // Tabs Switch
+    function switchTab(tabKey) {
+      const tabs = ["new-eval", "end-user", "nurse", "pharmacist", "summary"];
+      tabs.forEach(t => {
+        const panel = document.getElementById(`view-${t}`);
+        if (panel) panel.classList.toggle("active", t === tabKey);
+      });
+
+      // Update Desktop tabs
+      document.querySelectorAll(".nav-tab").forEach((btn, idx) => {
+        btn.classList.toggle("active", tabs[idx] === tabKey);
+      });
+
+      // Update Mobile tabs
+      document.querySelectorAll(".mobile-nav-btn").forEach((btn, idx) => {
+        btn.classList.toggle("active", tabs[idx] === tabKey);
+      });
+
+      if (tabKey === "end-user") renderDeck("End-user");
+      if (tabKey === "nurse") renderDeck("Nurse");
+      if (tabKey === "pharmacist") renderDeck("Pharmacist");
+      if (tabKey === "summary") renderSummary();
+    }
+
+    // Signature Pad
+    function initSignaturePad() {
+      canvas = document.getElementById("signaturePad");
+      ctx = canvas.getContext("2d");
+
+      function startDrawing(e) {
+        isDrawing = true;
+        hasSignature = true;
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      }
+
+      function draw(e) {
+        if (!isDrawing) return;
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+        const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = "#1B365D";
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+
+      function stopDrawing() {
+        if (isDrawing) {
+          isDrawing = false;
+          document.getElementById("field_Evaluator_Signature").value = canvas.toDataURL("image/png");
+        }
+      }
+
+      canvas.addEventListener("mousedown", startDrawing);
+      canvas.addEventListener("mousemove", draw);
+      window.addEventListener("mouseup", stopDrawing);
+
+      canvas.addEventListener("touchstart", startDrawing, { passive: false });
+      canvas.addEventListener("touchmove", draw, { passive: false });
+      window.addEventListener("touchend", stopDrawing);
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const rect = canvas.getBoundingClientRect();
+      if (canvas.width !== rect.width * ratio && rect.width > 0) {
+        canvas.width = rect.width * ratio;
+        canvas.height = rect.height * ratio;
+        ctx.scale(ratio, ratio);
+        drawSignatureGuide();
+      }
+    }
+
+    function drawSignatureGuide() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save();
+      ctx.strokeStyle = "#E2E8F0";
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(20, 140);
+      ctx.lineTo(canvas.width - 20, 140);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function clearSignature() {
+      drawSignatureGuide();
+      hasSignature = false;
+      document.getElementById("field_Evaluator_Signature").value = "";
+    }
+
+    // Backend Communication
+    function loadInitialData() {
+      if (typeof google !== "undefined" && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(onInitialDataLoaded)
+          .withFailureHandler(onInitialDataError)
+          .getAppInitialData();
+      } else {
+        // Fallback for offline design preview
+        console.log("Running in offline/preview mock mode.");
+        onInitialDataLoaded({
+          medicines: [
+            { name: "0.9% Sodium Chloride 1L Bottle/Bag (PNSS 1L)" },
+            { name: "Paracetamol 500mg Tablet" },
+            { name: "Ceftriaxone 1g Vial + 10ml Diluent" }
+          ],
+          suppliers: ["2EZ TRADING OPC", "Zuellig Pharma", "Metro Drug"],
+          accounts: [
+            { accountId: "chitosaba@gmail.com", role: "Pharmacist", name: "Luis Vallestero", email: "chitosaba@gmail.com" },
+            { accountId: "menardarellano@gmail.com", role: "End-user", name: "Menard Arellano", email: "menardarellano@gmail.com" },
+            { accountId: "myracel.joy@gmail.com", role: "Nurse", name: "Myracel Joy L. Mendoza", email: "myracel.joy@gmail.com" }
+          ],
+          userSession: {
+            detectedAccount: { accountId: "chitosaba@gmail.com", role: "Pharmacist", name: "Luis Vallestero" }
+          },
+          evaluations: [],
+          summary: []
+        });
+      }
+    }
+
+    function onInitialDataLoaded(res) {
+      if (res && res.medicines) {
+        const medDatalist = document.getElementById("medicineOptions");
+        medDatalist.innerHTML = res.medicines.map(m => `<option value="${m.name}">`).join("");
+      }
+      if (res && res.suppliers) {
+        const supDatalist = document.getElementById("supplierOptions");
+        supDatalist.innerHTML = res.suppliers.map(s => `<option value="${s}">`).join("");
+      }
+
+      registeredAccounts = res.accounts || [];
+
+      // Determine active evaluator account
+      let matched = null;
+      if (res.userSession && res.userSession.detectedAccount) {
+        matched = res.userSession.detectedAccount;
+      } else {
+        const saved = localStorage.getItem("ppmp_saved_account");
+        if (saved) {
+          try { matched = JSON.parse(saved); } catch (e) { }
+        }
+      }
+
+      if (!matched && registeredAccounts.length > 0) {
+        matched = registeredAccounts[0]; // fallback default
+      }
+
+      applyUserAccount(matched);
+
+      allEvaluations = res.evaluations || [];
+      allSummary = res.summary || [];
+      updateCounts();
+    }
+
+    function onInitialDataError(err) {
+      showToast("⚠️ Could not load data from Google Sheets: " + err);
+    }
+
+    function updateCounts() {
+      const cEnd = allEvaluations.filter(e => e.Evaluator === "End-user" || e.Evaluator === "Evaluator 1").length;
+      const cNurse = allEvaluations.filter(e => e.Evaluator === "Nurse" || e.Evaluator === "Evaluator 2").length;
+      const cPharma = allEvaluations.filter(e => e.Evaluator === "Pharmacist" || e.Evaluator === "Evaluator 3").length;
+      document.getElementById("endUserCount").innerText = `${cEnd} records`;
+      document.getElementById("nurseCount").innerText = `${cNurse} records`;
+      document.getElementById("pharmacistCount").innerText = `${cPharma} records`;
+    }
+
+    // Form Submission (Simultaneous Concurrency Guarded)
+    function handleFormSubmit(e) {
+      e.preventDefault();
+
+      if (!hasSignature) {
+        showToast("⚠️ Please draw your signature before submitting.");
+        return;
+      }
+
+      const form = document.getElementById("evalForm");
+      const formData = new FormData(form);
+      const payload = {};
+      formData.forEach((val, key) => { payload[key] = val; });
+
+      // Attach current user identity
+      if (currentAccount) {
+        payload.evaluatorName = currentAccount.name;
+        payload.evaluatorEmail = currentAccount.accountId || currentAccount.email;
+        payload.Evaluator = currentAccount.role;
+      }
+
+      const btnSubmit = document.getElementById("btnSubmit");
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = `<span class="spinner"></span> <span>Saving atomically...</span>`;
+
+      if (typeof google !== "undefined" && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(onSubmitSuccess)
+          .withFailureHandler(onSubmitError)
+          .submitEvaluationFromApp(payload);
+      } else {
+        setTimeout(() => {
+          onSubmitSuccess({ success: true, evaluationId: "c2a6f44d-5221-4f11-9a70-87ef242e8877" });
+        }, 1000);
+      }
+    }
+
+    function onSubmitSuccess(res) {
+      const btnSubmit = document.getElementById("btnSubmit");
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = `<span>🚀 Submit Official Evaluation</span>`;
+
+      if (res && res.success) {
+        showToast(`✅ Submitted! Unique ID: ${res.evaluationId.substring(0, 8)}...`);
+        // Reset form
+        document.getElementById("evalForm").reset();
+        clearSignature();
+        setReconstitution(false);
+        setAllValues("P1", "Yes");
+        setAllValues("P2", "Yes");
+
+        // Re-apply locked account
+        if (currentAccount) applyUserAccount(currentAccount);
+
+        goToStep(1);
+        loadInitialData();
+      } else {
+        showToast("⚠️ " + (res.error || "Submission failed. Please retry."));
+      }
+    }
+
+    function onSubmitError(err) {
+      const btnSubmit = document.getElementById("btnSubmit");
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = `<span>🚀 Submit Official Evaluation</span>`;
+      showToast("⚠️ Submission Failed: " + err);
+    }
+
+    // Deck Rendering
+    function renderDeck(role, query = "") {
+      const container = document.getElementById(`deck-${role}`);
+      const filtered = allEvaluations.filter(e => {
+        const matchesRole = e.Evaluator === role ||
+          (role === "End-user" && e.Evaluator === "Evaluator 1") ||
+          (role === "Nurse" && e.Evaluator === "Evaluator 2") ||
+          (role === "Pharmacist" && e.Evaluator === "Evaluator 3");
+        if (!matchesRole) return false;
+        if (!query) return true;
+        const q = query.toLowerCase();
+        return (e.Generic_Name || "").toLowerCase().includes(q) ||
+          (e.Brand_Name || "").toLowerCase().includes(q) ||
+          (e.Supplier || "").toLowerCase().includes(q);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px; color: var(--text-muted);">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">📑</div>
+            <p style="font-weight: 700;">No evaluations found</p>
+            <p style="font-size: 0.8rem;">Evaluations submitted by ${role} will appear here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => `
+        <div class="eval-card" onclick="openDetailModal('${escapeHtml(item.Evaluation_ID)}')">
+          <div class="eval-card-header">
+            <div class="eval-card-title">${escapeHtml(item.Generic_Name) || "Unnamed Generic"}</div>
+            <span class="badge ${item.Recommendation === "Recommended" ? "badge-success" : "badge-danger"}">
+              ${escapeHtml(item.Recommendation) === "Recommended" ? "Recommended" : "Not Recommended"}
+            </span>
+          </div>
+          <div class="eval-meta">
+            <div><strong>Brand:</strong> ${escapeHtml(item.Brand_Name) || "None"} • <strong>Supplier:</strong> ${escapeHtml(item.Supplier) || "N/A"}</div>
+            <div><strong>Price:</strong> ₱${Number(item.Price || 0).toFixed(2)} • <strong>ID:</strong> ${escapeHtml((item.Evaluation_ID || "").substring(0, 8))}...</div>
+          </div>
+          <div class="eval-scores-row">
+            <span>Part I: <strong>${escapeHtml(item.Part_I_Score) || "N/A"}</strong></span>
+            <span>Part II: <strong>${escapeHtml(item.Part_II_Score) || "N/A"}</strong></span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function filterDeck(role, query) {
+      renderDeck(role, query);
+    }
+
+    // Consolidated Summary Rendering
+    function renderSummary(query = "") {
+      const container = document.getElementById("summaryTableContainer");
+      const filtered = allSummary.filter(item => {
+        if (!query) return true;
+        const q = query.toLowerCase();
+        return (item.Generic_Name || "").toLowerCase().includes(q) ||
+          (item.Brand_Name || "").toLowerCase().includes(q) ||
+          (item.Supplier || "").toLowerCase().includes(q);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+            <div style="font-size: 2.2rem; margin-bottom: 8px;">📊</div>
+            <p style="font-weight: 700;">No consolidated items yet</p>
+            <p style="font-size: 0.8rem;">Submit evaluations across all 3 roles to view consensus.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          ${filtered.map(row => `
+            <div class="eval-card" style="cursor: default;">
+              <div class="eval-card-header">
+                <div>
+                  <h4 style="font-size: 1rem; color: var(--primary); font-weight: 800;">${escapeHtml(row.Generic_Name)}</h4>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">
+                    Brand: <strong>${escapeHtml(row.Brand_Name) || "None"}</strong> • Supplier: <strong>${escapeHtml(row.Supplier) || "N/A"}</strong> • Price: ₱${Number(row.Price || 0).toFixed(2)}
+                  </div>
+                </div>
+                <span class="badge ${getConsensusBadgeClass(row.Consensus_Status)}">
+                  ${escapeHtml(row.Consensus_Status) || "Pending"}
+                </span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; background: #F8FAFC; padding: 10px; border-radius: 8px; text-align: center; font-size: 0.75rem;">
+                <div>
+                  <div style="color: var(--text-muted); margin-bottom: 2px;">End-user</div>
+                  <strong style="color: ${row.EndUser_Recommendation === 'Recommended' ? 'var(--success)' : (row.EndUser_Recommendation ? 'var(--danger)' : '#64748B')}">
+                    ${escapeHtml(row.EndUser_Recommendation) || "Pending"}
+                  </strong>
+                  ${row.EndUser_PartI_Score && row.EndUser_PartI_Score !== '-' ? `<div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">P1: ${escapeHtml(row.EndUser_PartI_Score)} • P2: ${escapeHtml(row.EndUser_PartII_Score)}</div>` : ''}
+                </div>
+                <div>
+                  <div style="color: var(--text-muted); margin-bottom: 2px;">Nurse</div>
+                  <strong style="color: ${row.Nurse_Recommendation === 'Recommended' ? 'var(--success)' : (row.Nurse_Recommendation ? 'var(--danger)' : '#64748B')}">
+                    ${escapeHtml(row.Nurse_Recommendation) || "Pending"}
+                  </strong>
+                  ${row.Nurse_PartI_Score && row.Nurse_PartI_Score !== '-' ? `<div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">P1: ${escapeHtml(row.Nurse_PartI_Score)} • P2: ${escapeHtml(row.Nurse_PartII_Score)}</div>` : ''}
+                </div>
+                <div>
+                  <div style="color: var(--text-muted); margin-bottom: 2px;">Pharmacist</div>
+                  <strong style="color: ${row.Pharmacist_Recommendation === 'Recommended' ? 'var(--success)' : (row.Pharmacist_Recommendation ? 'var(--danger)' : '#64748B')}">
+                    ${escapeHtml(row.Pharmacist_Recommendation) || "Pending"}
+                  </strong>
+                  ${row.Pharmacist_PartI_Score && row.Pharmacist_PartI_Score !== '-' ? `<div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 2px;">P1: ${escapeHtml(row.Pharmacist_PartI_Score)} • P2: ${escapeHtml(row.Pharmacist_PartII_Score)}</div>` : ''}
+                </div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function getConsensusBadgeClass(status) {
+      if (!status) return "badge-neutral";
+      if (status.includes("RECOMMENDED") && !status.includes("NOT")) return "badge-success";
+      if (status.includes("NOT")) return "badge-danger";
+      if (status.includes("SPLIT")) return "badge-warning";
+      return "badge-neutral";
+    }
+
+    function filterSummary(query) {
+      renderSummary(query);
+    }
+
+    // Modal Inspection
+    function openDetailModal(evalId) {
+      const item = allEvaluations.find(e => e.Evaluation_ID === evalId);
+      if (!item) return;
+
+      document.getElementById("modalTitle").innerText = `${item.Generic_Name} (${item.Evaluator})`;
+      const body = document.getElementById("modalBody");
+      body.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+          <div>
+            <div style="font-size: 0.76rem; color: var(--text-muted);">Unique ID: <code>${escapeHtml(item.Evaluation_ID)}</code></div>
+            <div style="font-size: 0.76rem; color: var(--text-muted);">Timestamp: ${escapeHtml(item.Timestamp)}</div>
+          </div>
+          <span class="badge ${item.Recommendation === "Recommended" ? "badge-success" : "badge-danger"}">
+            ${escapeHtml(item.Recommendation)}
+          </span>
+        </div>
+
+        <div style="background: #F8FAFC; padding: 12px; border-radius: 8px; margin-bottom: 14px; font-size: 0.85rem;">
+          <div><strong>Brand Name:</strong> ${escapeHtml(item.Brand_Name) || "None"}</div>
+          <div><strong>Supplier:</strong> ${escapeHtml(item.Supplier) || "N/A"}</div>
+          <div><strong>Manufacturer:</strong> ${escapeHtml(item.Manufacturer) || "N/A"}</div>
+          <div><strong>Price:</strong> ₱${Number(item.Price || 0).toFixed(2)}</div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+          <div style="flex: 1; background: var(--primary-light); padding: 10px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.72rem; color: var(--primary); font-weight: 700;">PART I SCORE</div>
+            <div style="font-size: 1.1rem; font-weight: 800; color: var(--primary);">${escapeHtml(item.Part_I_Score) || "N/A"}</div>
+          </div>
+          <div style="flex: 1; background: var(--accent-light); padding: 10px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 0.72rem; color: var(--accent); font-weight: 700;">PART II SCORE</div>
+            <div style="font-size: 1.1rem; font-weight: 800; color: var(--accent);">${escapeHtml(item.Part_II_Score) || "N/A"}</div>
+          </div>
+        </div>
+
+        ${item.Remarks ? `
+          <div style="margin-bottom: 14px;">
+            <label style="font-size: 0.78rem; font-weight: 700; color: #475569;">Remarks / Observations:</label>
+            <div style="background: white; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 0.85rem; margin-top: 4px; white-space: pre-wrap;">
+              ${escapeHtml(item.Remarks)}
+            </div>
+          </div>
+        ` : ""}
+
+        ${item.Evaluator_Signature ? `
+          <div>
+            <label style="font-size: 0.78rem; font-weight: 700; color: #475569;">Digital Signature:</label>
+            <div style="border: 1px solid var(--border); border-radius: 8px; padding: 8px; text-align: center; background: white; margin-top: 4px;">
+              <img src="${escapeHtml(item.Evaluator_Signature)}" alt="Signature" style="max-height: 100px; max-width: 100%;">
+            </div>
+          </div>
+        ` : ""}
+      `;
+
+      document.getElementById("detailModal").classList.add("active");
+    }
+
+    function closeModal() {
+      document.getElementById("detailModal").classList.remove("active");
+    }
+
+    // Toast
+    function showToast(msg) {
+      const toast = document.getElementById("appToast");
+      toast.innerText = msg;
+      toast.style.display = "block";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3500);
+    }
+  </script>
+</body>
+
+</html>
