@@ -1009,10 +1009,229 @@
       display: inline-block;
     }
 
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
+    /* Searchable Picker Bottom-Sheet / Modal */
+    .picker-modal-overlay {
+      align-items: flex-end;
+      padding: 0;
+    }
+
+    @media (min-width: 641px) {
+      .picker-modal-overlay {
+        align-items: center;
+        padding: 16px;
       }
+    }
+
+    .picker-modal-content {
+      border-radius: 20px 20px 0 0;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      padding: 18px 18px 24px 18px;
+      animation: slideUpBottom 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      max-width: 100%;
+      background: white;
+    }
+
+    @media (min-width: 641px) {
+      .picker-modal-content {
+        border-radius: 16px;
+        max-width: 580px;
+        max-height: 80vh;
+        animation: none;
+      }
+    }
+
+    @keyframes slideUpBottom {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .picker-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .picker-header-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .picker-title-icon {
+      font-size: 1.6rem;
+    }
+
+    .picker-search-bar {
+      position: relative;
+      margin-top: 12px;
+      margin-bottom: 8px;
+      flex-shrink: 0;
+    }
+
+    .picker-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .picker-search-field {
+      padding-left: 38px;
+      padding-right: 36px;
+      font-size: 0.95rem;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .picker-search-field:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+    }
+
+    .picker-search-clear {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #E2E8F0;
+      border: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #64748B;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .picker-count-bar {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
+    .picker-items-scroll {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 48vh;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding-right: 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .picker-item-row {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      transition: all 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+      text-align: left;
+    }
+
+    .picker-item-row:hover, .picker-item-row:active {
+      background: #F0FDFA;
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .picker-item-row.selected {
+      background: var(--accent-light);
+      border-color: var(--accent);
+    }
+
+    .picker-item-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #0F172A;
+      line-height: 1.3;
+    }
+
+    .picker-item-meta {
+      font-size: 0.75rem;
+      color: #64748B;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .picker-item-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      background: #E2E8F0;
+      color: #334155;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 600;
+    }
+
+    .picker-empty-state {
+      text-align: center;
+      padding: 24px 16px;
+      color: var(--text-muted);
+    }
+
+    .picker-footer-action {
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    /* Interactive trigger wrapper for form inputs */
+    .picker-input-wrapper {
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .picker-input-wrapper .form-control {
+      cursor: pointer;
+      padding-right: 40px;
+      background-color: #FFFFFF;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .picker-input-wrapper:hover .form-control {
+      border-color: var(--accent);
+    }
+
+    .picker-trigger-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      color: #64748B;
+      font-size: 0.8rem;
     }
   </style>
 </head>
@@ -1128,9 +1347,13 @@
 
             <div class="form-group">
               <label class="form-label">Generic Name / Drug <span class="req">*</span></label>
-              <input type="text" id="field_Generic_Name" name="Generic_Name" class="form-control" list="medicineOptions"
-                placeholder="Type to search generic medicine..." required autocomplete="off">
-              <datalist id="medicineOptions"></datalist>
+              <div class="picker-input-wrapper" onclick="openSearchablePicker('medicine')">
+                <input type="text" id="field_Generic_Name" name="Generic_Name" class="form-control"
+                  placeholder="Select or search generic medicine..." required readonly autocomplete="off">
+                <div class="picker-trigger-icon">
+                  <span class="chevron">▼</span>
+                </div>
+              </div>
             </div>
 
             <div class="grid-2">
@@ -1149,9 +1372,13 @@
             <div class="grid-2">
               <div class="form-group">
                 <label class="form-label">Supplier / Bidder <span class="req">*</span></label>
-                <input type="text" id="field_Supplier" name="Supplier" class="form-control" list="supplierOptions"
-                  placeholder="e.g., 2EZ TRADING OPC" required>
-                <datalist id="supplierOptions"></datalist>
+                <div class="picker-input-wrapper" onclick="openSearchablePicker('supplier')">
+                  <input type="text" id="field_Supplier" name="Supplier" class="form-control"
+                    placeholder="Select or search supplier / bidder..." required readonly autocomplete="off">
+                  <div class="picker-trigger-icon">
+                    <span class="chevron">▼</span>
+                  </div>
+                </div>
               </div>
               <div class="form-group">
                 <label class="form-label">Manufacturer</label>
@@ -1463,6 +1690,47 @@
     </div>
   </div>
 
+  <!-- Searchable Picker Modal (Mobile Bottom-Sheet / Desktop Modal) -->
+  <div id="searchablePickerModal" class="modal-overlay picker-modal-overlay" onclick="closeSearchablePicker(event)">
+    <div class="modal-content picker-modal-content" onclick="event.stopPropagation()">
+      <div class="picker-modal-header">
+        <div class="picker-header-title">
+          <span id="pickerIcon" class="picker-title-icon">💊</span>
+          <div>
+            <h3 id="pickerTitle" style="color: var(--primary); font-size: 1.1rem; font-weight: 800; margin: 0;">Select Generic Medicine</h3>
+            <p id="pickerSubtitle" style="font-size: 0.75rem; color: var(--text-muted); margin: 2px 0 0 0;">Tap an item to select or search below</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close" onclick="closeSearchablePicker()">&times;</button>
+      </div>
+
+      <!-- Live Search Box with Clear Button -->
+      <div class="picker-search-bar">
+        <span class="picker-search-icon">🔍</span>
+        <input type="text" id="pickerSearchInput" class="form-control picker-search-field"
+          placeholder="Search..." autocomplete="off" oninput="filterPickerItems()">
+        <button type="button" id="pickerSearchClearBtn" class="picker-search-clear" onclick="clearPickerSearch()" style="display: none;">✕</button>
+      </div>
+
+      <!-- Item Counter / Status -->
+      <div id="pickerCountBar" class="picker-count-bar">
+        Showing 0 items
+      </div>
+
+      <!-- Scrollable List of Items -->
+      <div class="picker-items-scroll" id="pickerItemsContainer">
+        <!-- Rendered items injected here -->
+      </div>
+
+      <!-- Custom / Unlisted Entry Action -->
+      <div class="picker-footer-action">
+        <button type="button" class="btn btn-outline" id="pickerCustomBtn" onclick="enableCustomInputFromPicker()" style="width: 100%; font-size: 0.85rem; padding: 10px;">
+          ✏️ Enter Unlisted / Custom Name
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification -->
   <div id="appToast" class="toast">Action completed</div>
 
@@ -1516,6 +1784,9 @@
     let allEvaluations = [];
     let allSummary = [];
     let registeredAccounts = [];
+    let allMedicinesList = [];
+    let allSuppliersList = [];
+    let currentPickerType = "medicine"; // "medicine" or "supplier"
     let currentAccount = null; // { name, role, email, accountId }
     let currentStep = 1;
     let canvas, ctx, isDrawing = false, hasSignature = false;
@@ -1529,6 +1800,177 @@
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
+    }
+
+    // Searchable Picker Bottom-Sheet Controller (Mobile & Desktop)
+    function openSearchablePicker(type) {
+      currentPickerType = type;
+      const modal = document.getElementById("searchablePickerModal");
+      const titleEl = document.getElementById("pickerTitle");
+      const iconEl = document.getElementById("pickerIcon");
+      const subtitleEl = document.getElementById("pickerSubtitle");
+      const searchInput = document.getElementById("pickerSearchInput");
+      const customBtn = document.getElementById("pickerCustomBtn");
+
+      if (type === "medicine") {
+        iconEl.innerText = "💊";
+        titleEl.innerText = "Select Generic Medicine";
+        subtitleEl.innerText = "Tap a medicine to select or search below";
+        searchInput.placeholder = "🔍 Search generic medicine or category...";
+        customBtn.innerText = "✏️ Enter Unlisted / Custom Medicine";
+      } else {
+        iconEl.innerText = "🏢";
+        titleEl.innerText = "Select Supplier / Bidder";
+        subtitleEl.innerText = "Tap a bidder to select or search below";
+        searchInput.placeholder = "🔍 Search supplier / bidder...";
+        customBtn.innerText = "✏️ Enter Unlisted / Custom Supplier";
+      }
+
+      searchInput.value = "";
+      document.getElementById("pickerSearchClearBtn").style.display = "none";
+      renderPickerItems("");
+      modal.classList.add("active");
+
+      // Auto-focus search field smoothly
+      setTimeout(() => {
+        searchInput.focus();
+      }, 150);
+    }
+
+    function closeSearchablePicker(event) {
+      if (event && event.target && !event.target.classList.contains("picker-modal-overlay")) {
+        return;
+      }
+      const modal = document.getElementById("searchablePickerModal");
+      if (modal) modal.classList.remove("active");
+    }
+
+    function clearPickerSearch() {
+      const searchInput = document.getElementById("pickerSearchInput");
+      searchInput.value = "";
+      document.getElementById("pickerSearchClearBtn").style.display = "none";
+      renderPickerItems("");
+      searchInput.focus();
+    }
+
+    function filterPickerItems() {
+      const q = document.getElementById("pickerSearchInput").value;
+      const clearBtn = document.getElementById("pickerSearchClearBtn");
+      clearBtn.style.display = q ? "flex" : "none";
+      renderPickerItems(q.trim().toLowerCase());
+    }
+
+    function renderPickerItems(query) {
+      const container = document.getElementById("pickerItemsContainer");
+      const countBar = document.getElementById("pickerCountBar");
+      if (!container || !countBar) return;
+      container.innerHTML = "";
+
+      if (currentPickerType === "medicine") {
+        const filtered = allMedicinesList.filter(m => {
+          if (!query) return true;
+          const name = (m.name || "").toLowerCase();
+          const cat = (m.category || "").toLowerCase();
+          return name.includes(query) || cat.includes(query);
+        });
+
+        countBar.innerText = `Showing ${filtered.length} of ${allMedicinesList.length} medicines`;
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="picker-empty-state">
+              <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+              <div style="font-weight: 700; color: #1E293B;">No medicine found</div>
+              <p style="font-size: 0.8rem; margin: 4px 0 12px 0;">No registered medicines matched "${escapeHtml(query)}"</p>
+              ${query ? `<button type="button" class="btn btn-outline" onclick="selectPickerItem('${escapeHtml(query).replace(/'/g, "\\'")}')">Use "${escapeHtml(query)}" as medicine</button>` : ""}
+            </div>
+          `;
+          return;
+        }
+
+        const currentValue = document.getElementById("field_Generic_Name").value.trim().toLowerCase();
+
+        container.innerHTML = filtered.map(m => {
+          const isSelected = (m.name || "").trim().toLowerCase() === currentValue;
+          const escapedName = escapeHtml(m.name || "");
+          const escapedNameAttr = (m.name || "").replace(/'/g, "\\'");
+          const categoryHtml = m.category ? `<span class="picker-item-badge">${escapeHtml(m.category)}</span>` : "";
+          const procHtml = m.procurement ? `<span class="picker-item-badge" style="background: #FEF3C7; color: #92400E;">${escapeHtml(m.procurement)}</span>` : "";
+          
+          return `
+            <div class="picker-item-row ${isSelected ? 'selected' : ''}" onclick="selectPickerItem('${escapedNameAttr}')">
+              <div class="picker-item-name">${escapedName}</div>
+              ${(m.category || m.procurement) ? `<div class="picker-item-meta">${categoryHtml}${procHtml}</div>` : ""}
+            </div>
+          `;
+        }).join("");
+
+      } else {
+        // Supplier
+        const filtered = allSuppliersList.filter(s => {
+          if (!query) return true;
+          return s.toLowerCase().includes(query);
+        });
+
+        countBar.innerText = `Showing ${filtered.length} of ${allSuppliersList.length} suppliers`;
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div class="picker-empty-state">
+              <div style="font-size: 2rem; margin-bottom: 8px;">🏢</div>
+              <div style="font-weight: 700; color: #1E293B;">No supplier found</div>
+              <p style="font-size: 0.8rem; margin: 4px 0 12px 0;">No registered suppliers matched "${escapeHtml(query)}"</p>
+              ${query ? `<button type="button" class="btn btn-outline" onclick="selectPickerItem('${escapeHtml(query).replace(/'/g, "\\'")}')">Use "${escapeHtml(query)}" as supplier</button>` : ""}
+            </div>
+          `;
+          return;
+        }
+
+        const currentValue = document.getElementById("field_Supplier").value.trim().toLowerCase();
+
+        container.innerHTML = filtered.map(s => {
+          const isSelected = s.trim().toLowerCase() === currentValue;
+          const escapedName = escapeHtml(s);
+          const escapedNameAttr = s.replace(/'/g, "\\'");
+          return `
+            <div class="picker-item-row ${isSelected ? 'selected' : ''}" onclick="selectPickerItem('${escapedNameAttr}')">
+              <div class="picker-item-name">${escapedName}</div>
+            </div>
+          `;
+        }).join("");
+      }
+    }
+
+    function selectPickerItem(val) {
+      if (currentPickerType === "medicine") {
+        const input = document.getElementById("field_Generic_Name");
+        input.value = val;
+        input.readOnly = true;
+        input.dispatchEvent(new Event("change"));
+        input.dispatchEvent(new Event("input"));
+      } else {
+        const input = document.getElementById("field_Supplier");
+        input.value = val;
+        input.readOnly = true;
+        input.dispatchEvent(new Event("change"));
+        input.dispatchEvent(new Event("input"));
+      }
+      closeSearchablePicker();
+    }
+
+    function enableCustomInputFromPicker() {
+      closeSearchablePicker();
+      if (currentPickerType === "medicine") {
+        const input = document.getElementById("field_Generic_Name");
+        input.readOnly = false;
+        input.focus();
+        showToast("✏️ Type any custom medicine name directly.");
+      } else {
+        const input = document.getElementById("field_Supplier");
+        input.readOnly = false;
+        input.focus();
+        showToast("✏️ Type any custom supplier name directly.");
+      }
     }
 
     // Initialization
@@ -1883,18 +2325,19 @@
         console.log("Running in offline/preview mock mode.");
         onInitialDataLoaded({
           medicines: [
-            { name: "0.9% Sodium Chloride 1L Bottle/Bag (PNSS 1L)" },
-            { name: "Paracetamol 500mg Tablet" },
-            { name: "Ceftriaxone 1g Vial + 10ml Diluent" }
+            { name: "0.9% Sodium Chloride 1L Bottle/Bag (PNSS 1L)", category: "IV Fluids • Large Volume Parenteral" },
+            { name: "5% Dextrose in Water 500ml Bottle/Bag (D5W)", category: "IV Fluids • Large Volume Parenteral" },
+            { name: "Paracetamol 500mg Tablet", category: "Analgesic / Antipyretic" },
+            { name: "Ceftriaxone 1g Vial + 10ml Diluent", category: "Antibacterial • Cephalosporin" }
           ],
-          suppliers: ["2EZ TRADING OPC", "Zuellig Pharma", "Metro Drug"],
+          suppliers: ["2EZ TRADING OPC", "2MG INCORPORATED", "Zuellig Pharma", "Metro Drug"],
           accounts: [
-            { accountId: "chitosaba@gmail.com", role: "Pharmacist", name: "Luis Vallestero", email: "chitosaba@gmail.com" },
+            { accountId: "chitosaba@gmail.com", role: "Pharmacist", name: "Chito Saba", email: "chitosaba@gmail.com" },
             { accountId: "menardarellano@gmail.com", role: "End-user", name: "Menard Arellano", email: "menardarellano@gmail.com" },
             { accountId: "myracel.joy@gmail.com", role: "Nurse", name: "Myracel Joy L. Mendoza", email: "myracel.joy@gmail.com" }
           ],
           userSession: {
-            detectedAccount: { accountId: "chitosaba@gmail.com", role: "Pharmacist", name: "Luis Vallestero" }
+            detectedAccount: { accountId: "chitosaba@gmail.com", role: "Pharmacist", name: "Chito Saba" }
           },
           evaluations: [],
           summary: []
@@ -1904,12 +2347,10 @@
 
     function onInitialDataLoaded(res) {
       if (res && res.medicines) {
-        const medDatalist = document.getElementById("medicineOptions");
-        medDatalist.innerHTML = res.medicines.map(m => `<option value="${m.name}">`).join("");
+        allMedicinesList = res.medicines || [];
       }
       if (res && res.suppliers) {
-        const supDatalist = document.getElementById("supplierOptions");
-        supDatalist.innerHTML = res.suppliers.map(s => `<option value="${s}">`).join("");
+        allSuppliersList = res.suppliers || [];
       }
 
       registeredAccounts = res.accounts || [];
