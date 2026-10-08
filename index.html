@@ -1044,8 +1044,13 @@
     }
 
     @keyframes slideUpBottom {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
+      from {
+        transform: translateY(100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
     }
 
     .picker-modal-header {
@@ -1151,7 +1156,8 @@
       text-align: left;
     }
 
-    .picker-item-row:hover, .picker-item-row:active {
+    .picker-item-row:hover,
+    .picker-item-row:active {
       background: #F0FDFA;
       border-color: var(--accent);
       transform: translateY(-1px);
@@ -1233,6 +1239,218 @@
       color: #64748B;
       font-size: 0.8rem;
     }
+
+    /* Remarks Field & Clinical Quick Tags */
+    .remarks-textarea {
+      min-height: 135px;
+      font-size: 1rem !important; /* 16px to prevent mobile browser auto-zoom */
+      line-height: 1.55;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      resize: vertical;
+      transition: all 0.2s ease;
+      background-color: #FFFFFF;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .remarks-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
+      background-color: #FAFFFD;
+    }
+
+    .quick-tags-scroll {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 2px 0 10px 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .quick-tags-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .quick-tag-chip {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+      color: #334155;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 11px;
+      border-radius: 16px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .quick-tag-chip:hover,
+    .quick-tag-chip:active {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    /* Fullscreen Submission Progress Modal */
+    .progress-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 20px;
+    }
+
+    .progress-modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .progress-modal-card {
+      background: #FFFFFF;
+      border-radius: 20px;
+      max-width: 420px;
+      width: 100%;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      transform: translateY(20px) scale(0.96);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .progress-modal-overlay.active .progress-modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .progress-modal-icon-wrapper {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .progress-modal-spinner {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 4px solid #E2E8F0;
+      border-top-color: var(--accent);
+      border-right-color: var(--primary);
+      animation: spin 0.9s linear infinite;
+    }
+
+    .progress-modal-icon {
+      font-size: 34px;
+      z-index: 2;
+      animation: pulseIcon 1.4s ease infinite alternate;
+    }
+
+    @keyframes pulseIcon {
+      0% { transform: scale(0.92); }
+      100% { transform: scale(1.08); }
+    }
+
+    .progress-modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 6px;
+      transition: color 0.3s ease;
+    }
+
+    .progress-modal-subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.4;
+      min-height: 38px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: #E2E8F0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #0D9488, #10B981);
+      border-radius: 999px;
+      transition: width 0.35s ease, background 0.3s ease;
+    }
+
+    .progress-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 18px;
+    }
+
+    .progress-checklist {
+      background: #F8FAFC;
+      border-radius: 12px;
+      padding: 12px 14px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border: 1px solid #E2E8F0;
+    }
+
+    .progress-check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      transition: all 0.25s ease;
+    }
+
+    .progress-check-item.in-progress {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .progress-check-item.done {
+      color: #047857;
+      font-weight: 600;
+    }
+
+    .progress-check-item .chk-icon {
+      font-size: 0.95rem;
+      width: 20px;
+      text-align: center;
+    }
   </style>
 </head>
 
@@ -1287,11 +1505,11 @@
         </div>
         <div class="step-item" onclick="goToStep(2)">
           <div class="step-circle" id="circle-2">2</div>
-          <span class="step-label">Part I (19)</span>
+          <span class="step-label" id="stepLabelPart1">Part I (19)</span>
         </div>
         <div class="step-item" onclick="goToStep(3)">
           <div class="step-circle" id="circle-3">3</div>
-          <span class="step-label">Part II (6)</span>
+          <span class="step-label" id="stepLabelPart2">Part II (6)</span>
         </div>
         <div class="step-item" onclick="goToStep(4)">
           <div class="step-circle" id="circle-4">4</div>
@@ -1399,7 +1617,7 @@
           <div class="score-banner">
             <div>
               <div class="score-banner-title">Part I: Technical & Labeling Checklist</div>
-              <div style="font-size: 0.78rem; opacity: 0.85;">19 Technical Requirements</div>
+              <div id="part1Subtitle" style="font-size: 0.78rem; opacity: 0.85;">19 Technical Requirements</div>
             </div>
             <div class="score-pill" id="p1ScoreBadge">100.0%</div>
           </div>
@@ -1424,7 +1642,7 @@
           <div class="score-banner">
             <div>
               <div class="score-banner-title">Part II: Packaging & Container Integrity</div>
-              <div style="font-size: 0.78rem; opacity: 0.85;">6 Physical Integrity Parameters</div>
+              <div id="part2Subtitle" style="font-size: 0.78rem; opacity: 0.85;">6 Physical Integrity Parameters</div>
             </div>
             <div class="score-pill" id="p2ScoreBadge">100.0%</div>
           </div>
@@ -1513,9 +1731,23 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Observations & Remarks</label>
-              <textarea id="field_Remarks" name="Remarks" class="form-control" rows="3"
-                placeholder="Enter any qualitative observations, package seal notes, or defects..."></textarea>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <label class="form-label" style="margin-bottom: 0;">Observations & Remarks</label>
+                <span id="remarksCounter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">0 / 500 chars</span>
+              </div>
+              
+              <!-- Quick One-Tap Clinical Observation Chips -->
+              <div class="quick-tags-scroll">
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('📦 Packaging sealed and intact.')">+ Sealed & Intact</button>
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('🏷️ Labels clear, legible, and compliant.')">+ Clear Labels</button>
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('💧 No leakage or defect observed.')">+ No Leakage</button>
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('✨ Good container integrity and finish.')">+ Good Integrity</button>
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('⚠️ Minor outer carton dent, inner unit intact.')">+ Carton Dent</button>
+              </div>
+
+              <textarea id="field_Remarks" name="Remarks" class="form-control remarks-textarea" rows="5"
+                placeholder="Tap quick tags above or type qualitative observations, package seal notes, physical container integrity here..."
+                maxlength="500" oninput="updateRemarksCounter()"></textarea>
             </div>
 
             <div class="form-group">
@@ -1697,8 +1929,10 @@
         <div class="picker-header-title">
           <span id="pickerIcon" class="picker-title-icon">💊</span>
           <div>
-            <h3 id="pickerTitle" style="color: var(--primary); font-size: 1.1rem; font-weight: 800; margin: 0;">Select Generic Medicine</h3>
-            <p id="pickerSubtitle" style="font-size: 0.75rem; color: var(--text-muted); margin: 2px 0 0 0;">Tap an item to select or search below</p>
+            <h3 id="pickerTitle" style="color: var(--primary); font-size: 1.1rem; font-weight: 800; margin: 0;">Select
+              Generic Medicine</h3>
+            <p id="pickerSubtitle" style="font-size: 0.75rem; color: var(--text-muted); margin: 2px 0 0 0;">Tap an item
+              to select or search below</p>
           </div>
         </div>
         <button type="button" class="modal-close" onclick="closeSearchablePicker()">&times;</button>
@@ -1707,9 +1941,10 @@
       <!-- Live Search Box with Clear Button -->
       <div class="picker-search-bar">
         <span class="picker-search-icon">🔍</span>
-        <input type="text" id="pickerSearchInput" class="form-control picker-search-field"
-          placeholder="Search..." autocomplete="off" oninput="filterPickerItems()">
-        <button type="button" id="pickerSearchClearBtn" class="picker-search-clear" onclick="clearPickerSearch()" style="display: none;">✕</button>
+        <input type="text" id="pickerSearchInput" class="form-control picker-search-field" placeholder="Search..."
+          autocomplete="off" oninput="filterPickerItems()">
+        <button type="button" id="pickerSearchClearBtn" class="picker-search-clear" onclick="clearPickerSearch()"
+          style="display: none;">✕</button>
       </div>
 
       <!-- Item Counter / Status -->
@@ -1724,7 +1959,8 @@
 
       <!-- Custom / Unlisted Entry Action -->
       <div class="picker-footer-action">
-        <button type="button" class="btn btn-outline" id="pickerCustomBtn" onclick="enableCustomInputFromPicker()" style="width: 100%; font-size: 0.85rem; padding: 10px;">
+        <button type="button" class="btn btn-outline" id="pickerCustomBtn" onclick="enableCustomInputFromPicker()"
+          style="width: 100%; font-size: 0.85rem; padding: 10px;">
           ✏️ Enter Unlisted / Custom Name
         </button>
       </div>
@@ -1734,51 +1970,91 @@
   <!-- Toast Notification -->
   <div id="appToast" class="toast">Action completed</div>
 
+  <!-- Fullscreen Submission Animated Progress Modal -->
+  <div id="submissionProgressModal" class="progress-modal-overlay">
+    <div class="progress-modal-card">
+      <div class="progress-modal-icon-wrapper">
+        <div class="progress-modal-spinner" id="progressSpinner"></div>
+        <div class="progress-modal-icon" id="progressIcon">🚀</div>
+      </div>
+      <h3 class="progress-modal-title" id="progressTitle">Transmitting Evaluation</h3>
+      <p class="progress-modal-subtitle" id="progressSubtitle">Securing evaluation data to cloud registry...</p>
+
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width: 20%;"></div>
+      </div>
+      <div class="progress-stats">
+        <span id="progressStepText">Step 1 of 3: Optimizing digital signature...</span>
+        <span id="progressPercentText">20%</span>
+      </div>
+
+      <div class="progress-checklist">
+        <div class="progress-check-item in-progress" id="stepItem1">
+          <span class="chk-icon" id="stepIcon1">⏳</span>
+          <span>Optimizing & packaging digital signature</span>
+        </div>
+        <div class="progress-check-item" id="stepItem2">
+          <span class="chk-icon" id="stepIcon2">⚪</span>
+          <span>Generating RFC UUID & saving evaluation</span>
+        </div>
+        <div class="progress-check-item" id="stepItem3">
+          <span class="chk-icon" id="stepIcon3">⚪</span>
+          <span>Synchronizing consensus & hospital metrics</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- APPLICATION LOGIC SCRIPT -->
   <script>
-    // Checklist Definitions (Synchronized with Code.gs)
-    const PART1_QUESTIONS = [
-      { id: "P1_01_Brand_Name", text: "Product Name" },
-      { id: "P1_02_Generic_Name", text: "Dosage Form and Strength" },
-      { id: "P1_03_Dosage_Form_Strength", text: "Pharmacologic Category" },
-      { id: "P1_04_Manufacturer_Details", text: "Formulation / Composition" },
-      { id: "P1_05_CPR_FDA_Registration", text: "Indication(s)" },
-      { id: "P1_06_Batch_Lot_Number", text: "Dosage and Mode of Administration" },
-      { id: "P1_07_Manufacturing_Date", text: "Contraindication(s), Precaution(s), Warning(s)" },
-      { id: "P1_08_Expiration_Date", text: "Drug–Drug / Drug–Food Interactions" },
-      { id: "P1_09_Storage_Conditions", text: "Adverse Drug Reaction(s)" },
-      { id: "P1_10_Rx_Symbol", text: "Overdose and Treatment Information" },
-      { id: "P1_11_Net_Content", text: "Storage Condition(s)" },
-      { id: "P1_12_Language_Legibility", text: "Net Content / Pack Size" },
-      { id: "P1_13_Outer_Package", text: "Name & Address of Marketing Authorization Holder" },
-      { id: "P1_14_Inner_Package", text: "Name & Address of Manufacturer" },
-      { id: "P1_15_Package_Insert", text: "Rx Symbol & Prescription Caution Statement (if applicable)" },
-      { id: "P1_16_Barcode_QR", text: "ADR Reporting Statement" },
-      { id: "P1_17_Tamper_Evident_Seal", text: "Registration Number" },
-      { id: "P1_18_Special_Warnings", text: "Batch / Lot Number" },
-      { id: "P1_19_FDA_Compliance", text: "Date of Manufacture & Expiration Date" }
+    // Default Canonical Questions (Synchronized with Questionnaire tab schema)
+    const PART1_QUESTIONS_DEFAULT = [
+      { id: "P1_01_Brand_Name", text: "Product Name", options: ["Yes", "No", "N/A"] },
+      { id: "P1_02_Generic_Name", text: "Dosage Form and Strength", options: ["Yes", "No", "N/A"] },
+      { id: "P1_03_Dosage_Form_Strength", text: "Pharmacologic Category", options: ["Yes", "No", "N/A"] },
+      { id: "P1_04_Manufacturer_Details", text: "Formulation / Composition", options: ["Yes", "No", "N/A"] },
+      { id: "P1_05_CPR_FDA_Registration", text: "Indication(s)", options: ["Yes", "No", "N/A"] },
+      { id: "P1_06_Batch_Lot_Number", text: "Dosage and Mode of Administration", options: ["Yes", "No", "N/A"] },
+      { id: "P1_07_Manufacturing_Date", text: "Contraindication(s), Precaution(s), Warning(s)", options: ["Yes", "No", "N/A"] },
+      { id: "P1_08_Expiration_Date", text: "Drug–Drug / Drug–Food Interactions", options: ["Yes", "No", "N/A"] },
+      { id: "P1_09_Storage_Conditions", text: "Adverse Drug Reaction(s)", options: ["Yes", "No", "N/A"] },
+      { id: "P1_10_Rx_Symbol", text: "Overdose and Treatment Information", options: ["Yes", "No", "N/A"] },
+      { id: "P1_11_Net_Content", text: "Storage Condition(s)", options: ["Yes", "No", "N/A"] },
+      { id: "P1_12_Language_Legibility", text: "Net Content / Pack Size", options: ["Yes", "No", "N/A"] },
+      { id: "P1_13_Outer_Package", text: "Name & Address of Marketing Authorization Holder", options: ["Yes", "No", "N/A"] },
+      { id: "P1_14_Inner_Package", text: "Name & Address of Manufacturer", options: ["Yes", "No", "N/A"] },
+      { id: "P1_15_Package_Insert", text: "Rx Symbol & Prescription Caution Statement (if applicable)", options: ["Yes", "No", "N/A"] },
+      { id: "P1_16_Barcode_QR", text: "ADR Reporting Statement", options: ["Yes", "No", "N/A"] },
+      { id: "P1_17_Tamper_Evident_Seal", text: "Registration Number", options: ["Yes", "No", "N/A"] },
+      { id: "P1_18_Special_Warnings", text: "Batch / Lot Number", options: ["Yes", "No", "N/A"] },
+      { id: "P1_19_FDA_Compliance", text: "Date of Manufacture & Expiration Date", options: ["Yes", "No", "N/A"] }
     ];
 
-    const PART2_QUESTIONS = [
-      { id: "P2_01_Container_Integrity", text: "Inner label is identical to the outer label" },
-      { id: "P2_02_Closure_Seal", text: "Drug name, dosage form, strength, batch/lot number, manufacture date, and expiry date are clearly readable on the container or inner packaging" },
-      { id: "P2_03_Blister_Packaging", text: "For blister or aluminum foil packs, expiry date, drugs name and dosage form is printed on each individual unit" },
-      { id: "P2_04_Physical_Appearance", text: "No leakage observed in IV fluids or other parenteral products through closures (rubber stoppers, caps, seals) or infusion sets" },
-      { id: "P2_05_Dosing_Graduation", text: "Rubber stoppers (single-port and dual/twin-port) of IV fluid containers are durable yet easy to puncture" },
-      { id: "P2_06_Dispensing_Ease", text: "Ease of opening, dispensing, and overall container integrity" }
+    const PART2_QUESTIONS_DEFAULT = [
+      { id: "P2_01_Container_Integrity", text: "Inner label is identical to the outer label", options: ["Yes", "No", "N/A"] },
+      { id: "P2_02_Closure_Seal", text: "Drug name, dosage form, strength, batch/lot number, manufacture date, and expiry date are clearly readable on the container or inner packaging", options: ["Yes", "No", "N/A"] },
+      { id: "P2_03_Blister_Packaging", text: "For blister or aluminum foil packs, expiry date, drugs name and dosage form is printed on each individual unit", options: ["Yes", "No", "N/A"] },
+      { id: "P2_04_Physical_Appearance", text: "No leakage observed in IV fluids or other parenteral products through closures (rubber stoppers, caps, seals) or infusion sets", options: ["Yes", "No", "N/A"] },
+      { id: "P2_05_Dosing_Graduation", text: "Rubber stoppers (single-port and dual/twin-port) of IV fluid containers are durable yet easy to puncture", options: ["Yes", "No", "N/A"] },
+      { id: "P2_06_Dispensing_Ease", text: "Ease of opening, dispensing, and overall container integrity", options: ["Yes", "No", "N/A"] }
     ];
 
-    const PART3_QUESTIONS = [
-      { id: "P3_01_Reconstitution_Clarity", text: "Clarity of reconstituted solution without cloudiness or haze" },
-      { id: "P3_02_Dissolution_Time", text: "Fast and uniform dissolution time upon gentle swirling" },
-      { id: "P3_03_Foaming_Behavior", text: "Absence of excessive or persistent foaming" },
-      { id: "P3_04_Solution_Color", text: "Expected normal solution color without discoloration" },
-      { id: "P3_05_Diluent_Compatibility", text: "Proper compatibility with specified diluent" },
-      { id: "P3_06_Syringe_Passability", text: "Smooth syringe aspirability through standard gauge needles" },
-      { id: "P3_07_Post_Reconstitution_Stability", text: "Stability maintained within manufacturer specified post-reconstitution window" },
-      { id: "P3_08_Filter_Needle_Req", text: "Clear instructions if filter needle is required" },
-      { id: "P3_09_Particulate_Absence", text: "Total absence of visible foreign particles, glass shards, or precipitates" }
+    const PART3_QUESTIONS_DEFAULT = [
+      { id: "P3_01_Reconstitution_Clarity", text: "Clarity of reconstituted solution without cloudiness or haze", options: ["Yes", "No", "N/A"] },
+      { id: "P3_02_Dissolution_Time", text: "Fast and uniform dissolution time upon gentle swirling", options: ["Yes", "No", "N/A"] },
+      { id: "P3_03_Foaming_Behavior", text: "Absence of excessive or persistent foaming", options: ["Yes", "No", "N/A"] },
+      { id: "P3_04_Solution_Color", text: "Expected normal solution color without discoloration", options: ["Yes", "No", "N/A"] },
+      { id: "P3_05_Diluent_Compatibility", text: "Proper compatibility with specified diluent", options: ["Yes", "No", "N/A"] },
+      { id: "P3_06_Syringe_Passability", text: "Smooth syringe aspirability through standard gauge needles", options: ["Yes", "No", "N/A"] },
+      { id: "P3_07_Post_Reconstitution_Stability", text: "Stability maintained within manufacturer specified post-reconstitution window", options: ["Yes", "No", "N/A"] },
+      { id: "P3_08_Filter_Needle_Req", text: "Clear instructions if filter needle is required", options: ["Yes", "No", "N/A"] },
+      { id: "P3_09_Particulate_Absence", text: "Total absence of visible foreign particles, glass shards, or precipitates", options: ["Yes", "No", "N/A"] }
     ];
+
+    // Live Dynamic Questionnaire Repositories (Injected from Questionnaire tab)
+    let dynamicPart1Questions = [...PART1_QUESTIONS_DEFAULT];
+    let dynamicPart2Questions = [...PART2_QUESTIONS_DEFAULT];
+    let dynamicPart3Questions = [...PART3_QUESTIONS_DEFAULT];
 
     // Global Store
     let allEvaluations = [];
@@ -1896,7 +2172,7 @@
           const escapedNameAttr = (m.name || "").replace(/'/g, "\\'");
           const categoryHtml = m.category ? `<span class="picker-item-badge">${escapeHtml(m.category)}</span>` : "";
           const procHtml = m.procurement ? `<span class="picker-item-badge" style="background: #FEF3C7; color: #92400E;">${escapeHtml(m.procurement)}</span>` : "";
-          
+
           return `
             <div class="picker-item-row ${isSelected ? 'selected' : ''}" onclick="selectPickerItem('${escapedNameAttr}')">
               <div class="picker-item-name">${escapedName}</div>
@@ -1979,42 +2255,88 @@
       setReconstitution(false);
       initSignaturePad();
       loadInitialData();
+
+      // Mobile ergonomics: smooth scroll into view when remarks textarea is focused
+      const remarksInput = document.getElementById("field_Remarks");
+      if (remarksInput) {
+        remarksInput.addEventListener("focus", () => {
+          setTimeout(() => {
+            remarksInput.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 300);
+        });
+      }
     });
 
-    // Render Checklist UI
+    // Render Checklist UI dynamically from live questionnaire repository
     function buildChecklistUI() {
       // Part 1
       const p1Container = document.getElementById("part1Container");
-      p1Container.innerHTML = PART1_QUESTIONS.map((q, idx) => createChecklistRowHtml(q, idx + 1, "P1")).join("");
+      if (p1Container) {
+        p1Container.innerHTML = dynamicPart1Questions.map((q, idx) => createChecklistRowHtml(q, idx + 1, "P1")).join("");
+      }
+      const p1Subtitle = document.getElementById("part1Subtitle");
+      if (p1Subtitle) {
+        p1Subtitle.innerText = `${dynamicPart1Questions.length} Technical Requirements`;
+      }
+      const stepLabel1 = document.getElementById("stepLabelPart1");
+      if (stepLabel1) {
+        stepLabel1.innerText = `Part I (${dynamicPart1Questions.length})`;
+      }
 
       // Part 2
       const p2Container = document.getElementById("part2Container");
-      p2Container.innerHTML = PART2_QUESTIONS.map((q, idx) => createChecklistRowHtml(q, idx + 1, "P2")).join("");
+      if (p2Container) {
+        p2Container.innerHTML = dynamicPart2Questions.map((q, idx) => createChecklistRowHtml(q, idx + 1, "P2")).join("");
+      }
+      const p2Subtitle = document.getElementById("part2Subtitle");
+      if (p2Subtitle) {
+        p2Subtitle.innerText = `${dynamicPart2Questions.length} Physical Integrity Parameters`;
+      }
+      const stepLabel2 = document.getElementById("stepLabelPart2");
+      if (stepLabel2) {
+        stepLabel2.innerText = `Part II (${dynamicPart2Questions.length})`;
+      }
 
       // Part 3
       const p3Container = document.getElementById("part3Questions");
-      p3Container.innerHTML = PART3_QUESTIONS.map((q, idx) => createChecklistRowHtml(q, idx + 1, "P3")).join("");
+      if (p3Container) {
+        p3Container.innerHTML = dynamicPart3Questions.map((q, idx) => createChecklistRowHtml(q, idx + 1, "P3")).join("");
+      }
+
+      updateScores();
     }
 
     function createChecklistRowHtml(q, num, group) {
+      const opts = (Array.isArray(q.options) && q.options.length > 0) ? q.options : ["Yes", "No", "N/A"];
+      const defaultChoice = opts.includes("Yes") ? "Yes" : opts[0];
+
+      const buttonsHtml = opts.map(opt => {
+        let activeClass = "";
+        if (opt === defaultChoice) {
+          if (opt === "Yes") activeClass = "selected-yes";
+          else if (opt === "No") activeClass = "selected-no";
+          else if (opt === "N/A") activeClass = "selected-na";
+        }
+        return `<button type="button" class="btn-group-item ${activeClass}" onclick="setChoice('${escapeHtml(q.id)}', '${escapeHtml(opt)}', '${group}', this)">${escapeHtml(opt)}</button>`;
+      }).join("");
+
       return `
         <div class="checklist-row">
           <div class="checklist-text">
             <span class="checklist-num">${num}</span>
-            <span>${q.text}</span>
+            <span>${escapeHtml(q.text)}</span>
           </div>
           <div class="btn-group">
-            <button type="button" class="btn-group-item selected-yes" onclick="setChoice('${q.id}', 'Yes', '${group}', this)">Yes</button>
-            <button type="button" class="btn-group-item" onclick="setChoice('${q.id}', 'No', '${group}', this)">No</button>
-            <button type="button" class="btn-group-item" onclick="setChoice('${q.id}', 'N/A', '${group}', this)">N/A</button>
+            ${buttonsHtml}
           </div>
-          <input type="hidden" id="field_${q.id}" name="${q.id}" value="Yes">
+          <input type="hidden" id="field_${escapeHtml(q.id)}" name="${escapeHtml(q.id)}" value="${escapeHtml(defaultChoice)}">
         </div>
       `;
     }
 
     function setChoice(fieldId, val, group, btn) {
-      document.getElementById(`field_${fieldId}`).value = val;
+      const input = document.getElementById(`field_${fieldId}`);
+      if (input) input.value = val;
       const groupEl = btn.parentElement;
       Array.from(groupEl.children).forEach(b => {
         b.className = "btn-group-item";
@@ -2026,8 +2348,12 @@
     }
 
     function setAllValues(group, val) {
-      let list = group === "P1" ? PART1_QUESTIONS : (group === "P2" ? PART2_QUESTIONS : PART3_QUESTIONS);
+      let list = group === "P1" ? dynamicPart1Questions : (group === "P2" ? dynamicPart2Questions : dynamicPart3Questions);
       list.forEach(q => {
+        const opts = (Array.isArray(q.options) && q.options.length > 0) ? q.options : ["Yes", "No", "N/A"];
+        // If the question does not support val (e.g. val is 'N/A' but question only has Yes/No), preserve its value
+        if (!opts.includes(val)) return;
+
         const input = document.getElementById(`field_${q.id}`);
         if (input) {
           input.value = val;
@@ -2049,29 +2375,35 @@
     }
 
     function updateScores() {
-      // P1 Score
+      // P1 Score (Dynamically calculated based on active Part I questions)
       let p1Yes = 0, p1NA = 0;
-      PART1_QUESTIONS.forEach(q => {
-        const v = document.getElementById(`field_${q.id}`).value;
+      dynamicPart1Questions.forEach(q => {
+        const input = document.getElementById(`field_${q.id}`);
+        const v = input ? input.value : "Yes";
         if (v === "Yes") p1Yes++;
-        else if (v === "N/A") p1NA++;
+        else if (v === "N/A" || v === "NA") p1NA++;
       });
-      let p1Eligible = 19 - p1NA;
+      let p1Eligible = dynamicPart1Questions.length - p1NA;
       let p1Score = p1Eligible > 0 ? ((p1Yes / p1Eligible) * 100).toFixed(1) + "%" : "100.0%";
-      document.getElementById("p1ScoreBadge").innerText = p1Score;
-      document.getElementById("summaryP1Score").innerText = p1Score;
+      const p1Badge = document.getElementById("p1ScoreBadge");
+      if (p1Badge) p1Badge.innerText = p1Score;
+      const sumP1 = document.getElementById("summaryP1Score");
+      if (sumP1) sumP1.innerText = p1Score;
 
-      // P2 Score
+      // P2 Score (Dynamically calculated based on active Part II questions)
       let p2Yes = 0, p2NA = 0;
-      PART2_QUESTIONS.forEach(q => {
-        const v = document.getElementById(`field_${q.id}`).value;
+      dynamicPart2Questions.forEach(q => {
+        const input = document.getElementById(`field_${q.id}`);
+        const v = input ? input.value : "Yes";
         if (v === "Yes") p2Yes++;
-        else if (v === "N/A") p2NA++;
+        else if (v === "N/A" || v === "NA") p2NA++;
       });
-      let p2Eligible = 6 - p2NA;
+      let p2Eligible = dynamicPart2Questions.length - p2NA;
       let p2Score = p2Eligible > 0 ? ((p2Yes / p2Eligible) * 100).toFixed(1) + "%" : "100.0%";
-      document.getElementById("p2ScoreBadge").innerText = p2Score;
-      document.getElementById("summaryP2Score").innerText = p2Score;
+      const p2Badge = document.getElementById("p2ScoreBadge");
+      if (p2Badge) p2Badge.innerText = p2Score;
+      const sumP2 = document.getElementById("summaryP2Score");
+      if (sumP2) sumP2.innerText = p2Score;
     }
 
     // Role Lockdown & Account Binding
@@ -2270,7 +2602,7 @@
       function stopDrawing() {
         if (isDrawing) {
           isDrawing = false;
-          document.getElementById("field_Evaluator_Signature").value = canvas.toDataURL("image/png");
+          document.getElementById("field_Evaluator_Signature").value = getOptimizedSignatureDataUrl();
         }
       }
 
@@ -2313,6 +2645,52 @@
       document.getElementById("field_Evaluator_Signature").value = "";
     }
 
+    // High-Performance Signature Compression (Downscales to 400x150, cutting upload payload by ~95%)
+    function getOptimizedSignatureDataUrl() {
+      if (!canvas || !hasSignature) return "";
+      try {
+        const off = document.createElement("canvas");
+        off.width = 400;
+        off.height = 150;
+        const offCtx = off.getContext("2d");
+        offCtx.imageSmoothingEnabled = true;
+        offCtx.imageSmoothingQuality = "high";
+        offCtx.drawImage(canvas, 0, 0, off.width, off.height);
+        return off.toDataURL("image/png");
+      } catch (err) {
+        console.warn("Signature downscale fallback:", err);
+        return canvas.toDataURL("image/png");
+      }
+    }
+
+    // Quick Clinical Observation Tag Helper
+    function addRemarkTag(tagText) {
+      const remarksInput = document.getElementById("field_Remarks");
+      if (!remarksInput) return;
+      const current = remarksInput.value.trim();
+      if (!current) {
+        remarksInput.value = tagText;
+      } else if (!current.includes(tagText)) {
+        remarksInput.value = current + " " + tagText;
+      }
+      updateRemarksCounter();
+      remarksInput.focus();
+    }
+
+    function updateRemarksCounter() {
+      const remarksInput = document.getElementById("field_Remarks");
+      const counter = document.getElementById("remarksCounter");
+      if (remarksInput && counter) {
+        const len = remarksInput.value.length;
+        counter.innerText = `${len} / 500 chars`;
+        if (len > 450) {
+          counter.style.color = "var(--danger)";
+        } else {
+          counter.style.color = "var(--text-muted)";
+        }
+      }
+    }
+
     // Backend Communication
     function loadInitialData() {
       if (typeof google !== "undefined" && google.script && google.script.run) {
@@ -2340,7 +2718,12 @@
             detectedAccount: { accountId: "chitosaba@gmail.com", role: "Pharmacist", name: "Chito Saba" }
           },
           evaluations: [],
-          summary: []
+          summary: [],
+          questionnaire: {
+            part1: PART1_QUESTIONS_DEFAULT,
+            part2: PART2_QUESTIONS_DEFAULT,
+            part3: PART3_QUESTIONS_DEFAULT
+          }
         });
       }
     }
@@ -2372,6 +2755,26 @@
 
       applyUserAccount(matched);
 
+      // Dynamically inject questionnaire from Questionnaire tab repository
+      if (res && res.questionnaire) {
+        let hasChanges = false;
+        if (Array.isArray(res.questionnaire.part1) && res.questionnaire.part1.length > 0) {
+          dynamicPart1Questions = res.questionnaire.part1;
+          hasChanges = true;
+        }
+        if (Array.isArray(res.questionnaire.part2) && res.questionnaire.part2.length > 0) {
+          dynamicPart2Questions = res.questionnaire.part2;
+          hasChanges = true;
+        }
+        if (Array.isArray(res.questionnaire.part3) && res.questionnaire.part3.length > 0) {
+          dynamicPart3Questions = res.questionnaire.part3;
+          hasChanges = true;
+        }
+        if (hasChanges) {
+          buildChecklistUI();
+        }
+      }
+
       allEvaluations = res.evaluations || [];
       allSummary = res.summary || [];
       updateCounts();
@@ -2390,7 +2793,150 @@
       document.getElementById("pharmacistCount").innerText = `${cPharma} records`;
     }
 
-    // Form Submission (Simultaneous Concurrency Guarded)
+    // Fullscreen Animated Submission Progress Modal Controller
+    let progressTimer = null;
+
+    function showSubmissionProgress() {
+      const modal = document.getElementById("submissionProgressModal");
+      if (!modal) return;
+      const fill = document.getElementById("progressFill");
+      const title = document.getElementById("progressTitle");
+      const sub = document.getElementById("progressSubtitle");
+      const icon = document.getElementById("progressIcon");
+      const stepText = document.getElementById("progressStepText");
+      const percentText = document.getElementById("progressPercentText");
+      const spinner = document.getElementById("progressSpinner");
+
+      // Reset modal UI elements
+      if (spinner) spinner.style.display = "block";
+      if (icon) icon.innerText = "🚀";
+      if (title) {
+        title.innerText = "Transmitting Evaluation";
+        title.style.color = "var(--primary)";
+      }
+      if (sub) sub.innerText = "Securing evaluation data to cloud registry...";
+      if (fill) {
+        fill.style.width = "20%";
+        fill.style.background = "linear-gradient(90deg, #0D9488, #10B981)";
+      }
+      if (stepText) stepText.innerText = "Step 1 of 3: Optimizing digital signature...";
+      if (percentText) percentText.innerText = "20%";
+
+      const s1 = document.getElementById("stepItem1");
+      const s2 = document.getElementById("stepItem2");
+      const s3 = document.getElementById("stepItem3");
+      const ic1 = document.getElementById("stepIcon1");
+      const ic2 = document.getElementById("stepIcon2");
+      const ic3 = document.getElementById("stepIcon3");
+
+      if (s1) s1.className = "progress-check-item in-progress";
+      if (ic1) ic1.innerText = "⏳";
+      if (s2) s2.className = "progress-check-item";
+      if (ic2) ic2.innerText = "⚪";
+      if (s3) s3.className = "progress-check-item";
+      if (ic3) ic3.innerText = "⚪";
+
+      modal.classList.add("active");
+
+      let currentPercent = 20;
+      let stage = 1;
+      if (progressTimer) clearInterval(progressTimer);
+
+      progressTimer = setInterval(() => {
+        if (stage === 1 && currentPercent < 45) {
+          currentPercent += 8;
+        } else if (stage === 1 && currentPercent >= 45) {
+          stage = 2;
+          if (s1) s1.className = "progress-check-item done";
+          if (ic1) ic1.innerText = "✅";
+          if (s2) s2.className = "progress-check-item in-progress";
+          if (ic2) ic2.innerText = "⏳";
+          if (stepText) stepText.innerText = "Step 2 of 3: Generating RFC UUID & saving record...";
+          if (sub) sub.innerText = "Committing atomic evaluation row to Google Sheets...";
+        } else if (stage === 2 && currentPercent < 78) {
+          currentPercent += 5;
+        } else if (stage === 2 && currentPercent >= 78) {
+          stage = 3;
+          if (s2) s2.className = "progress-check-item done";
+          if (ic2) ic2.innerText = "✅";
+          if (s3) s3.className = "progress-check-item in-progress";
+          if (ic3) ic3.innerText = "⏳";
+          if (stepText) stepText.innerText = "Step 3 of 3: Synchronizing consensus & hospital metrics...";
+          if (sub) sub.innerText = "Refreshing clinical consensus matrix...";
+        } else if (stage === 3 && currentPercent < 92) {
+          currentPercent += 2;
+        }
+        if (fill) fill.style.width = currentPercent + "%";
+        if (percentText) percentText.innerText = Math.min(currentPercent, 95) + "%";
+      }, 300);
+    }
+
+    function completeSubmissionProgress(success, evalId, errorMsg) {
+      if (progressTimer) clearInterval(progressTimer);
+
+      const modal = document.getElementById("submissionProgressModal");
+      if (!modal) return;
+      const fill = document.getElementById("progressFill");
+      const title = document.getElementById("progressTitle");
+      const sub = document.getElementById("progressSubtitle");
+      const icon = document.getElementById("progressIcon");
+      const stepText = document.getElementById("progressStepText");
+      const percentText = document.getElementById("progressPercentText");
+      const spinner = document.getElementById("progressSpinner");
+
+      const s1 = document.getElementById("stepItem1");
+      const s2 = document.getElementById("stepItem2");
+      const s3 = document.getElementById("stepItem3");
+      const ic1 = document.getElementById("stepIcon1");
+      const ic2 = document.getElementById("stepIcon2");
+      const ic3 = document.getElementById("stepIcon3");
+
+      if (success) {
+        if (fill) fill.style.width = "100%";
+        if (percentText) percentText.innerText = "100%";
+        if (stepText) stepText.innerText = "Complete: All records successfully synced!";
+        if (s1) s1.className = "progress-check-item done";
+        if (ic1) ic1.innerText = "✅";
+        if (s2) s2.className = "progress-check-item done";
+        if (ic2) ic2.innerText = "✅";
+        if (s3) s3.className = "progress-check-item done";
+        if (ic3) ic3.innerText = "✅";
+
+        if (spinner) spinner.style.display = "none";
+        if (icon) icon.innerText = "✅";
+        if (title) {
+          title.innerText = "Evaluation Recorded!";
+          title.style.color = "#047857";
+        }
+        const shortId = (evalId || "").substring(0, 8);
+        if (sub) sub.innerHTML = `Saved with Official ID: <strong style="color: var(--primary); font-family: monospace;">${shortId}...</strong>`;
+
+        setTimeout(() => {
+          modal.classList.remove("active");
+          if (title) title.style.color = "";
+        }, 1300);
+      } else {
+        if (fill) {
+          fill.style.width = "100%";
+          fill.style.background = "#EF4444";
+        }
+        if (percentText) percentText.innerText = "Error";
+        if (spinner) spinner.style.display = "none";
+        if (icon) icon.innerText = "❌";
+        if (title) {
+          title.innerText = "Submission Failed";
+          title.style.color = "#DC2626";
+        }
+        if (sub) sub.innerText = errorMsg || "Could not save evaluation. Please check connection.";
+
+        setTimeout(() => {
+          modal.classList.remove("active");
+          if (title) title.style.color = "";
+        }, 2600);
+      }
+    }
+
+    // Form Submission (Simultaneous Concurrency Guarded + High Speed Compressed Payload)
     function handleFormSubmit(e) {
       e.preventDefault();
 
@@ -2404,6 +2950,9 @@
       const payload = {};
       formData.forEach((val, key) => { payload[key] = val; });
 
+      // Ensure ultra-compact signature (downscaled to 400x150, ~20KB) is dispatched
+      payload.Evaluator_Signature = getOptimizedSignatureDataUrl();
+
       // Attach current user identity
       if (currentAccount) {
         payload.evaluatorName = currentAccount.name;
@@ -2413,7 +2962,10 @@
 
       const btnSubmit = document.getElementById("btnSubmit");
       btnSubmit.disabled = true;
-      btnSubmit.innerHTML = `<span class="spinner"></span> <span>Saving atomically...</span>`;
+      btnSubmit.innerHTML = `<span class="spinner"></span> <span>Saving evaluation...</span>`;
+
+      // Trigger animated full-screen progress modal
+      showSubmissionProgress();
 
       if (typeof google !== "undefined" && google.script && google.script.run) {
         google.script.run
@@ -2422,8 +2974,22 @@
           .submitEvaluationFromApp(payload);
       } else {
         setTimeout(() => {
-          onSubmitSuccess({ success: true, evaluationId: "c2a6f44d-5221-4f11-9a70-87ef242e8877" });
-        }, 1000);
+          onSubmitSuccess({
+            success: true,
+            evaluationId: "c2a6f44d-5221-4f11-9a70-87ef242e8877",
+            newEvaluation: {
+              Evaluation_ID: "c2a6f44d-5221-4f11-9a70-87ef242e8877",
+              Generic_Name: payload.Generic_Name,
+              Brand_Name: payload.Brand_Name,
+              Supplier: payload.Supplier,
+              Price: payload.Price,
+              Evaluator: payload.Evaluator || "Pharmacist",
+              Part_I_Score: "100.0%",
+              Part_II_Score: "100.0%",
+              Recommendation: payload.Recommendation || "Recommended"
+            }
+          });
+        }, 1500);
       }
     }
 
@@ -2433,20 +2999,33 @@
       btnSubmit.innerHTML = `<span>🚀 Submit Official Evaluation</span>`;
 
       if (res && res.success) {
+        // Complete the modal progress bar with checkmark animation
+        completeSubmissionProgress(true, res.evaluationId);
         showToast(`✅ Submitted! Unique ID: ${res.evaluationId.substring(0, 8)}...`);
-        // Reset form
+        
+        // Instant in-memory cache update (No slow network re-download!)
+        if (res.newEvaluation) {
+          allEvaluations.unshift(res.newEvaluation);
+        }
+        if (res.summary && Array.isArray(res.summary)) {
+          allSummary = res.summary;
+        }
+        updateCounts();
+
+        // Reset form ready for next evaluation
         document.getElementById("evalForm").reset();
         clearSignature();
+        updateRemarksCounter();
         setReconstitution(false);
         setAllValues("P1", "Yes");
         setAllValues("P2", "Yes");
 
-        // Re-apply locked account
+        // Re-apply locked account identity
         if (currentAccount) applyUserAccount(currentAccount);
 
         goToStep(1);
-        loadInitialData();
       } else {
+        completeSubmissionProgress(false, null, res.error);
         showToast("⚠️ " + (res.error || "Submission failed. Please retry."));
       }
     }
@@ -2455,6 +3034,7 @@
       const btnSubmit = document.getElementById("btnSubmit");
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = `<span>🚀 Submit Official Evaluation</span>`;
+      completeSubmissionProgress(false, null, err.toString());
       showToast("⚠️ Submission Failed: " + err);
     }
 
