@@ -133,3 +133,16 @@ All cartoon emojis will be replaced with lightweight, crisp inline SVGs:
 - Test across mobile screen widths (360px, 390px, 412px, 768px, desktop).
 - Ensure 48px touch targets and zero horizontal viewport overflows.
 - Validate JavaScript syntax and deploy.
+
+---
+
+## 7. Questions & Alignment Before We Begin
+
+### A. Accent Color Palette Preference
+- **Option A (Image 2 & 3 Style):** Obsidian Dark (`#0B0F19`) + **Amber Gold** (`#F59E0B`) highlights and glowing badges.
+- **Option B (Clinical Tech Fusion - Recommended):** Obsidian Dark (`#0B0F19`) + **Emerald/Teal** (`#0D9488`) primary accents with **Amber Gold** (`#F59E0B`) security/lock badges.
+
+### B. Execution Strategy
+- **Option 1 (Phased Review - Recommended):** Execute and review **Phase 1 & 2** first (Header, Stepper, Step 1 Form & Centered Clinical Role Badge) before proceeding to questionnaire cards and summary tables.
+- **Option 2 (Full Pipeline):** Execute the transformation across the entire application in a single unified sweep.
+
