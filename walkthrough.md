@@ -17,7 +17,7 @@ This document explains the fully integrated **100% Free Pharmacy Product Evaluat
   - **Step 2: Part I (19 Regulatory & Labeling Criteria)**: Segmented Yes / No / N/A buttons with live score pill.
   - **Step 3: Part II (6 Container & Physical Integrity Criteria)**: Immediate scoring and visual feedback.
   - **Step 4: Part III (Reconstitution & Dilution Criteria)**: Conditionally appears when "Requires Reconstitution" is toggled ON.
-  - **Step 5: Recommendation & Digital Signature**: Choose Recommended / Not Recommended, write remarks, and sign using an HTML5 high-resolution canvas signature pad.
+  - **Step 5: Recommendation, Compliance Consents & Digital Signature**: Choose Recommended / Not Recommended, review & accept Data Privacy Notice (`Yes`/`No`), confirm Truthfulness & Electronic Signature Agreement (`Yes`/`No`), write remarks, and sign using an HTML5 high-resolution canvas signature pad.
 
 ### 2. High-Concurrency Backend (`Code.gs`)
 - **Simultaneous Submission Protection**: Uses Google Apps Script `LockService.getScriptLock()` with a 30-second queuing timeout to prevent row write collisions when multiple clinicians submit at the exact same second.

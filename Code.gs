@@ -1,4 +1,14 @@
 /**
+ * ONE-TIME AUTHORIZATION HELPER:
+ * Select 'testEmailAuth' in the Apps Script toolbar dropdown and click 'Run'
+ * to grant your Google account permission to send invitation emails.
+ */
+function testEmailAuth() {
+  var remaining = MailApp.getRemainingDailyQuota();
+  Logger.log("✅ Mail authorization confirmed! Daily quota: " + remaining);
+}
+
+/**
  * ============================================================================
  * PPMP MOBILE PHARMACY PRODUCT EVALUATION SYSTEM - BACKEND ENGINE
  * ============================================================================
@@ -42,7 +52,7 @@ var EVAL_HEADERS = [
   "P3_04_Solution_Color", "P3_05_Diluent_Compatibility", "P3_06_Syringe_Passability", "P3_07_Post_Reconstitution_Stability",
   "P3_08_Filter_Needle_Req", "P3_09_Particulate_Absence",
   "Part_I_Score", "Part_II_Score", "Remarks", "Recommendation",
-  "Data_Privacy_Consent", "Accuracy_Consent", "Acknowledgment", "Evaluator_Signature"
+  "Data_Privacy_Consent", "Accuracy_Consent", "Evaluator_Signature"
 ];
 
 var SUMMARY_HEADERS = [
@@ -86,6 +96,15 @@ var OFFICIAL_PART2_ITEMS = [
 ];
 
 /**
+ * One-time authorization helper for email permissions.
+ * Run this function once from the Apps Script toolbar to grant MailApp permissions!
+ */
+function authorizeEmailPermissions() {
+  var quota = MailApp.getRemainingDailyQuota();
+  Logger.log("Email permission granted! Daily email quota remaining: " + quota);
+}
+
+/**
  * Custom menu created when opening the Google Spreadsheet.
  */
 function onOpen() {
@@ -99,8 +118,12 @@ function createCustomMenu() {
   var ui = SpreadsheetApp.getUi();
   ui.createMenu("🏥 PPMP Evaluation")
     .addItem("🚀 Initialize Evaluation Workbook", "initializeEvaluationWorkbook")
-    .addItem("🛠️ Upgrade Schema: Insert Price & Signature", "upgradeSchemaAddPriceAndSignature")
+    .addItem("🛠️ Upgrade Schema: Insert Price, Consent & Signature", "upgradeSchemaAddPriceAndSignature")
     .addItem("🔑 Fix Duplicate Keys & Clean Headers", "fixDuplicateKeysAndCleanHeaders")
+    .addSeparator()
+    .addItem("📧 Send App Invites to Evaluators", "sendEvaluatorAppInvites")
+    .addItem("🔗 Generate / Refresh Evaluator App Links", "refreshEvaluatorAppLinks")
+    .addItem("⚙️ Set / Check Web App Deployment URL", "promptSetWebAppUrl")
     .addSeparator()
     .addItem("📊 Initialize / Refresh Horizontal Report", "createHorizontalReportSheet")
     .addItem("📑 Initialize / Reset Printable Checklist Viewer", "createChecklistReportSheet")
@@ -114,7 +137,8 @@ function createCustomMenu() {
 }
 
 /**
- * Safely inserts 'Price' (after Manufacturer) and 'Signature' (at the end)
+ * Safely inserts 'Price' (after Manufacturer), 'Data_Privacy_Consent', and 'Accuracy_Consent'
+ * (after Recommendation, before Signature), and 'Evaluator_Signature' (at the end)
  * into Evaluations_Master and Evaluator tabs, preserving all existing rows without column shifts.
  */
 function upgradeSchemaAddPriceAndSignature() {
@@ -123,7 +147,7 @@ function upgradeSchemaAddPriceAndSignature() {
   
   var response = ui.alert(
     "Confirm Schema Upgrade",
-    "This will safely insert the 'Price' column (after Manufacturer) and 'Signature' column (at the end) into Evaluations_Master and all Evaluator tabs.\n\nAll existing evaluations will be preserved without shifting.\n\nDo you want to proceed?",
+    "This will safely ensure 'Price' (after Manufacturer), 'Data_Privacy_Consent', 'Accuracy_Consent' (after Recommendation), and 'Evaluator_Signature' exist in Evaluations_Master and all Evaluator tabs.\n\nAll existing evaluations will be preserved without shifting.\n\nDo you want to proceed?",
     ui.ButtonSet.YES_NO
   );
   if (response !== ui.Button.YES) return;
@@ -165,15 +189,75 @@ function upgradeSchemaAddPriceAndSignature() {
       // Refresh headers after possible Price insertion
       headers = s.getRange(1, 1, 1, s.getLastColumn()).getValues()[0];
       
-      // 2. Check if Signature already exists
+      // 2. Check if Data_Privacy_Consent & Accuracy_Consent exist
+      var dpIndex = -1;
+      var accIndex = -1;
+      var recIndex = -1;
       var sigIndex = -1;
       for (var h2 = 0; h2 < headers.length; h2++) {
-        var colName2 = (headers[h2] || "").toString().trim().toLowerCase();
-        if (colName2 === "signature" || colName2 === "digital_signature" || colName2 === "evaluator_signature") sigIndex = h2;
+        var cName = (headers[h2] || "").toString().trim().toLowerCase();
+        if (cName === "data_privacy_consent" || cName === "privacy_consent") dpIndex = h2;
+        if (cName === "accuracy_consent" || cName === "truthfulness_consent") accIndex = h2;
+        if (cName === "recommendation") recIndex = h2;
+        if (cName === "signature" || cName === "digital_signature" || cName === "evaluator_signature") sigIndex = h2;
+      }
+
+      // Insert Data_Privacy_Consent if missing
+      if (dpIndex === -1) {
+        var insertDpCol;
+        if (sigIndex !== -1) {
+          insertDpCol = sigIndex + 1; // 1-indexed: insert before signature
+        } else if (recIndex !== -1) {
+          insertDpCol = recIndex + 2; // insert after recommendation
+        } else {
+          insertDpCol = s.getLastColumn() + 1;
+        }
+        s.insertColumnBefore(insertDpCol);
+        s.getRange(1, insertDpCol).setValue("Data_Privacy_Consent").setBackground("#1B365D").setFontColor("#FFFFFF").setFontWeight("bold");
+        s.setColumnWidth(insertDpCol, 150);
+        headers = s.getRange(1, 1, 1, s.getLastColumn()).getValues()[0];
+      }
+
+      // Insert Accuracy_Consent if missing
+      headers = s.getRange(1, 1, 1, s.getLastColumn()).getValues()[0];
+      accIndex = -1;
+      sigIndex = -1;
+      for (var h3 = 0; h3 < headers.length; h3++) {
+        var cName3 = (headers[h3] || "").toString().trim().toLowerCase();
+        if (cName3 === "accuracy_consent" || cName3 === "truthfulness_consent") accIndex = h3;
+        if (cName3 === "signature" || cName3 === "digital_signature" || cName3 === "evaluator_signature") sigIndex = h3;
+      }
+      
+      if (accIndex === -1) {
+        var dpFoundIndex = -1;
+        for (var h4 = 0; h4 < headers.length; h4++) {
+          var cName4 = (headers[h4] || "").toString().trim().toLowerCase();
+          if (cName4 === "data_privacy_consent" || cName4 === "privacy_consent") dpFoundIndex = h4;
+        }
+        var insertAccCol;
+        if (dpFoundIndex !== -1) {
+          insertAccCol = dpFoundIndex + 2; // right after Data_Privacy_Consent
+        } else if (sigIndex !== -1) {
+          insertAccCol = sigIndex + 1;
+        } else {
+          insertAccCol = s.getLastColumn() + 1;
+        }
+        s.insertColumnBefore(insertAccCol);
+        s.getRange(1, insertAccCol).setValue("Accuracy_Consent").setBackground("#1B365D").setFontColor("#FFFFFF").setFontWeight("bold");
+        s.setColumnWidth(insertAccCol, 150);
+        headers = s.getRange(1, 1, 1, s.getLastColumn()).getValues()[0];
+      }
+      
+      // 3. Check if Signature exists
+      headers = s.getRange(1, 1, 1, s.getLastColumn()).getValues()[0];
+      var sigFound = -1;
+      for (var h5 = 0; h5 < headers.length; h5++) {
+        var colNameSig = (headers[h5] || "").toString().trim().toLowerCase();
+        if (colNameSig === "signature" || colNameSig === "digital_signature" || colNameSig === "evaluator_signature") sigFound = h5;
       }
       
       // If Signature is missing, append it at the end
-      if (sigIndex === -1) {
+      if (sigFound === -1) {
         var newCol = s.getLastColumn() + 1;
         s.getRange(1, newCol).setValue("Evaluator_Signature").setBackground("#1B365D").setFontColor("#FFFFFF").setFontWeight("bold");
         s.setColumnWidth(newCol, 180);
@@ -199,12 +283,13 @@ function upgradeSchemaAddPriceAndSignature() {
       "Upgrade Complete!",
       "Successfully upgraded schema in: " + modifiedSheets.join(", ") + ".\n\n" +
       "• Column 'Price' (Col H) inserted after Manufacturer.\n" +
-      "• Column 'Evaluator_Signature' added.\n" +
+      "• Columns 'Data_Privacy_Consent' and 'Accuracy_Consent' inserted after Recommendation.\n" +
+      "• Column 'Evaluator_Signature' verified.\n" +
       "• Horizontal Report and Printable Checklist Viewer refreshed.\n\n" +
       "Next step in AppSheet:\n" +
       "1. Open AppSheet Editor.\n" +
       "2. Go to Data > Tables > Evaluations_Master > click 'Regenerate Structure'.\n" +
-      "3. Verify 'Price' (Type: Price) and 'Evaluator_Signature' (Type: Signature) are recognized!",
+      "3. Verify 'Price', 'Data_Privacy_Consent', 'Accuracy_Consent', and 'Evaluator_Signature' are recognized!",
       ui.ButtonSet.OK
     );
   } catch (err) {
@@ -493,6 +578,18 @@ function applyEvaluationsValidations(sheet) {
   
   // Recommendation col AU (index 47)
   sheet.getRange(2, 47, maxRows, 1).setDataValidation(ruleRecommendation);
+
+  // Data Privacy and Accuracy Consents
+  var lastCol = Math.max(1, sheet.getLastColumn());
+  var headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  var dpCol = headers.indexOf("Data_Privacy_Consent") + 1;
+  if (dpCol > 0) {
+    sheet.getRange(2, dpCol, maxRows, 1).setDataValidation(ruleYesNo);
+  }
+  var accCol = headers.indexOf("Accuracy_Consent") + 1;
+  if (accCol > 0) {
+    sheet.getRange(2, accCol, maxRows, 1).setDataValidation(ruleYesNo);
+  }
 }
 
 /**
@@ -2108,6 +2205,7 @@ function formatCheckmark(val) {
  */
 function doGet(e) {
   var template = HtmlService.createTemplateFromFile("index");
+  template.paramEmail = (e && e.parameter && (e.parameter.email || e.parameter.evaluator)) ? (e.parameter.email || e.parameter.evaluator).toString().trim() : "";
   return template.evaluate()
     .setTitle("PPMP Pharmacy Product Evaluation System")
     .addMetaTag("viewport", "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
@@ -2116,8 +2214,282 @@ function doGet(e) {
 }
 
 /**
+ * Resolves the active Web App URL for generating personal evaluator links.
+ */
+function getWebAppUrl() {
+  var props = PropertiesService.getScriptProperties();
+  var customUrl = props.getProperty("PPMP_WEBAPP_URL");
+  if (customUrl) return customUrl.trim();
+
+  var url = "";
+  try {
+    url = ScriptApp.getService().getUrl();
+  } catch (e) {
+    Logger.log("ScriptApp.getService().getUrl(): " + e.toString());
+  }
+  // If ScriptApp returned an invalid/empty URL, fallback to active deployment
+  if (!url || url.indexOf("AKfycbxw") !== -1) {
+    url = "https://script.google.com/macros/s/AKfycbzf5cK5DCLZnBB2sE0Cujfwlbbcgc8O84to5XQ-DuVUYrX8zz2D2cd2wlOE4oS1VtG/exec";
+  }
+  return url;
+}
+
+/**
+ * Prompts user to view or update the Web App deployment URL.
+ */
+function promptSetWebAppUrl() {
+  var ui = SpreadsheetApp.getUi();
+  var currentUrl = getWebAppUrl();
+  var resp = ui.prompt(
+    "Set Web App Deployment URL",
+    "Current Web App URL:\n" + currentUrl + "\n\n" +
+    "Paste the updated URL from 'Deploy > Manage deployments' below:",
+    ui.ButtonSet.OK_CANCEL
+  );
+  if (resp.getSelectedButton() === ui.Button.OK) {
+    var newUrl = resp.getResponseText().trim();
+    if (newUrl && newUrl.indexOf("http") === 0) {
+      PropertiesService.getScriptProperties().setProperty("PPMP_WEBAPP_URL", newUrl);
+      refreshEvaluatorAppLinks(false);
+      ui.alert("Success", "Web App URL saved and personal links refreshed in Evaluator_Accounts:\n" + newUrl, ui.ButtonSet.OK);
+    }
+  }
+}
+
+/**
+ * Ensures Evaluator_Accounts sheet has all 6 standard columns:
+ * Col A: Account_ID
+ * Col B: Evaluator_Role
+ * Col C: Evaluator_Name
+ * Col D: Email
+ * Col E: Personal_App_Link
+ * Col F: Invite_Status
+ */
+function ensureEvaluatorAccountsHeaders(sheet) {
+  var headers = ["Account_ID", "Evaluator_Role", "Evaluator_Name", "Email", "Personal_App_Link", "Invite_Status"];
+  setupSheetHeaders(sheet, headers, "#1B365D");
+}
+
+/**
+ * Generates and refreshes personal mobile links in Column E for all evaluators in Evaluator_Accounts.
+ * If Column D (Email) is empty, automatically fills it from Account_ID if Account_ID contains '@'.
+ */
+function refreshEvaluatorAppLinks(silent) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(SHEET_EVALUATOR_ACCOUNTS);
+  if (!sheet) return;
+  
+  ensureEvaluatorAccountsHeaders(sheet);
+  
+  var webAppUrl = getWebAppUrl();
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) {
+    if (!silent) SpreadsheetApp.getUi().alert("No Evaluators", "No evaluator rows found in " + SHEET_EVALUATOR_ACCOUNTS, SpreadsheetApp.getUi().ButtonSet.OK);
+    return;
+  }
+  
+  var data = sheet.getRange(2, 1, lastRow - 1, Math.max(sheet.getLastColumn(), 6)).getValues();
+  var count = 0;
+  var seenEmails = {};
+  
+  for (var i = 0; i < data.length; i++) {
+    var row = data[i];
+    var accountId = (row[0] || "").toString().trim();
+    var email = (row[3] || "").toString().trim() || (accountId.indexOf("@") !== -1 ? accountId : "");
+    var name = (row[2] || "").toString().trim();
+    var rowNum = i + 2;
+    
+    var cleanEmail = email.toLowerCase().trim();
+    var cleanName = name.toLowerCase().trim();
+
+    // Auto-fill Column D if blank and email detected
+    if (!row[3] && email) {
+      sheet.getRange(rowNum, 4).setValue(email);
+    }
+    
+    if (cleanEmail && cleanEmail.indexOf("@") !== -1 && cleanName !== "testing" && !seenEmails[cleanEmail]) {
+      seenEmails[cleanEmail] = true;
+      var link = webAppUrl + "?email=" + encodeURIComponent(email);
+      sheet.getRange(rowNum, 5).setValue(link);
+      count++;
+    } else if (!cleanEmail || cleanEmail.indexOf("@") === -1 || cleanName === "testing") {
+      // Clear link and status for blank or test rows
+      sheet.getRange(rowNum, 5, 1, 2).clearContent();
+    }
+  }
+  
+  if (!silent) {
+    try {
+      SpreadsheetApp.getUi().alert(
+        "Personal Links Refreshed",
+        "Successfully generated personal mobile links for " + count + " evaluator(s) in Column E.\n\n" +
+        "You can copy these links to send via WhatsApp, Viber, or SMS, or use '📧 Send App Invites to Evaluators' to email them automatically.",
+        SpreadsheetApp.getUi().ButtonSet.OK
+      );
+    } catch (eUi) {
+      Logger.log("Successfully generated personal mobile links for " + count + " evaluator(s).");
+    }
+  }
+}
+
+/**
+ * Sends official HTML invitation emails with personal 1-tap mobile access links
+ * to all registered evaluators in Evaluator_Accounts.
+ * Safe to execute both from the Google Sheets menu AND directly from Apps Script Editor.
+ */
+function sendEvaluatorAppInvites() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ui = null;
+  try {
+    ui = SpreadsheetApp.getUi();
+  } catch (eUi) {
+    // UI is not available when executed directly from Apps Script Editor
+  }
+
+  var sheet = ss.getSheetByName(SHEET_EVALUATOR_ACCOUNTS);
+  if (!sheet) {
+    if (ui) ui.alert("Error", "Sheet '" + SHEET_EVALUATOR_ACCOUNTS + "' was not found.", ui.ButtonSet.OK);
+    else Logger.log("Error: Sheet '" + SHEET_EVALUATOR_ACCOUNTS + "' was not found.");
+    return;
+  }
+  
+  ensureEvaluatorAccountsHeaders(sheet);
+  
+  var webAppUrl = getWebAppUrl();
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) {
+    if (ui) ui.alert("No Evaluators", "No evaluator accounts found to send invitations.", ui.ButtonSet.OK);
+    else Logger.log("No evaluator accounts found to send invitations.");
+    return;
+  }
+  
+  var data = sheet.getRange(2, 1, lastRow - 1, Math.max(sheet.getLastColumn(), 6)).getValues();
+  var evaluatorsToSend = [];
+  var seenEmails = {};
+  
+  for (var r = 0; r < data.length; r++) {
+    var row = data[r];
+    var accountId = (row[0] || "").toString().trim();
+    var role = (row[1] || "").toString().trim();
+    var name = (row[2] || "").toString().trim() || accountId;
+    var email = (row[3] || "").toString().trim() || (accountId.indexOf("@") !== -1 ? accountId : "");
+    var currentStatus = (row[5] || "").toString().trim();
+    
+    var cleanEmail = email.toLowerCase().trim();
+    var cleanName = name.toLowerCase().trim();
+
+    // Skip blank rows, rows without valid email, or test accounts
+    if (!cleanEmail || cleanEmail.indexOf("@") === -1 || cleanName === "testing") {
+      continue;
+    }
+
+    // Deduplicate by email: Never queue the same email address twice
+    if (seenEmails[cleanEmail]) {
+      Logger.log("Skipping duplicate email row: " + cleanEmail);
+      continue;
+    }
+    seenEmails[cleanEmail] = true;
+
+    evaluatorsToSend.push({
+      rowNum: r + 2,
+      accountId: accountId,
+      role: role || "Evaluator",
+      name: name,
+      email: email,
+      status: currentStatus
+    });
+  }
+  
+  if (evaluatorsToSend.length === 0) {
+    if (ui) ui.alert("No Valid Emails", "No evaluators with valid email addresses found in " + SHEET_EVALUATOR_ACCOUNTS, ui.ButtonSet.OK);
+    else Logger.log("No evaluators with valid email addresses found.");
+    return;
+  }
+  
+  var confirmList = evaluatorsToSend.map(function(e) {
+    return "• " + e.name + " (" + e.role + ") -> " + e.email + (e.status ? " [" + e.status + "]" : "");
+  }).join("\n");
+  
+  var promptMsg = "Are you sure you want to send official mobile evaluation portal invitations to the following " + evaluatorsToSend.length + " clinician(s)?\n\n" +
+                  confirmList + "\n\n" +
+                  "Web App Base URL:\n" + webAppUrl;
+  
+  if (ui) {
+    var resp = ui.alert("Confirm Sending Invites (" + evaluatorsToSend.length + " Evaluator" + (evaluatorsToSend.length > 1 ? "s" : "") + ")", promptMsg, ui.ButtonSet.YES_NO);
+    if (resp !== ui.Button.YES) return;
+  } else {
+    Logger.log("Starting dispatch of " + evaluatorsToSend.length + " invitation emails...");
+  }
+  
+  var sentCount = 0;
+  var errors = [];
+  var nowStr = Utilities.formatDate(new Date(), "GMT+8", "yyyy-MM-dd HH:mm");
+  
+  evaluatorsToSend.forEach(function(ev) {
+    var personalLink = webAppUrl + "?email=" + encodeURIComponent(ev.email);
+    
+    // Auto-fill Column D and E
+    sheet.getRange(ev.rowNum, 4).setValue(ev.email);
+    sheet.getRange(ev.rowNum, 5).setValue(personalLink);
+    
+    try {
+      var subject = "🏥 PPMP Evaluation Portal Access — " + ev.name + " (" + ev.role + ")";
+      var htmlBody = 
+        '<div style="font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">' +
+          '<div style="background: linear-gradient(135deg, #1B365D 0%, #0D9488 100%); padding: 24px 28px; color: white;">' +
+            '<h2 style="margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.02em;">🏥 PPMP Pharmacy Evaluation System</h2>' +
+            '<p style="margin: 6px 0 0; font-size: 13px; opacity: 0.9;">Technical Product Evaluation Portal</p>' +
+          '</div>' +
+          '<div style="padding: 28px; color: #1E293B; line-height: 1.6;">' +
+            '<p style="font-size: 16px; margin-top: 0;">Hello <strong>' + ev.name + '</strong>,</p>' +
+            '<p style="font-size: 14px; color: #475569;">You have been registered as an official clinical evaluator for the PPMP Technical Evaluation System with the following assigned role:</p>' +
+            '<div style="background: #F1F5F9; border-left: 4px solid #0D9488; padding: 12px 16px; border-radius: 6px; margin: 18px 0; font-size: 14px;">' +
+              '<div style="margin-bottom: 4px;"><strong>Assigned Role:</strong> <span style="color: #0D9488; font-weight: 800;">' + ev.role + '</span></div>' +
+              '<div><strong>Authorized Email:</strong> <code>' + ev.email + '</code></div>' +
+            '</div>' +
+            '<p style="font-size: 14px; color: #475569;">Please tap the button below on your mobile phone or computer. The portal will automatically identify you, lock your assigned role to <strong>' + ev.role + '</strong>, and save your session on your phone:</p>' +
+            '<div style="text-align: center; margin: 28px 0;">' +
+              '<a href="' + personalLink + '" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #1B365D 0%, #0D9488 100%); color: #FFFFFF; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 700; font-size: 15px; box-shadow: 0 4px 12px rgba(27,54,93,0.3);">' +
+                '📱 Open My Evaluation Portal' +
+              '</a>' +
+            '</div>' +
+            '<p style="font-size: 12px; color: #94A3B8; margin-top: 24px; border-top: 1px solid #E2E8F0; padding-top: 14px;">' +
+              'If the button above does not open, tap or copy this link into your mobile browser:<br>' +
+              '<a href="' + personalLink + '" style="color: #0D9488; word-break: break-all;">' + personalLink + '</a>' +
+            '</p>' +
+          '</div>' +
+        '</div>';
+        
+      MailApp.sendEmail({
+        to: ev.email,
+        subject: subject,
+        htmlBody: htmlBody
+      });
+      
+      sheet.getRange(ev.rowNum, 6).setValue("Sent on " + nowStr);
+      sentCount++;
+      Logger.log("Dispatched invite to: " + ev.email);
+    } catch (eMail) {
+      Logger.log("Failed to send invite to " + ev.email + ": " + eMail.toString());
+      sheet.getRange(ev.rowNum, 6).setValue("Failed: " + eMail.message);
+      errors.push(ev.email + " (" + eMail.message + ")");
+    }
+  });
+  
+  var resultMsg = "Successfully dispatched " + sentCount + " invitation email(s)!";
+  if (errors.length > 0) {
+    resultMsg += "\n\nErrors encountered:\n" + errors.join("\n");
+  }
+  if (ui) {
+    ui.alert("Invites Dispatched", resultMsg, ui.ButtonSet.OK);
+  } else {
+    Logger.log("Invites Summary: " + resultMsg);
+  }
+}
+
+/**
  * Returns list of registered evaluators from the Evaluator_Accounts sheet.
- * Sheet layout: Col A: Account_ID (email), Col B: Evaluator_Role, Col C: Evaluator_Name, Col D: Email
+ * Sheet layout: Col A: Account_ID, Col B: Evaluator_Role, Col C: Evaluator_Name, Col D: Email, Col E: Personal_App_Link, Col F: Invite_Status
  */
 function getEvaluatorAccounts() {
   try {
@@ -2125,28 +2497,73 @@ function getEvaluatorAccounts() {
     var sheet = ss.getSheetByName(SHEET_EVALUATOR_ACCOUNTS);
     if (!sheet || sheet.getLastRow() < 2) return [];
     
-    var data = sheet.getRange(2, 1, sheet.getLastRow() - 1, Math.max(sheet.getLastColumn(), 4)).getValues();
+    var data = sheet.getRange(2, 1, sheet.getLastRow() - 1, Math.max(sheet.getLastColumn(), 6)).getValues();
     var accounts = [];
+    var seenEmails = {};
     
     data.forEach(function(row) {
       var accountId = row[0] ? row[0].toString().trim() : "";
       var role = row[1] ? row[1].toString().trim() : "";
       var name = row[2] ? row[2].toString().trim() : "";
-      var email = row[3] ? row[3].toString().trim() : accountId;
+      var email = row[3] ? row[3].toString().trim() : (accountId.indexOf("@") !== -1 ? accountId : "");
+      var link = row[4] ? row[4].toString().trim() : "";
+      var status = row[5] ? row[5].toString().trim() : "";
       
-      if (accountId || name) {
-        accounts.push({
-          accountId: accountId,
-          role: role,
-          name: name || accountId,
-          email: email || accountId
-        });
+      var cleanEmail = (email || accountId).toLowerCase().trim();
+      var cleanName = (name || accountId).toLowerCase().trim();
+
+      // Skip blank rows, rows without valid email, or test rows
+      if (!cleanEmail || cleanEmail.indexOf("@") === -1 || cleanName === "testing") {
+        return;
       }
+
+      // Deduplicate: Keep only the first registered row for each email
+      if (seenEmails[cleanEmail]) {
+        return;
+      }
+      seenEmails[cleanEmail] = true;
+
+      accounts.push({
+        accountId: accountId || email,
+        role: role || "Evaluator",
+        name: name || accountId || email,
+        email: email || accountId,
+        link: link,
+        status: status
+      });
     });
     return accounts;
   } catch (err) {
     Logger.log("Error in getEvaluatorAccounts: " + err.toString());
     return [];
+  }
+}
+
+/**
+ * Server-side verification for an email address against Evaluator_Accounts.
+ */
+function verifyEvaluatorEmail(email) {
+  try {
+    if (!email) return { success: false, message: "Email is required." };
+    var cleanEmail = email.toString().trim().toLowerCase();
+    var accounts = getEvaluatorAccounts();
+    for (var i = 0; i < accounts.length; i++) {
+      var acc = accounts[i];
+      var accEmail = (acc.email || acc.accountId || "").toLowerCase().trim();
+      var accId = (acc.accountId || "").toLowerCase().trim();
+      if (cleanEmail === accEmail || cleanEmail === accId) {
+        return {
+          success: true,
+          account: acc
+        };
+      }
+    }
+    return {
+      success: false,
+      message: "The email '" + email + "' is not registered as an official evaluator. Please contact the administrator."
+    };
+  } catch (err) {
+    return { success: false, message: err.toString() };
   }
 }
 
@@ -2168,8 +2585,9 @@ function getCurrentUserSession() {
     var lower = activeEmail.toLowerCase().trim();
     for (var i = 0; i < accounts.length; i++) {
       var acc = accounts[i];
-      if ((acc.accountId && acc.accountId.toLowerCase() === lower) ||
-          (acc.email && acc.email.toLowerCase() === lower)) {
+      var accEmail = (acc.email || acc.accountId || "").toLowerCase().trim();
+      var accId = (acc.accountId || "").toLowerCase().trim();
+      if (accEmail === lower || accId === lower) {
         detected = acc;
         break;
       }
@@ -2425,6 +2843,10 @@ function submitEvaluationFromApp(payload) {
       } else if (key === "Price") {
         var numPrice = parseFloat(payload[key]);
         row.push(!isNaN(numPrice) ? numPrice : (payload[key] || ""));
+      } else if (key === "Data_Privacy_Consent") {
+        row.push(payload.Data_Privacy_Consent || payload.dataPrivacyConsent || "Yes");
+      } else if (key === "Accuracy_Consent") {
+        row.push(payload.Accuracy_Consent || payload.accuracyConsent || "Yes");
       } else if (payload.hasOwnProperty(key)) {
         row.push(payload[key]);
       } else {

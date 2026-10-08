@@ -59,14 +59,16 @@ graph TD
 | `Part_II_Score` | Text / Percent | ❌ | ❌ | Calculated by script / Virtual Column |
 | `Remarks` | LongText | ❌ | ❌ | Optional notes |
 | `Recommendation` | Enum | ❌ | ❌ | Values: `Recommended`, `Not Recommended` |
-| `Signature` | Signature | ❌ | ❌ | Digital signature drawing pad for evaluators |
+| `Data_Privacy_Consent` | Enum | ❌ | ❌ | Values: `Yes`, `No` (Buttons), Required: `TRUE`, Valid_If: `[_THIS] = "Yes"` |
+| `Accuracy_Consent` | Enum | ❌ | ❌ | Values: `Yes`, `No` (Buttons), Required: `TRUE`, Valid_If: `[_THIS] = "Yes"` |
+| `Evaluator_Signature` | Signature | ❌ | ❌ | Digital signature drawing pad for evaluators |
 
 > [!TIP]
 > **Important - Updating AppSheet After Upgrading Columns**:
-> After running the automated **🛠️ Upgrade Schema: Insert Price & Signature** tool in Google Sheets:
+> After running the automated **🛠️ Upgrade Schema: Insert Price, Consent & Signature** tool in Google Sheets:
 > 1. In AppSheet, go to **Data** → **Tables**.
 > 2. Select **`Evaluations_Master`** and click **Regenerate Structure** (top right icon with two curved arrows 🔄).
-> 3. Verify that `Price` is set to Type **Price** (Currency `₱`) and `Signature` is set to Type **Signature**.
+> 3. Verify that `Price` is set to Type **Price** (Currency `₱`), `Data_Privacy_Consent` and `Accuracy_Consent` are set to Type **Enum** (Buttons: Yes, No), and `Evaluator_Signature` is set to Type **Signature**.
 > 4. Repeat **Regenerate Structure** for `Consolidated_Summary` and any Evaluator tables.
 
 ---
@@ -179,10 +181,14 @@ graph LR
   8. Filter Needle Requirement Alert
   9. Absence of Particulate Matter
 
-#### Page 5: Summary, Verdict & Digital Signature
-- `Remarks` (LongText field for notes/observations)
-- `Recommendation` (Radio Buttons: `Recommended` | `Not Recommended`)
-- `Signature` (Digital Signature drawing pad — evaluators sign directly on the screen)
+#### Page 5: Summary, Verdict, Compliance Consents & Digital Signature
+- `Remarks` (LongText field for qualitative clinical notes/observations)
+- `Recommendation` (Enum Buttons: `Recommended` | `Not Recommended`)
+- `Data_Privacy_Consent` (Enum Buttons: `Yes` | `No`, Required `*`, `Valid_If`: `[_THIS] = "Yes"`)
+  - Display Name / Description: *"I have read and understood the Data Privacy Notice. I acknowledge that the information I provide in this evaluation will be collected, processed, stored, and used for legitimate organizational purposes, including training documentation, monitoring, evaluation, and reporting, in accordance with applicable data privacy laws and organizational policies."*
+- `Accuracy_Consent` (Enum Buttons: `Yes` | `No`, Required `*`, `Valid_If`: `[_THIS] = "Yes"`)
+  - Display Name / Description: *"I confirm that the information I have provided is true and accurate, and I agree to the use of my electronic signature as confirmation of my participation and completion of this evaluation. I have reviewed my responses and consent to the electronic storage of my signature and evaluation record for official training documentation."*
+- `Evaluator_Signature` (Digital Signature drawing pad — evaluators sign directly on the screen)
 
 ---
 

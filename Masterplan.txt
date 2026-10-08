@@ -48,6 +48,8 @@ PHASE 2: APPSHEET SETUP (CLEAN & ERROR-FREE)
     - P3_01 to P3_09: Enum (Buttons: Yes, No, N/A)
     - Remarks: LongText
     - Recommendation: Enum (Recommended, Not Recommended)
+    - Data_Privacy_Consent: Enum (Buttons: Yes, No), Required = YES, Valid_If = [_THIS] = "Yes"
+    - Accuracy_Consent: Enum (Buttons: Yes, No), Required = YES, Valid_If = [_THIS] = "Yes"
     - Evaluator_Signature: Type = Signature
 
 2.4 Create the 3 Evaluator Slices (Data -> Slices -> Add Slice):
@@ -76,7 +78,7 @@ PHASE 3: UX NAVIGATION & 5-PAGE FORM
     - Page 2: Part I items (P1_01 to P1_19)
     - Page 3: Part II items (P2_01 to P2_06)
     - Page 4: Part III items (P3_01 to P3_09)
-    - Page 5: Remarks, Recommendation, Evaluator_Signature
+    - Page 5: Remarks, Recommendation, Data_Privacy_Consent, Accuracy_Consent, Evaluator_Signature
 
 
 PHASE 4: 4 RULES TO STAY 100% FREE FOREVER (NO PLAN BLOCKS)

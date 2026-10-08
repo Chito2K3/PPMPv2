@@ -475,22 +475,31 @@
 
     /* Evaluator Role Selector (Locked State) */
     .role-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
       margin-bottom: 14px;
+      width: 100%;
     }
 
     .role-card {
       border: 2px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 8px;
+      border-radius: 12px;
+      padding: 14px 24px;
       text-align: center;
       transition: all 0.2s ease;
       background: white;
       opacity: 0.5;
       cursor: not-allowed;
       position: relative;
+      min-width: 200px;
+      max-width: 280px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     .role-card.selected {
@@ -502,21 +511,21 @@
     }
 
     .role-card .role-icon {
-      font-size: 1.5rem;
-      margin-bottom: 4px;
+      font-size: 1.6rem;
+      margin-bottom: 6px;
     }
 
     .role-card .role-name {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: var(--text);
     }
 
     .role-lock-badge {
       position: absolute;
-      top: 6px;
-      right: 6px;
-      font-size: 0.65rem;
+      top: 8px;
+      right: 8px;
+      font-size: 0.75rem;
       color: var(--accent);
     }
 
@@ -606,6 +615,137 @@
       background: #64748B;
       color: white;
       box-shadow: 0 1px 3px rgba(100, 116, 139, 0.3);
+    }
+
+    /* Compliance & Legal Consent Tiles (Modern Interactive Checkbox Cards) */
+    .consent-check-tile {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      background: #FFFFFF;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .consent-check-tile:hover {
+      background: #F8FAFC;
+      border-color: #CBD5E1;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .consent-check-tile.checked {
+      background: var(--success-light);
+      border-color: var(--success);
+      box-shadow: 0 3px 12px rgba(16, 185, 129, 0.16);
+    }
+
+    .consent-check-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    .consent-custom-checkbox {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      border-radius: 6px;
+      border: 2px solid #CBD5E1;
+      background: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .consent-check-tile:hover .consent-custom-checkbox {
+      border-color: var(--accent);
+    }
+
+    .consent-check-tile.checked .consent-custom-checkbox {
+      background: var(--success);
+      border-color: var(--success);
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+      transform: scale(1.05);
+    }
+
+    .consent-check-icon {
+      transform: scale(0);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .consent-check-tile.checked .consent-check-icon {
+      transform: scale(1);
+    }
+
+    .consent-content {
+      flex: 1;
+    }
+
+    .consent-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .consent-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #1E293B;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+
+    .consent-check-tile.checked .consent-title {
+      color: #065F46;
+    }
+
+    .consent-status-pill {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .consent-status-pill.pill-required {
+      background: #FEF2F2;
+      color: var(--danger);
+      border: 1px solid #FECACA;
+    }
+
+    .consent-status-pill.pill-agreed {
+      background: #D1FAE5;
+      color: #047857;
+      border: 1px solid #A7F3D0;
+    }
+
+    .consent-body {
+      font-size: 0.84rem;
+      line-height: 1.55;
+      color: #475569;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .consent-check-tile.checked .consent-body {
+      color: #1E3A2F;
     }
 
     /* Sticky Score Banner */
@@ -1243,7 +1383,8 @@
     /* Remarks Field & Clinical Quick Tags */
     .remarks-textarea {
       min-height: 135px;
-      font-size: 1rem !important; /* 16px to prevent mobile browser auto-zoom */
+      font-size: 1rem !important;
+      /* 16px to prevent mobile browser auto-zoom */
       line-height: 1.55;
       padding: 12px 14px;
       border: 1.5px solid var(--border);
@@ -1369,8 +1510,13 @@
     }
 
     @keyframes pulseIcon {
-      0% { transform: scale(0.92); }
-      100% { transform: scale(1.08); }
+      0% {
+        transform: scale(0.92);
+      }
+
+      100% {
+        transform: scale(1.08);
+      }
     }
 
     .progress-modal-title {
@@ -1450,6 +1596,64 @@
       font-size: 0.95rem;
       width: 20px;
       text-align: center;
+    }
+
+    /* Evaluator Authentication Gate Modal & Status Elements */
+    .auth-gate-card {
+      max-width: 440px !important;
+      text-align: center;
+      padding: 28px 24px !important;
+      border-radius: 18px !important;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+    }
+
+    .auth-gate-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #EBF2FA 0%, #E0F2FE 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 12px auto;
+      box-shadow: 0 4px 12px rgba(27, 54, 93, 0.08);
+    }
+
+    .auth-msg-box {
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      text-align: left;
+      margin-bottom: 14px;
+    }
+
+    .auth-msg-error {
+      background: #FEF2F2;
+      color: #DC2626;
+      border: 1px solid #FECACA;
+    }
+
+    .auth-msg-success {
+      background: #ECFDF5;
+      color: #047857;
+      border: 1px solid #A7F3D0;
+    }
+
+    .auth-gate-tip {
+      margin-top: 18px;
+      padding: 12px 14px;
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      text-align: left;
+      line-height: 1.45;
     }
   </style>
 </head>
@@ -1534,7 +1738,6 @@
                 <span>🔒</span>
                 <span>Role locked to active account: <strong id="lockdownAccountLabel">Detecting...</strong></span>
               </div>
-              <button type="button" class="lockdown-switch-btn" onclick="openAccountSwitcher()">Switch Profile</button>
             </div>
 
             <div class="card-title">
@@ -1733,16 +1936,22 @@
             <div class="form-group">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                 <label class="form-label" style="margin-bottom: 0;">Observations & Remarks</label>
-                <span id="remarksCounter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">0 / 500 chars</span>
+                <span id="remarksCounter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">0 /
+                  500 chars</span>
               </div>
-              
+
               <!-- Quick One-Tap Clinical Observation Chips -->
               <div class="quick-tags-scroll">
-                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('📦 Packaging sealed and intact.')">+ Sealed & Intact</button>
-                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('🏷️ Labels clear, legible, and compliant.')">+ Clear Labels</button>
-                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('💧 No leakage or defect observed.')">+ No Leakage</button>
-                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('✨ Good container integrity and finish.')">+ Good Integrity</button>
-                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('⚠️ Minor outer carton dent, inner unit intact.')">+ Carton Dent</button>
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('📦 Packaging sealed and intact.')">+
+                  Sealed & Intact</button>
+                <button type="button" class="quick-tag-chip"
+                  onclick="addRemarkTag('🏷️ Labels clear, legible, and compliant.')">+ Clear Labels</button>
+                <button type="button" class="quick-tag-chip"
+                  onclick="addRemarkTag('💧 No leakage or defect observed.')">+ No Leakage</button>
+                <button type="button" class="quick-tag-chip"
+                  onclick="addRemarkTag('✨ Good container integrity and finish.')">+ Good Integrity</button>
+                <button type="button" class="quick-tag-chip"
+                  onclick="addRemarkTag('⚠️ Minor outer carton dent, inner unit intact.')">+ Carton Dent</button>
               </div>
 
               <textarea id="field_Remarks" name="Remarks" class="form-control remarks-textarea" rows="5"
@@ -1765,6 +1974,48 @@
               <input type="hidden" id="field_Recommendation" name="Recommendation" value="Recommended">
             </div>
 
+            <!-- 1. DATA PRIVACY NOTICE & CONSENT -->
+            <div class="form-group">
+              <label class="consent-check-tile" id="tile_Data_Privacy_Consent">
+                <input type="checkbox" id="field_Data_Privacy_Consent" name="Data_Privacy_Consent" value="Yes" class="consent-check-input" onchange="syncConsentTile('Data_Privacy_Consent')">
+                <div class="consent-custom-checkbox">
+                  <svg class="consent-check-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <div class="consent-content">
+                  <div class="consent-header">
+                    <span class="consent-title">🛡️ Data Privacy Notice & Consent <span class="req">*</span></span>
+                    <span class="consent-status-pill pill-required" id="pill_Data_Privacy_Consent">Required</span>
+                  </div>
+                  <div class="consent-body">
+                    I have read and understood the Data Privacy Notice. I acknowledge that the information I provide in this evaluation will be collected, processed, stored, and used for legitimate organizational purposes, including training documentation, monitoring, evaluation, and reporting, in accordance with applicable data privacy laws and organizational policies.
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <!-- 2. ACCURACY & ELECTRONIC SIGNATURE AGREEMENT -->
+            <div class="form-group">
+              <label class="consent-check-tile" id="tile_Accuracy_Consent">
+                <input type="checkbox" id="field_Accuracy_Consent" name="Accuracy_Consent" value="Yes" class="consent-check-input" onchange="syncConsentTile('Accuracy_Consent')">
+                <div class="consent-custom-checkbox">
+                  <svg class="consent-check-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </div>
+                <div class="consent-content">
+                  <div class="consent-header">
+                    <span class="consent-title">✍️ Accuracy & Electronic Signature Agreement <span class="req">*</span></span>
+                    <span class="consent-status-pill pill-required" id="pill_Accuracy_Consent">Required</span>
+                  </div>
+                  <div class="consent-body">
+                    I confirm that the information I have provided is true and accurate, and I agree to the use of my electronic signature as confirmation of my participation and completion of this evaluation. I have reviewed my responses and consent to the electronic storage of my signature and evaluation record for official training documentation.
+                  </div>
+                </div>
+              </label>
+            </div>
+
             <!-- Digital Signature Canvas -->
             <div class="form-group">
               <label class="form-label">Evaluator Digital Signature <span class="req">*</span></label>
@@ -1776,14 +2027,6 @@
                 </div>
               </div>
               <input type="hidden" id="field_Evaluator_Signature" name="Evaluator_Signature">
-            </div>
-
-            <div class="form-group" style="margin-top: 14px;">
-              <label style="display: flex; align-items: center; gap: 8px; font-size: 0.82rem; cursor: pointer;">
-                <input type="checkbox" id="field_Accuracy_Consent" name="Accuracy_Consent" value="Yes" checked required>
-                <span>I confirm that the technical evaluation responses provided above are accurate and observed
-                  firsthand.</span>
-              </label>
             </div>
 
             <div class="stepper-actions">
@@ -1910,14 +2153,77 @@
     <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 480px;">
       <div class="modal-header">
         <div>
-          <h3 style="color: var(--primary); font-size: 1.1rem; font-weight: 800;">Select Evaluator Profile</h3>
-          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Profiles loaded from
-            Evaluator_Accounts sheet</p>
+          <h3 style="color: var(--primary); font-size: 1.1rem; font-weight: 800;">Evaluator Profile</h3>
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Synchronized with Evaluator_Accounts sheet</p>
         </div>
         <button class="modal-close" onclick="closeAccountModal()">&times;</button>
       </div>
+      
+      <!-- Current Active Account Banner -->
+      <div id="currentAccountBanner" style="background: #F8FAFC; border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+        <!-- Injected dynamically -->
+      </div>
+
+      <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
+        Registered Evaluators Roster
+      </div>
       <div class="account-picker-list" id="accountPickerList">
         <!-- Roster injected here -->
+      </div>
+
+      <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); display: flex; gap: 10px;">
+        <button type="button" class="btn btn-outline" style="flex: 1; font-size: 0.85rem;" onclick="promptSwitchEmail()">
+          🔑 Switch with Email
+        </button>
+        <button type="button" class="btn btn-outline" style="flex: 1; font-size: 0.85rem; color: var(--danger); border-color: #FECACA;" onclick="logoutEvaluator()">
+          🚪 Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Evaluator Authentication Gate Modal -->
+  <div id="authGateModal" class="modal-overlay" style="z-index: 150;" onclick="handleAuthGateOverlayClick(event)">
+    <div class="modal-content auth-gate-card" onclick="event.stopPropagation()">
+      <div style="display: flex; justify-content: flex-end;">
+        <button type="button" class="modal-close" id="authGateCloseBtn" onclick="closeAuthGateModal()" style="display: none;">&times;</button>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 18px;">
+        <div class="auth-gate-icon">🔐</div>
+        <h2 style="color: var(--primary); font-size: 1.25rem; font-weight: 800; margin-bottom: 6px;">Evaluator Sign-In</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">
+          Official PPMP Technical Evaluation Portal.<br>
+          Enter your registered email to unlock your assigned role.
+        </p>
+      </div>
+
+      <div id="authGateMsg" class="auth-msg-box" style="display: none;"></div>
+
+      <form onsubmit="handleAuthGateFormSubmit(event)" style="display: flex; flex-direction: column; gap: 14px;">
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="authGateEmail" style="font-weight: 700; font-size: 0.82rem; color: var(--text);">
+            Registered Hospital Email Address
+          </label>
+          <div style="position: relative;">
+            <input type="email" id="authGateEmail" class="form-control" placeholder="e.g. menardarellano@gmail.com"
+              required autocomplete="email" autocapitalize="none" autocorrect="off"
+              style="padding-left: 38px; font-size: 0.95rem;">
+            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: var(--text-muted);">✉️</span>
+          </div>
+        </div>
+
+        <button type="submit" id="authGateSubmitBtn" class="btn btn-primary" style="padding: 12px; font-weight: 700; font-size: 0.95rem; width: 100%;">
+          <span>🔑 Verify & Access Portal</span>
+        </button>
+      </form>
+
+      <div class="auth-gate-tip">
+        <span style="font-size: 1.1rem; line-height: 1;">📱</span>
+        <div>
+          <strong style="color: var(--primary); display: block; margin-bottom: 2px;">Mobile 1-Tap Access</strong>
+          <span>If you received an invitation email, open the link directly on your phone to be authenticated automatically without typing.</span>
+        </div>
       </div>
     </div>
   </div>
@@ -2007,6 +2313,18 @@
 
   <!-- APPLICATION LOGIC SCRIPT -->
   <script>
+    // Server-injected URL parameter (via doGet HtmlTemplate)
+    const SERVER_PARAM_EMAIL = "<?= typeof paramEmail !== 'undefined' ? paramEmail : '' ?>";
+
+    // Client-side URL query parameter reader
+    function getQueryParam(key) {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has(key)) return urlParams.get(key);
+      } catch (e) {}
+      return "";
+    }
+
     // Default Canonical Questions (Synchronized with Questionnaire tab schema)
     const PART1_QUESTIONS_DEFAULT = [
       { id: "P1_01_Brand_Name", text: "Product Name", options: ["Yes", "No", "N/A"] },
@@ -2413,49 +2731,110 @@
       localStorage.setItem("ppmp_saved_account", JSON.stringify(acc));
 
       // Update Header
-      document.getElementById("headerAvatar").innerText = (acc.name || "U").charAt(0).toUpperCase();
+      const initial = (acc.name || acc.accountId || "U").charAt(0).toUpperCase();
+      document.getElementById("headerAvatar").innerText = initial;
       document.getElementById("headerUserName").innerText = acc.name || acc.accountId;
       document.getElementById("headerUserRole").innerText = acc.role || "Evaluator";
 
       // Update Form Fields
       document.getElementById("field_Evaluator").value = acc.role;
       document.getElementById("field_evaluatorName").value = acc.name;
-      document.getElementById("field_evaluatorEmail").value = acc.accountId || acc.email;
+      document.getElementById("field_evaluatorEmail").value = acc.email || acc.accountId;
 
       // Update UI Banner & Summary Badges
-      document.getElementById("lockdownAccountLabel").innerText = `${acc.name} (${acc.role})`;
-      document.getElementById("summaryRoleBadge").innerText = `${acc.name} • ${acc.role}`;
+      const lockdownLabel = document.getElementById("lockdownAccountLabel");
+      if (lockdownLabel) lockdownLabel.innerText = `${acc.name} (${acc.role})`;
+      const summaryBadge = document.getElementById("summaryRoleBadge");
+      if (summaryBadge) summaryBadge.innerText = `${acc.name} • ${acc.role}`;
 
-      // Lock Role Cards
+      // Lock Role Cards: Show ONLY assigned role card centered; hide other 2 completely
       const roleCards = {
         "End-user": document.getElementById("roleCardEndUser"),
         "Nurse": document.getElementById("roleCardNurse"),
         "Pharmacist": document.getElementById("roleCardPharma")
       };
 
+      const userRole = (acc.role || "").toLowerCase().trim();
+
       Object.keys(roleCards).forEach(r => {
         const card = roleCards[r];
         if (card) {
-          card.classList.toggle("selected", r.toLowerCase() === acc.role.toLowerCase());
+          const match = r.toLowerCase().trim() === userRole;
+          card.classList.toggle("selected", match);
+          card.style.display = match ? "flex" : "none";
+        }
+      });
+    }
+
+    function clearUserAccount() {
+      currentAccount = null;
+      localStorage.removeItem("ppmp_saved_account");
+
+      document.getElementById("headerAvatar").innerText = "?";
+      document.getElementById("headerUserName").innerText = "Sign In Required";
+      document.getElementById("headerUserRole").innerText = "Tap to Sign In";
+
+      document.getElementById("field_Evaluator").value = "";
+      document.getElementById("field_evaluatorName").value = "";
+      document.getElementById("field_evaluatorEmail").value = "";
+
+      const lockdownLabel = document.getElementById("lockdownAccountLabel");
+      if (lockdownLabel) lockdownLabel.innerText = "No evaluator signed in";
+      const summaryBadge = document.getElementById("summaryRoleBadge");
+      if (summaryBadge) summaryBadge.innerText = "Sign In Required";
+
+      ["roleCardEndUser", "roleCardNurse", "roleCardPharma"].forEach(id => {
+        const card = document.getElementById(id);
+        if (card) {
+          card.classList.remove("selected");
+          card.style.display = "flex";
         }
       });
     }
 
     function openAccountSwitcher() {
+      if (!currentAccount) {
+        openAuthGateModal(false);
+        return;
+      }
+
+      const bannerEl = document.getElementById("currentAccountBanner");
+      if (bannerEl) {
+        const roleClass = currentAccount.role === "Pharmacist" ? "badge-success" : (currentAccount.role === "Nurse" ? "badge-warning" : "badge-neutral");
+        bannerEl.innerHTML = `
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem;">
+                ${(currentAccount.name || "U").charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <strong style="color: var(--primary); font-size: 0.95rem; display: block;">${escapeHtml(currentAccount.name)}</strong>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">${escapeHtml(currentAccount.email || currentAccount.accountId)}</span>
+              </div>
+            </div>
+            <span class="badge ${roleClass}">${escapeHtml(currentAccount.role)}</span>
+          </div>
+          <div style="margin-top: 10px; font-size: 0.75rem; color: #047857; display: flex; align-items: center; gap: 5px;">
+            <span>✓</span> <span>Device authenticated & role locked</span>
+          </div>
+        `;
+      }
+
       const listEl = document.getElementById("accountPickerList");
       if (registeredAccounts.length === 0) {
         listEl.innerHTML = `<p style="text-align: center; color: var(--text-muted); padding: 20px;">No registered accounts found in Evaluator_Accounts sheet.</p>`;
       } else {
         listEl.innerHTML = registeredAccounts.map(acc => {
-          const isCurrent = currentAccount && (currentAccount.accountId === acc.accountId || currentAccount.email === acc.email);
+          const isCurrent = currentAccount && ((currentAccount.email || currentAccount.accountId || "").toLowerCase() === (acc.email || acc.accountId || "").toLowerCase());
+          const roleClass = acc.role === "Pharmacist" ? "badge-success" : (acc.role === "Nurse" ? "badge-warning" : "badge-neutral");
           return `
-            <div class="account-item-card ${isCurrent ? 'current' : ''}" onclick="selectAccountFromPicker('${acc.accountId}')">
+            <div class="account-item-card ${isCurrent ? 'current' : ''}" onclick="selectAccountFromPicker('${escapeHtml(acc.accountId || acc.email)}')">
               <div>
-                <strong style="color: var(--primary); font-size: 0.9rem;">${acc.name || acc.accountId}</strong>
-                <div style="font-size: 0.75rem; color: var(--text-muted);">${acc.accountId}</div>
+                <strong style="color: var(--primary); font-size: 0.9rem;">${escapeHtml(acc.name || acc.accountId)}</strong>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(acc.email || acc.accountId)}</div>
               </div>
-              <span class="badge ${acc.role === 'Pharmacist' ? 'badge-success' : (acc.role === 'Nurse' ? 'badge-warning' : 'badge-neutral')}">
-                ${acc.role}
+              <span class="badge ${roleClass}">
+                ${escapeHtml(acc.role)}
               </span>
             </div>
           `;
@@ -2469,7 +2848,7 @@
     }
 
     function selectAccountFromPicker(accId) {
-      const found = registeredAccounts.find(a => a.accountId === accId);
+      const found = registeredAccounts.find(a => a.accountId === accId || a.email === accId);
       if (found) {
         applyUserAccount(found);
         showToast(`✅ Profile switched to ${found.name} (${found.role})`);
@@ -2477,11 +2856,178 @@
       closeAccountModal();
     }
 
+    function promptSwitchEmail() {
+      closeAccountModal();
+      openAuthGateModal(true);
+    }
+
+    function logoutEvaluator() {
+      if (confirm("Sign out of this device? You can sign in anytime using your registered email or invitation link.")) {
+        clearUserAccount();
+        closeAccountModal();
+        openAuthGateModal(false);
+        showToast("ℹ️ Signed out successfully.");
+      }
+    }
+
+    // Evaluator Authentication Gate Modal Controller
+    function openAuthGateModal(allowClose) {
+      const modal = document.getElementById("authGateModal");
+      if (!modal) return;
+
+      const closeBtn = document.getElementById("authGateCloseBtn");
+      if (closeBtn) {
+        closeBtn.style.display = (allowClose || currentAccount) ? "block" : "none";
+      }
+
+      const emailInput = document.getElementById("authGateEmail");
+      if (emailInput) {
+        emailInput.value = currentAccount ? (currentAccount.email || currentAccount.accountId || "") : "";
+        setTimeout(() => emailInput.focus(), 250);
+      }
+
+      const msgBox = document.getElementById("authGateMsg");
+      if (msgBox) {
+        msgBox.style.display = "none";
+        msgBox.innerHTML = "";
+      }
+
+      const btn = document.getElementById("authGateSubmitBtn");
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = "<span>🔑 Verify & Access Portal</span>";
+      }
+
+      modal.classList.add("active");
+    }
+
+    function closeAuthGateModal() {
+      const modal = document.getElementById("authGateModal");
+      if (modal) modal.classList.remove("active");
+    }
+
+    function handleAuthGateOverlayClick(e) {
+      if (currentAccount) {
+        closeAuthGateModal();
+      }
+    }
+
+    function handleAuthGateFormSubmit(e) {
+      e.preventDefault();
+      submitAuthGate();
+    }
+
+    function submitAuthGate() {
+      const emailInput = document.getElementById("authGateEmail");
+      const msgBox = document.getElementById("authGateMsg");
+      const btn = document.getElementById("authGateSubmitBtn");
+      if (!emailInput) return;
+
+      const rawEmail = emailInput.value.trim().toLowerCase();
+      if (!rawEmail) {
+        showAuthError("Please enter your registered hospital email address.");
+        emailInput.focus();
+        return;
+      }
+
+      if (!rawEmail.includes("@") || !rawEmail.includes(".")) {
+        showAuthError("Please enter a valid email address (e.g., name@gmail.com).");
+        emailInput.focus();
+        return;
+      }
+
+      // Show verifying spinner
+      btn.disabled = true;
+      btn.innerHTML = `<span class="spinner" style="width: 16px; height: 16px; border-width: 2px; margin-right: 8px;"></span> Verifying...`;
+
+      // 1. Check client-side cached accounts
+      const matched = registeredAccounts.find(a => {
+        const aEmail = (a.email || a.accountId || "").toLowerCase().trim();
+        const aId = (a.accountId || "").toLowerCase().trim();
+        return aEmail === rawEmail || aId === rawEmail;
+      });
+
+      if (matched) {
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = "<span>🔑 Verify & Access Portal</span>";
+          completeAuthentication(matched);
+        }, 300);
+        return;
+      }
+
+      // 2. Query backend verifyEvaluatorEmail
+      if (typeof google !== "undefined" && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(res) {
+            btn.disabled = false;
+            btn.innerHTML = "<span>🔑 Verify & Access Portal</span>";
+            if (res && res.success && res.account) {
+              if (!registeredAccounts.some(a => a.accountId === res.account.accountId)) {
+                registeredAccounts.push(res.account);
+              }
+              completeAuthentication(res.account);
+            } else {
+              showAuthError(res && res.message ? res.message : `Access Denied: The email '${rawEmail}' is not registered as an official evaluator.`);
+            }
+          })
+          .withFailureHandler(function(err) {
+            btn.disabled = false;
+            btn.innerHTML = "<span>🔑 Verify & Access Portal</span>";
+            showAuthError("Server verification error: " + err.toString());
+          })
+          .verifyEvaluatorEmail(rawEmail);
+      } else {
+        setTimeout(() => {
+          btn.disabled = false;
+          btn.innerHTML = "<span>🔑 Verify & Access Portal</span>";
+          showAuthError(`Access Denied: The email '${rawEmail}' is not registered in the Evaluator Accounts roster.`);
+        }, 500);
+      }
+    }
+
+    function showAuthError(message) {
+      const msgBox = document.getElementById("authGateMsg");
+      if (msgBox) {
+        msgBox.className = "auth-msg-box auth-msg-error";
+        msgBox.innerHTML = `⚠️ ${escapeHtml(message)}`;
+        msgBox.style.display = "block";
+      }
+    }
+
+    function completeAuthentication(acc) {
+      applyUserAccount(acc);
+      closeAuthGateModal();
+      showToast(`✅ Welcome, ${acc.name}! (${acc.role})`);
+    }
+
     // Recommendation Selection
     function selectRecommendation(rec, card) {
       document.getElementById("field_Recommendation").value = rec;
       document.querySelectorAll(".rec-card").forEach(c => c.classList.remove("selected"));
       card.classList.add("selected");
+    }
+
+    // Legal & Compliance Consent Tile Synchronization
+    function syncConsentTile(field) {
+      const checkbox = document.getElementById(`field_${field}`);
+      const tile = document.getElementById(`tile_${field}`);
+      const pill = document.getElementById(`pill_${field}`);
+      if (!checkbox || !tile) return;
+
+      if (checkbox.checked) {
+        tile.classList.add("checked");
+        if (pill) {
+          pill.className = "consent-status-pill pill-agreed";
+          pill.innerText = "✓ Agreed";
+        }
+      } else {
+        tile.classList.remove("checked");
+        if (pill) {
+          pill.className = "consent-status-pill pill-required";
+          pill.innerText = "Required";
+        }
+      }
     }
 
     // Reconstitution Toggle
@@ -2509,6 +3055,13 @@
     // Stepper Navigation
     function goToStep(step) {
       if (step < 1 || step > 5) return;
+
+      // Ensure evaluator is authenticated before filling form
+      if (!currentAccount) {
+        showToast("⚠️ Authentication required: Please sign in with your registered email.");
+        openAuthGateModal(false);
+        return;
+      }
 
       // Basic validation when advancing from Step 1
       if (currentStep === 1 && step > 1) {
@@ -2738,22 +3291,63 @@
 
       registeredAccounts = res.accounts || [];
 
-      // Determine active evaluator account
+      // Determine active evaluator account via 4-stage resolution
       let matched = null;
-      if (res.userSession && res.userSession.detectedAccount) {
-        matched = res.userSession.detectedAccount;
-      } else {
-        const saved = localStorage.getItem("ppmp_saved_account");
-        if (saved) {
-          try { matched = JSON.parse(saved); } catch (e) { }
+
+      // 1. Check URL parameters (?email=... or ?evaluator=...)
+      const urlEmail = (typeof SERVER_PARAM_EMAIL !== "undefined" && SERVER_PARAM_EMAIL) 
+        ? SERVER_PARAM_EMAIL 
+        : (getQueryParam("email") || getQueryParam("evaluator"));
+
+      if (urlEmail) {
+        const cleanUrlEmail = urlEmail.trim().toLowerCase();
+        matched = registeredAccounts.find(a => {
+          const aEmail = (a.email || a.accountId || "").toLowerCase().trim();
+          const aId = (a.accountId || "").toLowerCase().trim();
+          return aEmail === cleanUrlEmail || aId === cleanUrlEmail;
+        });
+        if (matched) {
+          localStorage.setItem("ppmp_saved_account", JSON.stringify(matched));
+          showToast(`👋 Welcome, ${matched.name}! (${matched.role})`);
+          try {
+            if (window.history && window.history.replaceState) {
+              window.history.replaceState({}, document.title, window.location.pathname);
+            }
+          } catch (e) {}
+        } else {
+          showToast(`⚠️ Personal link email '${urlEmail}' was not found in Evaluator Accounts.`);
         }
       }
 
-      if (!matched && registeredAccounts.length > 0) {
-        matched = registeredAccounts[0]; // fallback default
+      // 2. Check persistent localStorage from prior mobile session
+      if (!matched) {
+        const saved = localStorage.getItem("ppmp_saved_account");
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            matched = registeredAccounts.find(a => {
+              const aEmail = (a.email || a.accountId || "").toLowerCase().trim();
+              const pEmail = (parsed.email || parsed.accountId || "").toLowerCase().trim();
+              return aEmail === pEmail;
+            }) || parsed;
+          } catch (e) {}
+        }
       }
 
-      applyUserAccount(matched);
+      // 3. Check Google Apps Script session if available
+      if (!matched && res.userSession && res.userSession.detectedAccount) {
+        matched = res.userSession.detectedAccount;
+        localStorage.setItem("ppmp_saved_account", JSON.stringify(matched));
+      }
+
+      // 4. Apply authenticated profile or activate Auth Gate modal
+      if (matched) {
+        applyUserAccount(matched);
+        closeAuthGateModal();
+      } else {
+        clearUserAccount();
+        openAuthGateModal(false);
+      }
 
       // Dynamically inject questionnaire from Questionnaire tab repository
       if (res && res.questionnaire) {
@@ -2940,6 +3534,24 @@
     function handleFormSubmit(e) {
       e.preventDefault();
 
+      if (!currentAccount) {
+        showToast("⚠️ Authentication required: Please sign in with your registered email before submitting.");
+        openAuthGateModal(false);
+        return;
+      }
+
+      const dpChecked = document.getElementById("field_Data_Privacy_Consent").checked;
+      const accChecked = document.getElementById("field_Accuracy_Consent").checked;
+
+      if (!dpChecked) {
+        showToast("⚠️ Please acknowledge and check the Data Privacy Notice.");
+        return;
+      }
+      if (!accChecked) {
+        showToast("⚠️ Please agree to truthfulness and check the Electronic Signature Agreement.");
+        return;
+      }
+
       if (!hasSignature) {
         showToast("⚠️ Please draw your signature before submitting.");
         return;
@@ -2949,6 +3561,9 @@
       const formData = new FormData(form);
       const payload = {};
       formData.forEach((val, key) => { payload[key] = val; });
+
+      payload.Data_Privacy_Consent = "Yes";
+      payload.Accuracy_Consent = "Yes";
 
       // Ensure ultra-compact signature (downscaled to 400x150, ~20KB) is dispatched
       payload.Evaluator_Signature = getOptimizedSignatureDataUrl();
@@ -2986,7 +3601,9 @@
               Evaluator: payload.Evaluator || "Pharmacist",
               Part_I_Score: "100.0%",
               Part_II_Score: "100.0%",
-              Recommendation: payload.Recommendation || "Recommended"
+              Recommendation: payload.Recommendation || "Recommended",
+              Data_Privacy_Consent: "Yes",
+              Accuracy_Consent: "Yes"
             }
           });
         }, 1500);
@@ -3002,7 +3619,7 @@
         // Complete the modal progress bar with checkmark animation
         completeSubmissionProgress(true, res.evaluationId);
         showToast(`✅ Submitted! Unique ID: ${res.evaluationId.substring(0, 8)}...`);
-        
+
         // Instant in-memory cache update (No slow network re-download!)
         if (res.newEvaluation) {
           allEvaluations.unshift(res.newEvaluation);
@@ -3015,6 +3632,8 @@
         // Reset form ready for next evaluation
         document.getElementById("evalForm").reset();
         clearSignature();
+        syncConsentTile("Data_Privacy_Consent");
+        syncConsentTile("Accuracy_Consent");
         updateRemarksCounter();
         setReconstitution(false);
         setAllValues("P1", "Yes");
@@ -3209,6 +3828,13 @@
             <div style="background: white; border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 0.85rem; margin-top: 4px; white-space: pre-wrap;">
               ${escapeHtml(item.Remarks)}
             </div>
+          </div>
+        ` : ""}
+
+        ${item.Data_Privacy_Consent === "Yes" || item.Accuracy_Consent === "Yes" ? `
+          <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; font-size: 0.78rem; color: #166534; display: flex; align-items: center; gap: 8px;">
+            <span>🛡️</span>
+            <span><strong>Compliance Verified:</strong> Data Privacy Notice accepted (${escapeHtml(item.Data_Privacy_Consent || "Yes")}) & Truthfulness / E-Signature confirmed (${escapeHtml(item.Accuracy_Consent || "Yes")}).</span>
           </div>
         ` : ""}
 
