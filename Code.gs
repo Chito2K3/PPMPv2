@@ -1714,7 +1714,7 @@ function createChecklistReportSheet(silent) {
     sheet.setRowHeight(sigRow, 24);
     
     sheet.getRange(sigRow + 1, 1, 1, 3).merge().setFormula("=\"Official Role: \" & IF(ISNUMBER($H$3), IFERROR(INDEX('" + hName + "'!$G:$G, $H$3), $G$3), $G$3)").setFontStyle("italic").setVerticalAlignment("middle");
-    sheet.getRange(sigRow + 1, 4, 1, 4).merge().setFormula("=IF(NOT(ISNUMBER($H$3)), \"Signature: _______________________\", IF(ISBLANK(INDEX('" + hName + "'!$AM:$AM, $H$3)), \"Signature: _______________________\", IF(ISNUMBER(SEARCH(\"http\", INDEX('" + hName + "'!$AM:$AM, $H$3))), IMAGE(INDEX('" + hName + "'!$AM:$AM, $H$3)), \"☑ Signed via Web App\")))").setFontWeight("bold").setVerticalAlignment("middle");
+    sheet.getRange(sigRow + 1, 4, 1, 4).merge().setFormula("=IF(NOT(ISNUMBER($H$3)), \"Signature: _______________________\", IF(ISBLANK(INDEX('" + hName + "'!$AM:$AM, $H$3)), \"Signature: _______________________\", IF(ISNUMBER(SEARCH(\"http\", INDEX('" + hName + "'!$AM:$AM, $H$3))), IMAGE(INDEX('" + hName + "'!$AM:$AM, $H$3), 1), \"Signature: _______________________\")))").setFontWeight("bold").setHorizontalAlignment("center").setVerticalAlignment("middle");
     sheet.setRowHeight(sigRow + 1, 60); // Generous height to render signature image cleanly!
     
     // Apply grid borders to tables
@@ -2042,7 +2042,39 @@ function syncHorizontalReport(silent) {
       var p2Score = getVal(row, ["Part_II_Score", "Part II Score", "Part2_Score", "Part2Score", "Score_Part_II"]);
       var remarks = getVal(row, ["Remarks", "Remark", "Comments", "Notes"]);
       var rec = (getVal(row, ["Recommendation", "Verdict", "Decision", "Status"]) || "").toString().trim();
-      var signature = getVal(row, ["Evaluator_Signature", "Signature", "Digital_Signature", "Sign", "Signature_URL"]);
+      var signature = (getVal(row, ["Evaluator_Signature", "Signature", "Digital_Signature", "Sign", "Signature_URL"]) || "").toString().trim();
+      
+      // Auto-migrate any base64 signature in master sheet to a permanent Drive thumbnail image
+      if (signature && signature.indexOf("data:image") === 0) {
+        var convertedUrl = saveBase64SignatureToDrive(signature, evalId);
+        if (convertedUrl) {
+          signature = convertedUrl;
+          var sigColIdx = colMap[norm("Evaluator_Signature")];
+          if (sigColIdx === undefined) sigColIdx = colMap[norm("Signature")];
+          if (sigColIdx === undefined) sigColIdx = colMap[norm("Digital_Signature")];
+          if (sigColIdx !== undefined) {
+            try { masterSheet.getRange(i + 1, sigColIdx + 1).setValue(convertedUrl); } catch (eUp) {}
+          }
+        }
+      } else if (signature && signature.indexOf("drive.google.com") !== -1) {
+        var matchId = signature.match(/id=([a-zA-Z0-9_-]+)/);
+        if (matchId && matchId[1]) {
+          var fileId = matchId[1];
+          try {
+            var f = DriveApp.getFileById(fileId);
+            f.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+          } catch (eF) {}
+          var thumbUrl = "https://drive.google.com/thumbnail?id=" + fileId + "&sz=w1000";
+          if (signature !== thumbUrl) {
+            signature = thumbUrl;
+            var sigColIdx2 = colMap[norm("Evaluator_Signature")];
+            if (sigColIdx2 === undefined) sigColIdx2 = colMap[norm("Signature")];
+            if (sigColIdx2 !== undefined) {
+              try { masterSheet.getRange(i + 1, sigColIdx2 + 1).setValue(thumbUrl); } catch (eUp2) {}
+            }
+          }
+        }
+      }
       
       var formattedRow = [
         (reportRows.length + 1), generic, brand, supplier, manufacturer, price, role, evalName, dateStr
@@ -2093,6 +2125,14 @@ function syncHorizontalReport(silent) {
       sheet.getRange(3, 39, reportRows.length, 1).setHorizontalAlignment("center"); // Col 39: Signature
       
       targetRange.setBorder(true, true, true, true, true, true, "#CBD5E1", SpreadsheetApp.BorderStyle.SOLID);
+      
+      // Auto-refresh Checklist_Report signature cell formula & row height if tab exists
+      var clSheet = ss.getSheetByName(SHEET_CHECKLIST_REPORT) || ss.getSheetByName("Checklist Report");
+      if (clSheet && clSheet.getLastRow() >= 42) {
+        var hName = sheet.getName();
+        clSheet.getRange(43, 4, 1, 4).setFormula("=IF(NOT(ISNUMBER($H$3)), \"Signature: _______________________\", IF(ISBLANK(INDEX('" + hName + "'!$AM:$AM, $H$3)), \"Signature: _______________________\", IF(ISNUMBER(SEARCH(\"http\", INDEX('" + hName + "'!$AM:$AM, $H$3))), IMAGE(INDEX('" + hName + "'!$AM:$AM, $H$3), 1), \"Signature: _______________________\")))").setFontWeight("bold").setHorizontalAlignment("center").setVerticalAlignment("middle");
+        clSheet.setRowHeight(43, 60);
+      }
     }
     
     if (!silent && ui) {
@@ -2110,7 +2150,7 @@ function syncHorizontalReport(silent) {
  * Fast incremental update to Checklist_Report_Horizontal for a single evaluation.
  * Appends 1 row in ~0.2 seconds without wiping the sheet, resetting formats, or looping 39 setColumnWidth calls.
  */
-function appendOrUpdateHorizontalReportRow(rowValues) {
+function appendOrUpdateHorizontalReportRow(rowValues, activeHeaders) {
   try {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = getHorizontalReportSheet(ss);
@@ -2120,15 +2160,61 @@ function appendOrUpdateHorizontalReportRow(rowValues) {
       return;
     }
     
-    var lastRow = sheet.getLastRow();
-    var generic = rowValues[3] || "";
-    var brand = rowValues[4] || "";
-    var supplier = rowValues[5] || "";
-    var manufacturer = rowValues[6] || "";
-    var price = rowValues[7] || "";
-    var role = (rowValues[2] || "").toString().trim();
+    // Resolve activeHeaders if not provided
+    if (!activeHeaders || !Array.isArray(activeHeaders) || activeHeaders.length === 0) {
+      var masterSheet = ss.getSheetByName(SHEET_EVALUATIONS_MASTER);
+      if (masterSheet && masterSheet.getLastColumn() > 0) {
+        activeHeaders = masterSheet.getRange(1, 1, 1, masterSheet.getLastColumn()).getValues()[0];
+      } else {
+        activeHeaders = EVAL_HEADERS;
+      }
+    }
     
-    var timestamp = rowValues[1];
+    // Normalize colMap from activeHeaders
+    function normKey(s) {
+      return (s || "").toString().toLowerCase().replace(/[^a-z0-9]/g, "");
+    }
+    var colMap = {};
+    for (var h = 0; h < activeHeaders.length; h++) {
+      var nk = normKey(activeHeaders[h]);
+      if (nk) colMap[nk] = h;
+    }
+    
+    function getVal(keys) {
+      if (!Array.isArray(keys)) keys = [keys];
+      for (var k = 0; k < keys.length; k++) {
+        var target = normKey(keys[k]);
+        if (colMap[target] !== undefined) {
+          var val = rowValues[colMap[target]];
+          if (val !== undefined && val !== null && val.toString().trim() !== "") return val;
+        }
+        for (var exKey in colMap) {
+          if (exKey.indexOf(target) === 0 || target.indexOf(exKey) === 0) {
+            var val2 = rowValues[colMap[exKey]];
+            if (val2 !== undefined && val2 !== null && val2.toString().trim() !== "") return val2;
+          }
+        }
+      }
+      return "";
+    }
+    
+    var lastRow = sheet.getLastRow();
+    var generic = getVal(["Generic_Name", "Generic Name", "Generic", "Medicine", "Item_Description"]) || rowValues[3] || "";
+    var brand = (getVal(["Brand_Name", "Brand Name", "Brand"]) || rowValues[4] || "").toString().trim();
+    var supplier = (getVal(["Supplier", "Supplier_Name"]) || rowValues[5] || "").toString().trim();
+    var manufacturer = (getVal(["Manufacturer", "Manufacturer_Name"]) || rowValues[6] || "").toString().trim();
+    var price = getVal(["Price", "Unit_Price", "Cost"]) || rowValues[7] || "";
+    var role = (getVal(["Evaluator", "Evaluator_Role", "Role"]) || rowValues[2] || "").toString().trim();
+    var lowerRole = role.toLowerCase();
+    if (lowerRole.indexOf("pharma") !== -1 || lowerRole === "evaluator 3") {
+      role = "Pharmacist";
+    } else if (lowerRole.indexOf("nurse") !== -1 || lowerRole === "evaluator 2") {
+      role = "Nurse";
+    } else if (lowerRole.indexOf("end") !== -1 || lowerRole === "evaluator 1") {
+      role = "End-user";
+    }
+    
+    var timestamp = getVal(["Timestamp", "Date", "Evaluation_Date"]) || rowValues[1];
     var dateStr = "";
     if (timestamp instanceof Date) {
       dateStr = Utilities.formatDate(timestamp, "GMT+8", "yyyy-MM-dd");
@@ -2137,31 +2223,40 @@ function appendOrUpdateHorizontalReportRow(rowValues) {
     }
     
     // Determine Evaluator Name from remarks tag or default role
-    var rawRemarks = (rowValues[EVAL_HEADERS.indexOf("Remarks")] || "").toString().trim();
+    var rawRemarks = (getVal(["Remarks", "Remark", "Comments"]) || "").toString().trim();
     var evalName = role;
     var matchRemark = rawRemarks.match(/\[(?:Evaluated by|By)\s+([^\]]+)\]/i);
     if (matchRemark && matchRemark[1]) {
       evalName = matchRemark[1].trim();
+    } else {
+      var explicitName = (getVal(["Evaluator_Name", "Evaluator Name", "Name"]) || "").toString().trim();
+      if (explicitName) evalName = explicitName;
     }
     
     // Part I items (19)
     var p1Cols = [];
-    var p1Start = EVAL_HEADERS.indexOf("P1_01_Brand_Name");
-    for (var p1 = 0; p1 < 19; p1++) {
-      p1Cols.push(formatCheckmark(rowValues[p1Start + p1]));
+    for (var p1 = 1; p1 <= 19; p1++) {
+      var numStr = (p1 < 10) ? ("0" + p1) : ("" + p1);
+      var val1 = getVal(["P1_" + numStr, "P1" + numStr, "Part1_" + numStr, "Part_I_" + numStr]);
+      p1Cols.push(formatCheckmark(val1));
     }
     
     // Part II items (6)
     var p2Cols = [];
-    var p2Start = EVAL_HEADERS.indexOf("P2_01_Container_Integrity");
-    for (var p2 = 0; p2 < 6; p2++) {
-      p2Cols.push(formatCheckmark(rowValues[p2Start + p2]));
+    for (var p2 = 1; p2 <= 6; p2++) {
+      var numStr2 = "0" + p2;
+      var val2 = getVal(["P2_" + numStr2, "P2" + numStr2, "Part2_" + numStr2, "Part_II_" + numStr2]);
+      p2Cols.push(formatCheckmark(val2));
     }
     
-    var p1Score = rowValues[EVAL_HEADERS.indexOf("Part_I_Score")];
-    var p2Score = rowValues[EVAL_HEADERS.indexOf("Part_II_Score")];
-    var rec = (rowValues[EVAL_HEADERS.indexOf("Recommendation")] || "").toString().trim();
-    var sigUrl = rowValues[EVAL_HEADERS.indexOf("Evaluator_Signature")];
+    var p1Score = getVal(["Part_I_Score", "Part I Score", "Part1_Score", "Part1Score"]);
+    var p2Score = getVal(["Part_II_Score", "Part II Score", "Part2_Score", "Part2Score"]);
+    var rec = (getVal(["Recommendation", "Verdict", "Decision", "Status"]) || "").toString().trim();
+    var sigUrl = getVal(["Evaluator_Signature", "Signature", "Digital_Signature", "Sign", "Signature_URL"]);
+    if (sigUrl && sigUrl.indexOf("data:image") === 0) {
+      var driveSaved = saveBase64SignatureToDrive(sigUrl, rowValues[0]);
+      if (driveSaved) sigUrl = driveSaved;
+    }
     
     var itemNumber = Math.max(1, lastRow - 1);
     var rowNum = lastRow + 1;
@@ -2185,6 +2280,12 @@ function appendOrUpdateHorizontalReportRow(rowValues) {
     }
     if (recBg !== "#FFFFFF") {
       sheet.getRange(rowNum, 37).setBackground(recBg);
+    }
+    
+    // Ensure Checklist_Report signature row height is generous (60px) for clean rendering
+    var clSheet = ss.getSheetByName(SHEET_CHECKLIST_REPORT) || ss.getSheetByName("Checklist Report");
+    if (clSheet && clSheet.getLastRow() >= 43) {
+      try { clSheet.setRowHeight(43, 60); } catch (eHgt) {}
     }
   } catch (eH) {
     Logger.log("Error in appendOrUpdateHorizontalReportRow: " + eH.toString());
@@ -2717,32 +2818,94 @@ function getOrCreateSignaturesFolder() {
   if (cachedId) {
     try {
       var cachedFolder = DriveApp.getFolderById(cachedId);
-      if (cachedFolder) return cachedFolder;
+      if (cachedFolder) {
+        try { cachedFolder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch (eF) {}
+        return cachedFolder;
+      }
     } catch (e) {
       // Cached folder inaccessible or trashed; fall through to search/recreate
     }
   }
 
   var folderName = "PPMP_Evaluation_Signatures";
-  var folders = DriveApp.getFoldersByName(folderName);
   var folder = null;
-  if (folders.hasNext()) {
-    folder = folders.next();
-  } else {
-    folder = DriveApp.createFolder(folderName);
+
+  // 1. Try finding or creating in spreadsheet parent folder first
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var ssFile = DriveApp.getFileById(ss.getId());
+    var parents = ssFile.getParents();
+    if (parents.hasNext()) {
+      var parentFolder = parents.next();
+      var subFolders = parentFolder.getFoldersByName(folderName);
+      if (subFolders.hasNext()) {
+        folder = subFolders.next();
+      } else {
+        folder = parentFolder.createFolder(folderName);
+      }
+    }
+  } catch (eParent) {
+    Logger.log("Parent folder check: " + eParent.toString());
+  }
+
+  // 2. Fallback to Drive root search or create
+  if (!folder) {
+    var folders = DriveApp.getFoldersByName(folderName);
+    if (folders.hasNext()) {
+      folder = folders.next();
+    } else {
+      folder = DriveApp.createFolder(folderName);
+    }
+  }
+
+  if (folder) {
     try {
       folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     } catch (e) {
       Logger.log("Folder sharing: " + e.toString());
     }
-  }
-  
-  if (folder) {
     try {
       props.setProperty("PPMP_SIG_FOLDER_ID", folder.getId());
     } catch (eProp) {}
   }
   return folder;
+}
+
+/**
+ * Converts a base64 data:image URL to a permanent Google Drive image file.
+ * Returns the public Google Drive thumbnail URL suitable for Google Sheets =IMAGE().
+ */
+function saveBase64SignatureToDrive(base64DataUrl, evalId) {
+  if (!base64DataUrl || typeof base64DataUrl !== "string") return "";
+  if (base64DataUrl.indexOf("http") === 0) return base64DataUrl; // Already a URL
+  if (base64DataUrl.indexOf("data:image") !== 0) return "";
+
+  try {
+    var base64Parts = base64DataUrl.split(",");
+    if (base64Parts.length < 2) return "";
+
+    var contentType = "image/png";
+    var matchType = base64Parts[0].match(/:(.*?);/);
+    if (matchType && matchType[1]) contentType = matchType[1];
+
+    var imageBlob = Utilities.newBlob(Utilities.base64Decode(base64Parts[1]), contentType, "Sig_" + (evalId || Utilities.getUuid()) + ".png");
+    var sigFolder = getOrCreateSignaturesFolder();
+    var sigFile = sigFolder.createFile(imageBlob);
+
+    // Ensure public link viewable so Google Sheets =IMAGE() can fetch and render it!
+    try {
+      sigFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    } catch (eShare) {
+      Logger.log("Sig file share warning: " + eShare.toString());
+    }
+
+    var fileId = sigFile.getId();
+    // Return high-res thumbnail URL supported by Google Sheets =IMAGE()
+    return "https://drive.google.com/thumbnail?id=" + fileId + "&sz=w1000";
+  } catch (err) {
+    Logger.log("Error in saveBase64SignatureToDrive: " + err.toString());
+    return "";
+  }
 }
 
 /**
@@ -2788,19 +2951,12 @@ function submitEvaluationFromApp(payload) {
     }
     
     // Convert base64 canvas signature to a permanent Google Drive PNG image URL
-    if (payload.Evaluator_Signature && payload.Evaluator_Signature.indexOf("data:image") === 0) {
-      try {
-        var base64Parts = payload.Evaluator_Signature.split(",");
-        if (base64Parts.length > 1) {
-          var imageBlob = Utilities.newBlob(Utilities.base64Decode(base64Parts[1]), "image/png", "Sig_" + evalId + ".png");
-          var sigFolder = getOrCreateSignaturesFolder();
-          var sigFile = sigFolder.createFile(imageBlob);
-          // Direct web image link for Google Sheets =IMAGE() formula
-          var directImgUrl = "https://drive.google.com/uc?export=view&id=" + sigFile.getId();
-          payload.Evaluator_Signature = directImgUrl;
-        }
-      } catch (errSig) {
-        Logger.log("Signature drive upload: " + errSig.toString());
+    var rawSig = payload.Evaluator_Signature || payload.signature || payload.evaluatorSignature || payload.Digital_Signature || "";
+    if (rawSig && rawSig.indexOf("data:image") === 0) {
+      var driveSigUrl = saveBase64SignatureToDrive(rawSig, evalId);
+      if (driveSigUrl) {
+        payload.Evaluator_Signature = driveSigUrl;
+        payload.signature = driveSigUrl;
       }
     }
 
@@ -2846,30 +3002,41 @@ function submitEvaluationFromApp(payload) {
     var row = [];
     for (var i = 0; i < activeHeaders.length; i++) {
       var key = activeHeaders[i];
-      if (key === "Evaluation_ID") {
+      var normK = (key || "").toString().toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (normK === "evaluationid") {
         row.push(evalId);
-      } else if (key === "Timestamp") {
+      } else if (normK === "timestamp") {
         row.push(timestamp);
-      } else if (key === "Price") {
-        var numPrice = parseFloat(payload[key]);
-        row.push(!isNaN(numPrice) ? numPrice : (payload[key] || ""));
-      } else if (key === "Data_Privacy_Consent") {
+      } else if (normK === "price") {
+        var numPrice = parseFloat(payload[key] || payload.Price);
+        row.push(!isNaN(numPrice) ? numPrice : (payload[key] || payload.Price || ""));
+      } else if (normK === "dataprivacyconsent") {
         row.push(payload.Data_Privacy_Consent || payload.dataPrivacyConsent || "Yes");
-      } else if (key === "Accuracy_Consent") {
+      } else if (normK === "accuracyconsent") {
         row.push(payload.Accuracy_Consent || payload.accuracyConsent || "Yes");
+      } else if (normK === "evaluatorsignature" || normK === "signature" || normK === "digitalsignature") {
+        row.push(payload.Evaluator_Signature || payload.signature || payload.evaluatorSignature || payload.Digital_Signature || "");
       } else if (payload.hasOwnProperty(key)) {
         row.push(payload[key]);
       } else {
-        row.push("");
+        var foundVal = "";
+        for (var pKey in payload) {
+          if (pKey.toLowerCase().replace(/[^a-z0-9]/g, "") === normK) {
+            foundVal = payload[pKey];
+            break;
+          }
+        }
+        row.push(foundVal);
       }
     }
     
     // Pre-calculate Part I and Part II scores in memory BEFORE writing
     var scores = calculateScoresForRow(row, activeHeaders);
-    var p1Col = activeHeaders.indexOf("Part_I_Score");
-    var p2Col = activeHeaders.indexOf("Part_II_Score");
-    if (p1Col !== -1) row[p1Col] = scores.partIScore;
-    if (p2Col !== -1) row[p2Col] = scores.partIIScore;
+    for (var h = 0; h < activeHeaders.length; h++) {
+      var nH = (activeHeaders[h] || "").toString().toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (nH === "partiscore") row[h] = scores.partIScore;
+      if (nH === "partiiscore") row[h] = scores.partIIScore;
+    }
     
     // Append to Evaluations_Master atomically in a single write
     masterSheet.appendRow(row);
@@ -2902,7 +3069,7 @@ function submitEvaluationFromApp(payload) {
     
     // Fast single-row append to Horizontal report (~0.1s)
     try {
-      appendOrUpdateHorizontalReportRow(row);
+      appendOrUpdateHorizontalReportRow(row, activeHeaders);
     } catch (eSync) {
       Logger.log("Silent horizontal report sync error: " + eSync.toString());
     }

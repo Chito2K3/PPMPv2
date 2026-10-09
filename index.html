@@ -1077,6 +1077,17 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
+    .signature-container::before {
+      content: '';
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      top: 135px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.22);
+      pointer-events: none;
+      z-index: 1;
+    }
+
     .signature-container.active {
       border-color: #0D9488;
       box-shadow: 0 0 16px rgba(13, 148, 136, 0.25);
@@ -3802,10 +3813,10 @@
         const rect = canvas.getBoundingClientRect();
         const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
         const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = 3.0;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        ctx.strokeStyle = "#14B8A6";
+        ctx.strokeStyle = "#0D9488";
         ctx.lineTo(x, y);
         ctx.stroke();
       }
@@ -3839,15 +3850,8 @@
     }
 
     function drawSignatureGuide() {
+      if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
-      ctx.setLineDash([4, 4]);
-      ctx.beginPath();
-      ctx.moveTo(20, 140);
-      ctx.lineTo(canvas.width - 20, 140);
-      ctx.stroke();
-      ctx.restore();
     }
 
     function clearSignature() {
