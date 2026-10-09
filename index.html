@@ -12,26 +12,67 @@
     rel="stylesheet">
   <style>
     :root {
-      --primary: #1B365D;
-      --primary-hover: #142846;
-      --primary-light: #EBF2FA;
+      /* Obsidian Dark Base & Elevated Slate Surfaces */
+      --bg-base: #0B0F19;
+      --bg-surface: #131B2A;
+      --bg-surface-elevated: #1A2333;
+      --bg-surface-dark: #0F172A;
+      --bg-glass: rgba(15, 23, 42, 0.88);
+      --bg-glass-card: rgba(19, 27, 42, 0.92);
+
+      /* Luminous Borders & Glows */
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.09);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      --border-focus: rgba(13, 148, 136, 0.50);
+      --border-teal: rgba(13, 148, 136, 0.40);
+      --border-gold: rgba(245, 158, 11, 0.40);
+
+      /* Primary Clinical Accents (Option B: Clinical Tech Fusion) */
+      --primary: #0D9488;
+      --primary-hover: #0F766E;
+      --primary-light: rgba(13, 148, 136, 0.15);
       --accent: #0D9488;
-      --accent-hover: #0F766E;
-      --accent-light: #F0FDFA;
-      --bg: #F1F5F9;
-      --card-bg: #FFFFFF;
-      --text: #0F172A;
-      --text-muted: #64748B;
-      --border: #E2E8F0;
+      --accent-hover: #14B8A6;
+      --accent-light: rgba(13, 148, 136, 0.15);
+      --accent-teal: #0D9488;
+      --accent-teal-glow: rgba(13, 148, 136, 0.25);
+
+      /* Amber Gold Security & Lockdown Accents */
+      --accent-gold: #F59E0B;
+      --accent-gold-hover: #D97706;
+      --accent-gold-light: rgba(245, 158, 11, 0.14);
+      --accent-gold-glow: rgba(245, 158, 11, 0.25);
+
+      /* Clinical Verdict Colors */
       --success: #10B981;
-      --success-light: #ECFDF5;
+      --success-light: rgba(16, 185, 129, 0.15);
+      --success-glow: rgba(16, 185, 129, 0.25);
       --danger: #EF4444;
-      --danger-light: #FEF2F2;
+      --danger-light: rgba(239, 68, 68, 0.15);
+      --danger-glow: rgba(239, 68, 68, 0.25);
       --warning: #F59E0B;
-      --warning-light: #FFFBEB;
+      --warning-light: rgba(245, 158, 11, 0.15);
+
+      /* High-Contrast Clinical Typography */
+      --text: #F8FAFC;
+      --text-primary: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-secondary: #94A3B8;
+      --text-tertiary: #64748B;
+
+      /* Structural Radii & Shadows */
       --radius: 12px;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --radius-card: 14px;
+      --radius-pill: 9999px;
+      --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.50);
+      --shadow-lg: 0 12px 36px -4px rgba(0, 0, 0, 0.70);
+      --glow-active: 0 0 20px rgba(13, 148, 136, 0.25);
+      --glow-gold: 0 0 20px rgba(245, 158, 11, 0.25);
+
+      /* Backwards-Compatibility Aliases */
+      --bg: #0B0F19;
+      --card-bg: #131B2A;
     }
 
     * {
@@ -43,29 +84,49 @@
 
     body {
       font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
+      background-color: var(--bg-base);
+      color: var(--text-primary);
       line-height: 1.5;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding-bottom: 72px;
-      /* space for bottom nav on mobile */
+      padding-bottom: 96px; /* space for mobile floating dock */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Modern Sleek Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-base);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(13, 148, 136, 0.40);
     }
 
     /* Top App Bar */
     .app-header {
-      background: linear-gradient(135deg, #1B365D 0%, #0D9488 100%);
-      color: white;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-primary);
       padding: 12px 20px;
       position: sticky;
       top: 0;
       z-index: 50;
-      box-shadow: var(--shadow);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.40);
     }
 
     .header-content {
-      max-width: 1000px;
+      max-width: 1040px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -80,57 +141,69 @@
     }
 
     .app-icon {
-      font-size: 26px;
-      background: rgba(255, 255, 255, 0.18);
       width: 42px;
       height: 42px;
+      background: rgba(13, 148, 136, 0.15);
+      border: 1px solid rgba(13, 148, 136, 0.35);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 12px;
-      backdrop-filter: blur(4px);
+      color: #14B8A6;
+      box-shadow: 0 0 16px rgba(13, 148, 136, 0.25);
+      flex-shrink: 0;
+    }
+
+    .app-icon svg {
+      width: 24px;
+      height: 24px;
     }
 
     .app-title h1 {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 800;
       letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: #F8FAFC;
     }
 
     .app-title p {
       font-size: 0.72rem;
-      opacity: 0.85;
+      color: var(--text-muted);
       font-weight: 500;
     }
 
     /* User Profile Chip */
     .user-profile-badge {
-      background: rgba(255, 255, 255, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 30px;
-      padding: 5px 12px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      padding: 6px 12px;
+      border-radius: 30px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
     }
 
     .user-profile-badge:hover {
-      background: rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(13, 148, 136, 0.40);
     }
 
     .user-avatar {
-      width: 24px;
-      height: 24px;
-      background: white;
-      color: var(--primary);
+      width: 26px;
+      height: 26px;
+      background: linear-gradient(135deg, #0D9488 0%, #10B981 100%);
+      color: white;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 0.75rem;
       font-weight: 800;
+      box-shadow: 0 0 10px rgba(13, 148, 136, 0.40);
     }
 
     .user-info {
@@ -144,21 +217,25 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      color: #F8FAFC;
     }
 
     .user-role-tag {
       font-size: 0.65rem;
-      color: #99F6E4;
+      color: #14B8A6;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
     }
 
     /* Desktop Navigation Tabs */
     .desktop-nav {
-      background: white;
-      border-bottom: 1px solid var(--border);
       display: none;
+      background: rgba(19, 27, 42, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 66px;
+      z-index: 40;
     }
 
     @media (min-width: 768px) {
@@ -167,58 +244,70 @@
       }
 
       body {
-        padding-bottom: 24px;
+        padding-bottom: 32px;
       }
     }
 
     .nav-container {
-      max-width: 1000px;
+      max-width: 1040px;
       margin: 0 auto;
       display: flex;
-      gap: 8px;
+      gap: 6px;
       padding: 0 16px;
-      overflow-x: auto;
     }
 
     .nav-tab {
-      padding: 12px 18px;
-      font-size: 0.88rem;
+      padding: 14px 18px;
+      font-size: 0.86rem;
       font-weight: 600;
       color: var(--text-muted);
+      background: transparent;
       border: none;
-      background: none;
+      border-bottom: 2px solid transparent;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 8px;
-      border-bottom: 3px solid transparent;
       transition: all 0.2s ease;
       white-space: nowrap;
     }
 
+    .nav-tab svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
     .nav-tab:hover {
-      color: var(--primary);
+      color: #F8FAFC;
     }
 
     .nav-tab.active {
-      color: var(--primary);
-      border-bottom-color: var(--accent);
-      background-color: #F8FAFC;
+      color: #14B8A6;
+      border-bottom-color: #0D9488;
+      font-weight: 700;
     }
 
-    /* Mobile Bottom Navigation */
+    /* Mobile Floating Glassmorphic Dock */
     .mobile-nav {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      border-top: 1px solid var(--border);
+      bottom: 12px;
+      left: 14px;
+      right: 14px;
+      max-width: 520px;
+      margin: 0 auto;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 22px;
+      height: 64px;
       display: flex;
+      align-items: center;
       justify-content: space-around;
-      padding: 6px 4px;
-      z-index: 50;
-      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+      padding: 4px 6px;
+      z-index: 100;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 1px 1px rgba(255, 255, 255, 0.08);
     }
 
     @media (min-width: 768px) {
@@ -233,32 +322,43 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: none;
+      gap: 3px;
+      background: transparent;
       border: none;
-      padding: 4px;
-      font-size: 0.65rem;
-      font-weight: 600;
       color: var(--text-muted);
+      font-size: 0.68rem;
+      font-weight: 600;
       cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s;
+      padding: 6px 4px;
+      border-radius: 14px;
+      transition: all 0.2s ease;
+      min-height: 48px;
     }
 
-    .mobile-nav-btn span.icon {
-      font-size: 1.25rem;
-      margin-bottom: 2px;
+    .mobile-nav-btn svg {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.2s ease;
+      stroke-width: 2;
     }
 
     .mobile-nav-btn.active {
-      color: var(--accent);
+      color: #14B8A6;
+      background: rgba(13, 148, 136, 0.16);
+      box-shadow: 0 0 14px rgba(13, 148, 136, 0.20);
+    }
+
+    .mobile-nav-btn.active svg {
+      transform: translateY(-1px) scale(1.08);
+      stroke: #14B8A6;
     }
 
     /* Container */
     .main-wrapper {
-      max-width: 900px;
+      max-width: 1040px;
+      margin: 0 auto;
       width: 100%;
-      margin: 16px auto;
-      padding: 0 16px;
+      padding: 16px;
       flex: 1;
     }
 
@@ -269,15 +369,14 @@
 
     .view-panel.active {
       display: block;
-      animation: fadeIn 0.25s ease-in-out;
+      animation: fadeIn 0.22s ease-out;
     }
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(6px);
+        transform: translateY(4px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -286,178 +385,217 @@
 
     /* Card System */
     .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-subtle);
+      padding: 22px;
       box-shadow: var(--shadow);
-      padding: 20px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s ease;
     }
 
     .card-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 14px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #F8FAFC;
+      margin-bottom: 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      letter-spacing: -0.01em;
+      gap: 10px;
+    }
+
+    .card-title-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title-left svg {
+      width: 20px;
+      height: 20px;
+      color: #14B8A6;
     }
 
     /* Role Lockdown Notice */
     .lockdown-banner {
-      background: var(--accent-light);
-      border: 1px solid #99F6E4;
-      border-radius: 10px;
-      padding: 10px 14px;
+      background: rgba(245, 158, 11, 0.10);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
-      font-size: 0.82rem;
+      gap: 12px;
     }
 
     .lockdown-left {
       display: flex;
       align-items: center;
-      gap: 8px;
-      color: #0F766E;
-      font-weight: 600;
+      gap: 10px;
+      font-size: 0.82rem;
+      color: #FBBF24;
+      font-weight: 500;
+    }
+
+    .lockdown-left svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: #F59E0B;
     }
 
     .lockdown-switch-btn {
-      background: white;
-      border: 1px solid #99F6E4;
-      padding: 4px 10px;
+      font-size: 0.75rem;
+      background: rgba(245, 158, 11, 0.16);
+      border: 1px solid rgba(245, 158, 11, 0.45);
+      color: #FBBF24;
+      padding: 5px 12px;
       border-radius: 6px;
-      color: #0D9488;
-      font-weight: 700;
-      font-size: 0.72rem;
       cursor: pointer;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: all 0.2s;
     }
 
-    /* Stepper / Progress Bar */
+    .lockdown-switch-btn:hover {
+      background: rgba(245, 158, 11, 0.28);
+    }
+
+    /* Illuminated Stepper Pipeline */
     .stepper {
       display: flex;
+      align-items: center;
       justify-content: space-between;
       position: relative;
-      margin-bottom: 24px;
-      padding: 0 8px;
+      margin: 12px 0 22px 0;
+      padding: 16px 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow);
     }
 
     .stepper::before {
       content: '';
       position: absolute;
-      top: 18px;
-      left: 24px;
-      right: 24px;
+      top: 35px;
+      left: 36px;
+      right: 36px;
       height: 3px;
-      background: var(--border);
+      background: rgba(255, 255, 255, 0.08);
       z-index: 1;
     }
 
     .stepper-progress {
       position: absolute;
-      top: 18px;
-      left: 24px;
+      top: 35px;
+      left: 36px;
       height: 3px;
-      background: var(--accent);
-      z-index: 1;
-      transition: width 0.3s ease;
+      background: linear-gradient(90deg, #0D9488 0%, #10B981 100%);
+      z-index: 2;
+      transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 12px rgba(13, 148, 136, 0.50);
     }
 
     .step-item {
       position: relative;
-      z-index: 2;
+      z-index: 3;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
       cursor: pointer;
     }
 
     .step-circle {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      background: white;
-      border: 3px solid var(--border);
+      background: #0B0F19;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-muted);
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      transition: all 0.3s ease;
+      font-size: 0.88rem;
+      transition: all 0.25s ease;
     }
 
     .step-item.active .step-circle {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: white;
-      box-shadow: 0 0 0 4px var(--accent-light);
+      background: rgba(13, 148, 136, 0.25);
+      border-color: #0D9488;
+      color: #FFFFFF;
+      box-shadow: 0 0 16px rgba(13, 148, 136, 0.45);
+      transform: scale(1.08);
     }
 
     .step-item.completed .step-circle {
-      border-color: var(--accent);
-      background: var(--accent);
-      color: white;
+      background: #10B981;
+      border-color: #10B981;
+      color: #0B0F19;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.30);
     }
 
     .step-label {
       font-size: 0.72rem;
       font-weight: 600;
-      color: var(--text-muted);
+      color: var(--text-tertiary);
+      margin-top: 6px;
       text-align: center;
-      display: none;
+      transition: color 0.25s;
     }
 
-    @media (min-width: 500px) {
+    @media (max-width: 480px) {
       .step-label {
-        display: block;
+        font-size: 0.65rem;
       }
     }
 
     .step-item.active .step-label {
-      color: var(--accent);
+      color: #14B8A6;
       font-weight: 700;
     }
 
-    /* Form Elements */
+    /* Form Elements & Inputs */
     .form-group {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     .form-label {
       display: block;
       font-size: 0.82rem;
       font-weight: 700;
-      color: #334155;
       margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
+      color: #F8FAFC;
     }
 
     .form-label span.req {
-      color: var(--danger);
+      color: #EF4444;
     }
 
     .form-control {
       width: 100%;
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      font-size: 0.95rem;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: var(--bg-surface-dark);
+      color: #F8FAFC;
+      font-size: 0.92rem;
       font-family: inherit;
-      color: var(--text);
-      background: white;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      transition: all 0.2s ease;
+    }
+
+    .form-control::placeholder {
+      color: #64748B;
     }
 
     .form-control:focus {
       outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+      border-color: #0D9488;
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.25), 0 0 14px rgba(13, 148, 136, 0.15);
     }
 
     /* Grid Layouts */
@@ -473,72 +611,119 @@
       }
     }
 
-    /* Evaluator Role Selector (Locked State) */
+    /* Centered Clinical Evaluator Credential Card */
     .role-grid {
       display: flex;
       justify-content: center;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 22px;
       width: 100%;
     }
 
     .role-card {
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 14px 24px;
-      text-align: center;
-      transition: all 0.2s ease;
-      background: white;
-      opacity: 0.5;
-      cursor: not-allowed;
-      position: relative;
-      min-width: 200px;
-      max-width: 280px;
       width: 100%;
+      max-width: 460px;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      text-align: center;
+      position: relative;
+      transition: all 0.25s ease;
     }
 
     .role-card.selected {
-      border-color: var(--accent);
-      background-color: var(--accent-light);
-      box-shadow: 0 2px 4px rgba(13, 148, 136, 0.12);
-      opacity: 1;
-      cursor: default;
+      border-color: rgba(245, 158, 11, 0.50);
+      background: linear-gradient(180deg, rgba(26, 35, 51, 0.95) 0%, rgba(19, 27, 42, 0.95) 100%);
+      box-shadow: 0 0 24px -2px rgba(245, 158, 11, 0.22), 0 8px 24px rgba(0, 0, 0, 0.40);
     }
 
     .role-card .role-icon {
-      font-size: 1.6rem;
-      margin-bottom: 6px;
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: rgba(13, 148, 136, 0.15);
+      border: 1px solid rgba(13, 148, 136, 0.35);
+      color: #14B8A6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      box-shadow: 0 0 16px rgba(13, 148, 136, 0.25);
+    }
+
+    .role-card .role-icon svg {
+      width: 32px;
+      height: 32px;
     }
 
     .role-card .role-name {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text);
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #F8FAFC;
+      letter-spacing: -0.01em;
+    }
+
+    .role-card .role-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .role-card .role-verified-pill {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.14);
+      border: 1px solid rgba(245, 158, 11, 0.40);
+      color: #F59E0B;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 5px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.20);
+    }
+
+    .role-card .role-verified-pill svg {
+      width: 14px;
+      height: 14px;
     }
 
     .role-lock-badge {
       position: absolute;
-      top: 8px;
-      right: 8px;
-      font-size: 0.75rem;
-      color: var(--accent);
+      top: 14px;
+      right: 14px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      color: #F59E0B;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .role-lock-badge svg {
+      width: 14px;
+      height: 14px;
     }
 
     /* Checklist Item Component */
     .checklist-row {
-      background: #F8FAFC;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
+      background: var(--bg-surface-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px 16px;
       margin-bottom: 10px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
       transition: all 0.2s;
     }
 
@@ -553,81 +738,87 @@
     .checklist-text {
       font-size: 0.88rem;
       font-weight: 500;
-      color: #1E293B;
+      color: #F8FAFC;
       flex: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
     }
 
     .checklist-num {
       display: inline-block;
-      width: 22px;
-      height: 22px;
-      background: #E2E8F0;
-      color: #475569;
+      min-width: 24px;
+      height: 24px;
+      background: rgba(13, 148, 136, 0.15);
+      border: 1px solid rgba(13, 148, 136, 0.30);
+      color: #14B8A6;
       border-radius: 50%;
       text-align: center;
       font-size: 0.72rem;
       font-weight: 700;
       line-height: 22px;
-      margin-right: 8px;
+      flex-shrink: 0;
     }
 
     /* Segmented Buttons (Yes / No / N/A) */
     .btn-group {
       display: inline-flex;
-      border-radius: 8px;
-      background: #E2E8F0;
+      border-radius: 10px;
+      background: #0B0F19;
+      border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 3px;
       width: 100%;
       max-width: 260px;
+      flex-shrink: 0;
     }
 
     .btn-group-item {
       flex: 1;
-      padding: 6px 10px;
+      padding: 7px 10px;
       font-size: 0.8rem;
       font-weight: 700;
       border: none;
       background: transparent;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
-      color: #475569;
+      color: var(--text-muted);
       transition: all 0.15s ease;
       text-align: center;
     }
 
     .btn-group-item:hover {
-      color: #0F172A;
+      color: #F8FAFC;
     }
 
     .btn-group-item.selected-yes {
-      background: var(--success);
+      background: linear-gradient(135deg, #0D9488 0%, #10B981 100%);
       color: white;
-      box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.35);
     }
 
     .btn-group-item.selected-no {
-      background: var(--danger);
+      background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
       color: white;
-      box-shadow: 0 1px 3px rgba(239, 68, 68, 0.3);
+      box-shadow: 0 0 14px rgba(239, 68, 68, 0.35);
     }
 
     .btn-group-item.selected-na {
-      background: #64748B;
-      color: white;
-      box-shadow: 0 1px 3px rgba(100, 116, 139, 0.3);
+      background: #334155;
+      color: #F8FAFC;
+      box-shadow: 0 0 10px rgba(51, 65, 85, 0.35);
     }
 
-    /* Compliance & Legal Consent Tiles (Modern Interactive Checkbox Cards) */
+    /* Compliance & Legal Consent Tiles */
     .consent-check-tile {
       display: flex;
       align-items: flex-start;
       gap: 14px;
-      background: #FFFFFF;
-      border: 1.5px solid var(--border);
+      background: var(--bg-surface-dark);
+      border: 1.5px solid var(--border-subtle);
       border-radius: var(--radius);
       padding: 16px 18px;
       margin-bottom: 14px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.20);
       cursor: pointer;
       user-select: none;
       transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
@@ -635,16 +826,15 @@
     }
 
     .consent-check-tile:hover {
-      background: #F8FAFC;
-      border-color: #CBD5E1;
+      background: var(--bg-surface-elevated);
+      border-color: rgba(13, 148, 136, 0.35);
       transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
     }
 
     .consent-check-tile.checked {
-      background: var(--success-light);
-      border-color: var(--success);
-      box-shadow: 0 3px 12px rgba(16, 185, 129, 0.16);
+      background: rgba(16, 185, 129, 0.10);
+      border-color: #10B981;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.20);
     }
 
     .consent-check-input {
@@ -660,8 +850,8 @@
       height: 24px;
       min-width: 24px;
       border-radius: 6px;
-      border: 2px solid #CBD5E1;
-      background: #FFFFFF;
+      border: 2px solid rgba(255, 255, 255, 0.20);
+      background: #0B0F19;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -674,9 +864,9 @@
     }
 
     .consent-check-tile.checked .consent-custom-checkbox {
-      background: var(--success);
-      border-color: var(--success);
-      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+      background: #10B981;
+      border-color: #10B981;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.40);
       transform: scale(1.05);
     }
 
@@ -705,13 +895,22 @@
     .consent-title {
       font-size: 0.85rem;
       font-weight: 800;
-      color: #1E293B;
+      color: #F8FAFC;
       letter-spacing: 0.02em;
       transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .consent-title svg {
+      width: 18px;
+      height: 18px;
+      color: #14B8A6;
     }
 
     .consent-check-tile.checked .consent-title {
-      color: #065F46;
+      color: #34D399;
     }
 
     .consent-status-pill {
@@ -725,58 +924,63 @@
     }
 
     .consent-status-pill.pill-required {
-      background: #FEF2F2;
-      color: var(--danger);
-      border: 1px solid #FECACA;
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
     }
 
     .consent-status-pill.pill-agreed {
-      background: #D1FAE5;
-      color: #047857;
-      border: 1px solid #A7F3D0;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
     }
 
     .consent-body {
       font-size: 0.84rem;
       line-height: 1.55;
-      color: #475569;
+      color: var(--text-muted);
       font-weight: 500;
       transition: color 0.2s;
     }
 
     .consent-check-tile.checked .consent-body {
-      color: #1E3A2F;
+      color: #D1FAE5;
     }
 
     /* Sticky Score Banner */
     .score-banner {
-      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      background: linear-gradient(135deg, #0F172A 0%, #1A2333 100%);
+      border: 1px solid rgba(13, 148, 136, 0.30);
       color: white;
-      padding: 12px 18px;
-      border-radius: 10px;
+      padding: 14px 18px;
+      border-radius: 12px;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
     }
 
     .score-banner-title {
       font-size: 0.82rem;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      opacity: 0.85;
+      color: #F8FAFC;
     }
 
     .score-pill {
       font-size: 1.15rem;
       font-weight: 800;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(13, 148, 136, 0.20);
+      border: 1px solid #0D9488;
+      color: #14B8A6;
       padding: 4px 14px;
       border-radius: 20px;
       display: flex;
       align-items: center;
       gap: 6px;
+      box-shadow: 0 0 14px rgba(13, 148, 136, 0.30);
     }
 
     .quick-actions {
@@ -789,19 +993,27 @@
       padding: 6px 12px;
       font-size: 0.78rem;
       font-weight: 700;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: white;
-      color: #334155;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: var(--bg-surface-dark);
+      color: var(--text-muted);
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      transition: background 0.15s;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .btn-quick svg {
+      width: 14px;
+      height: 14px;
+      color: #14B8A6;
     }
 
     .btn-quick:hover {
-      background: #F1F5F9;
+      background: var(--bg-surface-elevated);
+      color: #F8FAFC;
+      border-color: rgba(13, 148, 136, 0.40);
     }
 
     /* Recommendation Choice Cards */
@@ -813,30 +1025,44 @@
     }
 
     .rec-card {
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 18px 14px;
       text-align: center;
       cursor: pointer;
-      background: white;
+      background: var(--bg-surface-dark);
       transition: all 0.2s;
+      color: var(--text-muted);
+    }
+
+    .rec-card:hover {
+      border-color: rgba(255, 255, 255, 0.20);
+      background: var(--bg-surface-elevated);
     }
 
     .rec-card.recommended.selected {
-      border-color: var(--success);
-      background: var(--success-light);
-      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+      border-color: #10B981;
+      background: rgba(16, 185, 129, 0.14);
+      color: #34D399;
+      box-shadow: 0 0 18px rgba(16, 185, 129, 0.25);
     }
 
     .rec-card.not-recommended.selected {
-      border-color: var(--danger);
-      background: var(--danger-light);
-      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+      border-color: #EF4444;
+      background: rgba(239, 68, 68, 0.14);
+      color: #F87171;
+      box-shadow: 0 0 18px rgba(239, 68, 68, 0.25);
     }
 
     .rec-icon {
-      font-size: 1.8rem;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .rec-icon svg {
+      width: 28px;
+      height: 28px;
     }
 
     .rec-label {
@@ -846,26 +1072,27 @@
 
     /* Signature Canvas Pad */
     .signature-container {
-      background: white;
-      border: 2px dashed #CBD5E1;
-      border-radius: 12px;
+      background: #0B0F19;
+      border: 2px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
       padding: 10px;
       margin-bottom: 16px;
       position: relative;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .signature-container.active {
-      border-color: var(--accent);
+      border-color: #0D9488;
+      box-shadow: 0 0 16px rgba(13, 148, 136, 0.25);
     }
 
     #signaturePad {
       width: 100%;
-      height: 180px;
-      border-radius: 8px;
-      background: #FAFBFD;
+      height: 170px;
       touch-action: none;
-      display: block;
       cursor: crosshair;
+      border-radius: 8px;
+      background: #0F172A;
     }
 
     .signature-tools {
@@ -873,75 +1100,110 @@
       justify-content: space-between;
       align-items: center;
       margin-top: 8px;
-      padding: 0 4px;
     }
 
     .signature-hint {
       font-size: 0.75rem;
       color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .signature-hint svg {
+      width: 14px;
+      height: 14px;
+      color: #14B8A6;
     }
 
     /* Stepper Action Buttons */
     .stepper-actions {
       display: flex;
       justify-content: space-between;
-      gap: 12px;
+      align-items: center;
       margin-top: 24px;
+      gap: 12px;
     }
 
     .btn {
       padding: 12px 22px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 0.9rem;
       font-weight: 700;
-      border: none;
       cursor: pointer;
+      border: none;
+      transition: all 0.2s;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .btn svg {
+      width: 18px;
+      height: 18px;
     }
 
     .btn-secondary {
-      background: #E2E8F0;
-      color: #334155;
+      background: var(--bg-surface-elevated);
+      color: var(--text-muted);
+      border: 1px solid rgba(255, 255, 255, 0.10);
     }
 
     .btn-secondary:hover {
-      background: #CBD5E1;
+      background: #243046;
+      color: #F8FAFC;
     }
 
     .btn-primary {
-      background: var(--accent);
+      background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
       color: white;
+      box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
     }
 
     .btn-primary:hover {
-      background: var(--accent-hover);
+      box-shadow: 0 6px 18px rgba(13, 148, 136, 0.50);
+      transform: translateY(-1px);
     }
 
     .btn-submit {
-      background: var(--primary);
+      background: linear-gradient(135deg, #0D9488 0%, #10B981 100%);
       color: white;
+      box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35);
       padding: 14px 28px;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
     .btn-submit:hover {
-      background: var(--primary-hover);
+      box-shadow: 0 6px 24px rgba(16, 185, 129, 0.50);
+      transform: translateY(-1px);
     }
 
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-primary);
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(13, 148, 136, 0.50);
+      background: rgba(13, 148, 136, 0.10);
+      color: #14B8A6;
     }
 
     /* List & Deck Views */
     .deck-grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 12px;
+      gap: 14px;
     }
 
     @media (min-width: 640px) {
@@ -951,125 +1213,166 @@
     }
 
     .eval-card {
-      background: white;
-      border: 1px solid var(--border);
+      background: var(--bg-surface-dark);
+      border: 1px solid var(--border-subtle);
       border-radius: 12px;
       padding: 16px;
-      box-shadow: var(--shadow);
       cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
+      transition: all 0.2s;
     }
 
     .eval-card:hover {
+      border-color: rgba(13, 148, 136, 0.40);
       transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.40);
     }
 
     .eval-card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      gap: 8px;
     }
 
     .eval-card-title {
       font-size: 0.95rem;
       font-weight: 800;
-      color: var(--primary);
-      line-height: 1.3;
+      color: #F8FAFC;
     }
 
     .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.72rem;
-      font-weight: 700;
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 14px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
     }
 
     .badge-success {
-      background: var(--success-light);
-      color: var(--success);
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.30);
     }
 
     .badge-danger {
-      background: var(--danger-light);
-      color: var(--danger);
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.30);
     }
 
     .badge-warning {
-      background: var(--warning-light);
-      color: var(--warning);
+      background: rgba(245, 158, 11, 0.15);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.30);
+    }
+
+    .badge-gold {
+      background: rgba(245, 158, 11, 0.15);
+      color: #F59E0B;
+      border: 1px solid rgba(245, 158, 11, 0.40);
     }
 
     .badge-neutral {
-      background: #F1F5F9;
-      color: #475569;
+      background: rgba(100, 116, 139, 0.15);
+      color: #94A3B8;
+      border: 1px solid rgba(100, 116, 139, 0.30);
     }
 
     .eval-meta {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       margin-bottom: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
+      line-height: 1.45;
     }
 
     .eval-scores-row {
       display: flex;
       justify-content: space-between;
-      background: #F8FAFC;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
       padding: 8px 12px;
       border-radius: 8px;
       font-size: 0.78rem;
-      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .eval-scores-row strong {
+      color: #F8FAFC;
     }
 
     /* Modal for Detailed Inspection / Account Switching */
     .modal-overlay {
       position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.80);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       z-index: 100;
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
     }
 
     .modal-overlay.active {
-      display: flex;
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .modal-content {
-      background: white;
+      background: var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 16px;
-      max-width: 650px;
+      max-width: 580px;
       width: 100%;
-      max-height: 85vh;
+      max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
       padding: 24px;
+      position: relative;
+      transform: translateY(12px);
+      transition: transform 0.25s ease;
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.70);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 12px;
+      margin-bottom: 18px;
     }
 
     .modal-close {
-      background: none;
+      background: rgba(255, 255, 255, 0.08);
       border: none;
-      font-size: 1.5rem;
-      color: var(--text-muted);
+      font-size: 1.3rem;
+      line-height: 1;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
       cursor: pointer;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.16);
+      color: #F8FAFC;
     }
 
     /* Account Selection List inside Modal */
@@ -1077,57 +1380,62 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      max-height: 380px;
+      margin-top: 12px;
+      max-height: 280px;
       overflow-y: auto;
     }
 
     .account-item-card {
-      border: 1px solid var(--border);
+      background: var(--bg-surface-dark);
+      border: 1px solid var(--border-subtle);
       border-radius: 10px;
       padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.18s ease;
     }
 
     .account-item-card:hover {
-      background: #F8FAFC;
-      border-color: var(--accent);
+      background: var(--bg-surface-elevated);
+      border-color: rgba(13, 148, 136, 0.40);
     }
 
     .account-item-card.current {
-      border-color: var(--accent);
-      background: var(--accent-light);
+      border-color: #0D9488;
+      background: rgba(13, 148, 136, 0.12);
     }
 
     /* Toast Notification */
     .toast {
       position: fixed;
-      bottom: 80px;
-      right: 20px;
-      background: #0F172A;
+      bottom: 84px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       color: white;
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      box-shadow: var(--shadow-lg);
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
       z-index: 200;
       display: none;
-      animation: slideUp 0.2s ease;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.50);
+      white-space: nowrap;
+      animation: toastIn 0.25s ease-out;
     }
 
-    @keyframes slideUp {
+    @keyframes toastIn {
       from {
-        transform: translateY(20px);
         opacity: 0;
+        transform: translate(-50%, 10px);
       }
-
       to {
-        transform: translateY(0);
         opacity: 1;
+        transform: translate(-50%, 0);
       }
     }
 
@@ -1140,13 +1448,19 @@
 
     /* Spinner */
     .spinner {
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
       display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255, 255, 255, 0.2);
+      border-top-color: #14B8A6;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     /* Searchable Picker Bottom-Sheet / Modal */
@@ -1155,7 +1469,7 @@
       padding: 0;
     }
 
-    @media (min-width: 641px) {
+    @media (min-width: 640px) {
       .picker-modal-overlay {
         align-items: center;
         padding: 16px;
@@ -1163,112 +1477,117 @@
     }
 
     .picker-modal-content {
-      border-radius: 20px 20px 0 0;
+      max-width: 580px;
+      width: 100%;
       max-height: 85vh;
+      border-radius: 24px 24px 0 0;
+      padding: 20px 20px 28px 20px;
       display: flex;
       flex-direction: column;
-      padding: 18px 18px 24px 18px;
-      animation: slideUpBottom 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      width: 100%;
-      max-width: 100%;
-      background: white;
+      background: var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-bottom: none;
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.80);
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
     }
 
-    @media (min-width: 641px) {
+    @media (min-width: 640px) {
       .picker-modal-content {
-        border-radius: 16px;
-        max-width: 580px;
+        border-radius: 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         max-height: 80vh;
-        animation: none;
+        transform: translateY(16px);
       }
     }
 
-    @keyframes slideUpBottom {
-      from {
-        transform: translateY(100%);
-      }
-
-      to {
-        transform: translateY(0);
-      }
+    .picker-modal-overlay.active .picker-modal-content {
+      transform: translateY(0);
     }
 
     .picker-modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 14px;
     }
 
     .picker-header-title {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .picker-title-icon {
-      font-size: 1.6rem;
-    }
-
-    .picker-search-bar {
-      position: relative;
-      margin-top: 12px;
-      margin-bottom: 8px;
-      flex-shrink: 0;
-    }
-
-    .picker-search-icon {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      pointer-events: none;
-    }
-
-    .picker-search-field {
-      padding-left: 38px;
-      padding-right: 36px;
-      font-size: 0.95rem;
-      border: 1.5px solid var(--border);
+      width: 36px;
+      height: 36px;
       border-radius: 10px;
-    }
-
-    .picker-search-field:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
-    }
-
-    .picker-search-clear {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: #E2E8F0;
-      border: none;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      font-size: 0.75rem;
-      font-weight: bold;
-      color: #64748B;
-      cursor: pointer;
+      background: rgba(13, 148, 136, 0.15);
+      border: 1px solid rgba(13, 148, 136, 0.35);
+      color: #14B8A6;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .picker-count-bar {
-      font-size: 0.72rem;
-      font-weight: 700;
+    .picker-title-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .picker-search-bar {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .picker-search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
       color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-      flex-shrink: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .picker-search-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .picker-search-field {
+      padding-left: 42px;
+      padding-right: 36px;
+      font-size: 0.95rem;
+      border-radius: 10px;
+    }
+
+    .picker-search-clear {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--text-muted);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .picker-count-bar {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 10px;
+      padding: 0 4px;
     }
 
     .picker-items-scroll {
@@ -1277,169 +1596,125 @@
       max-height: 48vh;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
       padding-right: 4px;
-      -webkit-overflow-scrolling: touch;
     }
 
     .picker-item-row {
       padding: 12px 14px;
-      border: 1px solid var(--border);
+      background: var(--bg-surface-dark);
+      border: 1px solid var(--border-subtle);
       border-radius: 10px;
-      background: white;
       cursor: pointer;
+      transition: all 0.15s ease;
       display: flex;
       flex-direction: column;
-      gap: 3px;
-      transition: all 0.15s ease;
-      -webkit-tap-highlight-color: transparent;
-      text-align: left;
+      gap: 4px;
     }
 
-    .picker-item-row:hover,
-    .picker-item-row:active {
-      background: #F0FDFA;
-      border-color: var(--accent);
-      transform: translateY(-1px);
+    .picker-item-row:hover {
+      background: var(--bg-surface-elevated);
+      border-color: rgba(13, 148, 136, 0.40);
     }
 
     .picker-item-row.selected {
-      background: var(--accent-light);
-      border-color: var(--accent);
+      background: rgba(13, 148, 136, 0.15);
+      border-color: #0D9488;
     }
 
     .picker-item-name {
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       font-weight: 700;
-      color: #0F172A;
-      line-height: 1.3;
+      color: #F8FAFC;
     }
 
     .picker-item-meta {
-      font-size: 0.75rem;
-      color: #64748B;
       display: flex;
-      gap: 6px;
-      align-items: center;
       flex-wrap: wrap;
+      gap: 6px;
     }
 
     .picker-item-badge {
-      display: inline-block;
-      padding: 2px 7px;
-      background: #E2E8F0;
-      color: #334155;
-      border-radius: 4px;
-      font-size: 0.68rem;
+      font-size: 0.7rem;
       font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: rgba(13, 148, 136, 0.15);
+      border: 1px solid rgba(13, 148, 136, 0.30);
+      color: #14B8A6;
     }
 
     .picker-empty-state {
       text-align: center;
-      padding: 24px 16px;
+      padding: 40px 20px;
       color: var(--text-muted);
     }
 
     .picker-footer-action {
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-      flex-shrink: 0;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-subtle);
     }
 
-    /* Interactive trigger wrapper for form inputs */
+    /* Trigger wrapper for searchable input */
     .picker-input-wrapper {
       position: relative;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      width: 100%;
     }
 
     .picker-input-wrapper .form-control {
       cursor: pointer;
-      padding-right: 40px;
-      background-color: #FFFFFF;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    .picker-input-wrapper:hover .form-control {
-      border-color: var(--accent);
+      padding-right: 38px;
     }
 
     .picker-trigger-icon {
       position: absolute;
-      right: 14px;
+      right: 12px;
       top: 50%;
       transform: translateY(-50%);
+      color: #14B8A6;
       pointer-events: none;
       display: flex;
       align-items: center;
-      color: #64748B;
-      font-size: 0.8rem;
+    }
+
+    .picker-trigger-icon svg {
+      width: 18px;
+      height: 18px;
     }
 
     /* Remarks Field & Clinical Quick Tags */
     .remarks-textarea {
-      min-height: 135px;
-      font-size: 1rem !important;
-      /* 16px to prevent mobile browser auto-zoom */
-      line-height: 1.55;
-      padding: 12px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
       resize: vertical;
-      transition: all 0.2s ease;
-      background-color: #FFFFFF;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .remarks-textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
-      background-color: #FAFFFD;
+      min-height: 90px;
+      font-size: 0.9rem;
     }
 
     .quick-tags-scroll {
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      padding: 2px 0 10px 0;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-
-    .quick-tags-scroll::-webkit-scrollbar {
-      display: none;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
     }
 
     .quick-tag-chip {
-      background: #F1F5F9;
-      border: 1px solid #CBD5E1;
-      color: #334155;
-      font-size: 0.78rem;
+      background: var(--bg-surface-dark);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
+      font-size: 0.75rem;
       font-weight: 600;
-      padding: 6px 11px;
-      border-radius: 16px;
-      white-space: nowrap;
+      padding: 6px 12px;
+      border-radius: 20px;
       cursor: pointer;
-      transition: all 0.18s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+      transition: all 0.15s;
     }
 
-    .quick-tag-chip:hover,
-    .quick-tag-chip:active {
-      background: var(--accent-light);
-      border-color: var(--accent);
-      color: var(--accent-hover);
-      transform: translateY(-1px);
+    .quick-tag-chip:hover {
+      background: var(--bg-surface-elevated);
+      color: #F8FAFC;
+      border-color: rgba(13, 148, 136, 0.40);
     }
 
     /* Fullscreen Submission Progress Modal */
@@ -1449,17 +1724,17 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 250;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
+      padding: 20px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.25s ease;
-      padding: 20px;
+      transition: opacity 0.28s ease;
     }
 
     .progress-modal-overlay.active {
@@ -1468,26 +1743,27 @@
     }
 
     .progress-modal-card {
-      background: #FFFFFF;
+      background: var(--bg-surface);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 20px;
-      max-width: 420px;
+      max-width: 440px;
       width: 100%;
-      padding: 30px 24px;
+      padding: 32px 24px;
       text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-      transform: translateY(20px) scale(0.96);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.70);
+      transform: scale(0.92);
+      transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .progress-modal-overlay.active .progress-modal-card {
-      transform: translateY(0) scale(1);
+      transform: scale(1);
     }
 
     .progress-modal-icon-wrapper {
       position: relative;
       width: 76px;
       height: 76px;
-      margin: 0 auto 16px;
+      margin: 0 auto 18px auto;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1495,157 +1771,202 @@
 
     .progress-modal-spinner {
       position: absolute;
-      inset: 0;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
-      border: 4px solid #E2E8F0;
-      border-top-color: var(--accent);
-      border-right-color: var(--primary);
-      animation: spin 0.9s linear infinite;
+      border: 3.5px solid rgba(13, 148, 136, 0.15);
+      border-top-color: #14B8A6;
+      animation: spin 1s linear infinite;
     }
 
     .progress-modal-icon {
-      font-size: 34px;
+      font-size: 2rem;
       z-index: 2;
-      animation: pulseIcon 1.4s ease infinite alternate;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #14B8A6;
     }
 
-    @keyframes pulseIcon {
-      0% {
-        transform: scale(0.92);
-      }
-
-      100% {
-        transform: scale(1.08);
-      }
+    .progress-modal-icon svg {
+      width: 36px;
+      height: 36px;
     }
 
     .progress-modal-title {
       font-size: 1.25rem;
       font-weight: 800;
-      color: var(--primary);
+      color: #F8FAFC;
       margin-bottom: 6px;
-      transition: color 0.3s ease;
     }
 
     .progress-modal-subtitle {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
-      margin-bottom: 20px;
-      line-height: 1.4;
-      min-height: 38px;
+      margin-bottom: 22px;
+      line-height: 1.45;
     }
 
     .progress-track {
       width: 100%;
-      height: 10px;
-      background: #E2E8F0;
-      border-radius: 999px;
+      height: 8px;
+      background: #0B0F19;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
       overflow: hidden;
-      margin-bottom: 8px;
-      position: relative;
+      margin-bottom: 12px;
     }
 
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, #0D9488, #10B981);
-      border-radius: 999px;
-      transition: width 0.35s ease, background 0.3s ease;
+      background: linear-gradient(90deg, #0D9488 0%, #10B981 100%);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.40);
     }
 
     .progress-stats {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      font-size: 0.78rem;
-      font-weight: 700;
-      color: #475569;
-      margin-bottom: 18px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 20px;
     }
 
     .progress-checklist {
-      background: #F8FAFC;
-      border-radius: 12px;
-      padding: 12px 14px;
-      text-align: left;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      border: 1px solid #E2E8F0;
+      text-align: left;
+      background: var(--bg-surface-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 0.8rem;
     }
 
     .progress-check-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 0.82rem;
       color: var(--text-muted);
-      transition: all 0.25s ease;
+      transition: color 0.2s;
     }
 
     .progress-check-item.in-progress {
-      color: var(--primary);
+      color: #FBBF24;
       font-weight: 700;
     }
 
     .progress-check-item.done {
-      color: #047857;
+      color: #34D399;
       font-weight: 600;
     }
 
     .progress-check-item .chk-icon {
-      font-size: 0.95rem;
-      width: 20px;
-      text-align: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
     }
 
-    /* Evaluator Authentication Gate Modal & Status Elements */
+    .progress-check-item .chk-icon::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-tertiary);
+    }
+
+    .progress-check-item.in-progress .chk-icon {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.40);
+    }
+
+    .progress-check-item.in-progress .chk-icon::after {
+      width: 8px;
+      height: 8px;
+      background: #FBBF24;
+      box-shadow: 0 0 8px #F59E0B;
+    }
+
+    .progress-check-item.done .chk-icon {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.40);
+    }
+
+    .progress-check-item.done .chk-icon::after {
+      content: '✓';
+      color: #34D399;
+      font-weight: 800;
+      font-size: 0.75rem;
+      width: auto;
+      height: auto;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    /* Evaluator Authentication Gate Modal */
     .auth-gate-card {
-      max-width: 440px !important;
-      text-align: center;
-      padding: 28px 24px !important;
-      border-radius: 18px !important;
-      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25) !important;
+      max-width: 440px;
+      padding: 28px 24px;
     }
 
     .auth-gate-icon {
       width: 58px;
       height: 58px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #EBF2FA 0%, #E0F2FE 100%);
+      border-radius: 18px;
+      background: rgba(13, 148, 136, 0.15);
+      border: 1px solid rgba(13, 148, 136, 0.35);
+      color: #14B8A6;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      margin: 0 auto 12px auto;
-      box-shadow: 0 4px 12px rgba(27, 54, 93, 0.08);
+      margin: 0 auto 14px auto;
+      box-shadow: 0 0 18px rgba(13, 148, 136, 0.25);
+    }
+
+    .auth-gate-icon svg {
+      width: 30px;
+      height: 30px;
     }
 
     .auth-msg-box {
       padding: 10px 14px;
       border-radius: 8px;
-      font-size: 0.82rem;
-      line-height: 1.45;
-      text-align: left;
+      font-size: 0.8rem;
+      font-weight: 600;
       margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
     .auth-msg-error {
-      background: #FEF2F2;
-      color: #DC2626;
-      border: 1px solid #FECACA;
+      background: rgba(239, 68, 68, 0.15);
+      color: #F87171;
+      border: 1px solid rgba(239, 68, 68, 0.30);
     }
 
     .auth-msg-success {
-      background: #ECFDF5;
-      color: #047857;
-      border: 1px solid #A7F3D0;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.30);
     }
 
     .auth-gate-tip {
       margin-top: 18px;
       padding: 12px 14px;
-      background: #F8FAFC;
-      border: 1px solid var(--border);
+      background: var(--bg-surface-dark);
+      border: 1px solid var(--border-subtle);
       border-radius: 10px;
       font-size: 0.78rem;
       color: var(--text-muted);
@@ -1655,6 +1976,15 @@
       text-align: left;
       line-height: 1.45;
     }
+
+    .auth-gate-tip svg {
+      width: 20px;
+      height: 20px;
+      color: #14B8A6;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
   </style>
 </head>
 
@@ -1664,7 +1994,12 @@
   <header class="app-header">
     <div class="header-content">
       <div class="app-branding">
-        <div class="app-icon">🏥</div>
+        <div class="app-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="3" width="18" height="18" rx="5" fill="rgba(13,148,136,0.15)"></rect>
+  <path d="M12 7v10M7 12h10" stroke="#14B8A6" stroke-width="2.5"></path>
+</svg>
+        </div>
         <div class="app-title">
           <h1>PPMP Pharmacy Evaluation</h1>
           <p>Product Technical Evaluation Portal</p>
@@ -1686,11 +2021,50 @@
   <!-- Desktop Navigation -->
   <nav class="desktop-nav">
     <div class="nav-container">
-      <button class="nav-tab active" onclick="switchTab('new-eval')">📝 New Evaluation</button>
-      <button class="nav-tab" id="navTabEndUser" onclick="switchTab('end-user')">👨‍⚕️ End-user (Eval 1)</button>
-      <button class="nav-tab" id="navTabNurse" onclick="switchTab('nurse')">👩‍⚕️ Nurse (Eval 2)</button>
-      <button class="nav-tab" id="navTabPharma" onclick="switchTab('pharmacist')">💊 Pharmacist (Eval 3)</button>
-      <button class="nav-tab" onclick="switchTab('summary')">📊 Consolidated Summary</button>
+      <button class="nav-tab active" onclick="switchTab('new-eval')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+  <polyline points="14 2 14 8 20 8"></polyline>
+  <line x1="12" y1="18" x2="12" y2="12"></line>
+  <line x1="9" y1="15" x2="15" y2="15"></line>
+</svg>
+        <span>New Evaluation</span>
+      </button>
+      <button class="nav-tab" id="navTabEndUser" onclick="switchTab('end-user')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4.5 3v5a4 4 0 0 0 8 0V3"></path>
+  <path d="M8.5 12v3a4 4 0 0 0 4 4h1a3 3 0 0 0 3-3v-2.5"></path>
+  <circle cx="16.5" cy="13.5" r="2.5" fill="currentColor"></circle>
+</svg>
+        <span>End-user (Eval 1)</span>
+      </button>
+      <button class="nav-tab" id="navTabNurse" onclick="switchTab('nurse')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 2 4 4"></path>
+  <path d="m17 7 3-3"></path>
+  <path d="M19 9 8.7 19.3c-.4.4-1 .6-1.6.6H3v-4.1c0-.6.2-1.2.6-1.6L15 4l4 5Z"></path>
+  <path d="m9 11 4 4"></path>
+  <path d="m5 19-3 3"></path>
+  <path d="m14 4 6 6"></path>
+</svg>
+        <span>Nurse (Eval 2)</span>
+      </button>
+      <button class="nav-tab" id="navTabPharma" onclick="switchTab('pharmacist')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+  <path d="m8.5 8.5 7 7"></path>
+</svg>
+        <span>Pharmacist (Eval 3)</span>
+      </button>
+      <button class="nav-tab" onclick="switchTab('summary')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="18" y1="20" x2="18" y2="10"></line>
+  <line x1="12" y1="20" x2="12" y2="4"></line>
+  <line x1="6" y1="20" x2="6" y2="14"></line>
+  <line x1="2" y1="20" x2="22" y2="20"></line>
+</svg>
+        <span>Consolidated Summary</span>
+      </button>
     </div>
   </nav>
 
@@ -1735,31 +2109,80 @@
             <!-- Account & Role Lockdown Notice -->
             <div class="lockdown-banner">
               <div class="lockdown-left">
-                <span>🔒</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+  <path d="m9 12 2 2 4-4"></path>
+</svg>
                 <span>Role locked to active account: <strong id="lockdownAccountLabel">Detecting...</strong></span>
               </div>
+              <button type="button" class="lockdown-switch-btn" onclick="openAccountSwitcher()">Switch Profile</button>
             </div>
 
             <div class="card-title">
-              <span>👤 Evaluator Role (Assigned)</span>
-              <span class="badge badge-success" id="roleAssignedBadge">Locked to Profile</span>
+              <div class="card-title-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+  <path d="m9 12 2 2 4-4"></path>
+</svg>
+                <span>Evaluator Credential (Assigned)</span>
+              </div>
+              <span class="badge badge-gold" id="roleAssignedBadge">VERIFIED & LOCKED</span>
             </div>
 
+            <!-- Centered Clinical Credential Card Grid -->
             <div class="role-grid">
               <div id="roleCardEndUser" class="role-card">
-                <span class="role-lock-badge">🔒</span>
-                <div class="role-icon">👨‍⚕️</div>
-                <div class="role-name">End-user</div>
+                <span class="role-lock-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg></span>
+                <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4.5 3v5a4 4 0 0 0 8 0V3"></path>
+  <path d="M8.5 12v3a4 4 0 0 0 4 4h1a3 3 0 0 0 3-3v-2.5"></path>
+  <circle cx="16.5" cy="13.5" r="2.5" fill="currentColor"></circle>
+</svg></div>
+                <div class="role-name">End-user Evaluator</div>
+                <div class="role-sub">Clinical Specialist & Medical Staff</div>
+                <div class="role-verified-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+  <path d="m9 12 2 2 4-4"></path>
+</svg> VERIFIED CLINICIAN</div>
               </div>
               <div id="roleCardNurse" class="role-card">
-                <span class="role-lock-badge">🔒</span>
-                <div class="role-icon">👩‍⚕️</div>
-                <div class="role-name">Nurse</div>
+                <span class="role-lock-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg></span>
+                <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 2 4 4"></path>
+  <path d="m17 7 3-3"></path>
+  <path d="M19 9 8.7 19.3c-.4.4-1 .6-1.6.6H3v-4.1c0-.6.2-1.2.6-1.6L15 4l4 5Z"></path>
+  <path d="m9 11 4 4"></path>
+  <path d="m5 19-3 3"></path>
+  <path d="m14 4 6 6"></path>
+</svg></div>
+                <div class="role-name">Nurse Evaluator</div>
+                <div class="role-sub">Nursing Administration & Patient Care</div>
+                <div class="role-verified-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+  <path d="m9 12 2 2 4-4"></path>
+</svg> VERIFIED CLINICIAN</div>
               </div>
               <div id="roleCardPharma" class="role-card">
-                <span class="role-lock-badge">🔒</span>
-                <div class="role-icon">💊</div>
-                <div class="role-name">Pharmacist</div>
+                <span class="role-lock-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg></span>
+                <div class="role-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+  <path d="m8.5 8.5 7 7"></path>
+</svg></div>
+                <div class="role-name">Pharmacist Evaluator</div>
+                <div class="role-sub">Pharmacy Drug & Therapeutics Committee</div>
+                <div class="role-verified-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+  <path d="m9 12 2 2 4-4"></path>
+</svg> VERIFIED CLINICIAN</div>
               </div>
             </div>
             <input type="hidden" id="field_Evaluator" name="Evaluator" value="Pharmacist">
@@ -1772,7 +2195,9 @@
                 <input type="text" id="field_Generic_Name" name="Generic_Name" class="form-control"
                   placeholder="Select or search generic medicine..." required readonly autocomplete="off">
                 <div class="picker-trigger-icon">
-                  <span class="chevron">▼</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <polyline points="6 9 12 15 18 9"></polyline>
+</svg>
                 </div>
               </div>
             </div>
@@ -1797,7 +2222,9 @@
                   <input type="text" id="field_Supplier" name="Supplier" class="form-control"
                     placeholder="Select or search supplier / bidder..." required readonly autocomplete="off">
                   <div class="picker-trigger-icon">
-                    <span class="chevron">▼</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+  <polyline points="6 9 12 15 18 9"></polyline>
+</svg>
                   </div>
                 </div>
               </div>
@@ -1820,14 +2247,21 @@
           <div class="score-banner">
             <div>
               <div class="score-banner-title">Part I: Technical & Labeling Checklist</div>
-              <div id="part1Subtitle" style="font-size: 0.78rem; opacity: 0.85;">19 Technical Requirements</div>
+              <div id="part1Subtitle" style="font-size: 0.78rem; opacity: 0.85; color: var(--text-muted);">19 Technical Requirements</div>
             </div>
             <div class="score-pill" id="p1ScoreBadge">100.0%</div>
           </div>
 
           <div class="quick-actions">
-            <button type="button" class="btn-quick" onclick="setAllValues('P1', 'Yes')">⚡ Mark All Yes</button>
-            <button type="button" class="btn-quick" onclick="setAllValues('P1', 'N/A')">Set All N/A</button>
+            <button type="button" class="btn-quick" onclick="setAllValues('P1', 'Yes')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+              <span>Mark All Yes</span>
+            </button>
+            <button type="button" class="btn-quick" onclick="setAllValues('P1', 'N/A')">
+              <span>Set All N/A</span>
+            </button>
           </div>
 
           <div class="card" id="part1Container">
@@ -1845,14 +2279,21 @@
           <div class="score-banner">
             <div>
               <div class="score-banner-title">Part II: Packaging & Container Integrity</div>
-              <div id="part2Subtitle" style="font-size: 0.78rem; opacity: 0.85;">6 Physical Integrity Parameters</div>
+              <div id="part2Subtitle" style="font-size: 0.78rem; opacity: 0.85; color: var(--text-muted);">6 Physical Integrity Parameters</div>
             </div>
             <div class="score-pill" id="p2ScoreBadge">100.0%</div>
           </div>
 
           <div class="quick-actions">
-            <button type="button" class="btn-quick" onclick="setAllValues('P2', 'Yes')">⚡ Mark All Yes</button>
-            <button type="button" class="btn-quick" onclick="setAllValues('P2', 'N/A')">Set All N/A</button>
+            <button type="button" class="btn-quick" onclick="setAllValues('P2', 'Yes')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+              <span>Mark All Yes</span>
+            </button>
+            <button type="button" class="btn-quick" onclick="setAllValues('P2', 'N/A')">
+              <span>Set All N/A</span>
+            </button>
           </div>
 
           <div class="card" id="part2Container">
@@ -1869,7 +2310,17 @@
         <div id="step-4" class="wizard-step" style="display: none;">
           <div class="card">
             <div class="card-title">
-              <span>💉 Part III: Reconstitution & Performance</span>
+              <div class="card-title-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 2 4 4"></path>
+  <path d="m17 7 3-3"></path>
+  <path d="M19 9 8.7 19.3c-.4.4-1 .6-1.6.6H3v-4.1c0-.6.2-1.2.6-1.6L15 4l4 5Z"></path>
+  <path d="m9 11 4 4"></path>
+  <path d="m5 19-3 3"></path>
+  <path d="m14 4 6 6"></path>
+</svg>
+                <span>Part III: Reconstitution & Performance</span>
+              </div>
             </div>
 
             <div class="form-group" style="margin-bottom: 20px;">
@@ -1885,18 +2336,29 @@
 
             <!-- Inactive notice when 'No' -->
             <div id="reconInactiveNotice"
-              style="background: #F8FAFC; border: 1px dashed var(--border); border-radius: 10px; padding: 20px; text-align: center; color: var(--text-muted);">
-              <div style="font-size: 2rem; margin-bottom: 6px;">🧴</div>
-              <p style="font-weight: 600;">Part III is marked as Not Applicable</p>
-              <p style="font-size: 0.8rem; margin-top: 4px;">Oral solids, ointments, and ready-to-administer liquid
+              style="background: var(--bg-surface-dark); border: 1px dashed var(--border); border-radius: 12px; padding: 24px 20px; text-align: center; color: var(--text-muted);">
+              <div style="width: 48px; height: 48px; margin: 0 auto 10px auto; color: #14B8A6;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10 2v7.31L4.1 19.5A2 2 0 0 0 5.8 22h12.4a2 2 0 0 0 1.7-2.5L14 9.31V2"></path>
+  <line x1="8.5" y1="2" x2="15.5" y2="2"></line>
+  <line x1="6.5" y1="16" x2="17.5" y2="16"></line>
+</svg></div>
+              <p style="font-weight: 700; color: #F8FAFC;">Part III is marked as Not Applicable</p>
+              <p style="font-size: 0.8rem; margin-top: 4px; color: var(--text-muted);">Oral solids, ointments, and ready-to-administer liquid
                 preparations skip reconstitution evaluation.</p>
             </div>
 
             <!-- Active questions when 'Yes' -->
             <div id="reconActiveContainer" style="display: none;">
               <div class="quick-actions">
-                <button type="button" class="btn-quick" onclick="setAllValues('P3', 'Yes')">⚡ Mark All Yes</button>
-                <button type="button" class="btn-quick" onclick="setAllValues('P3', 'N/A')">Set All N/A</button>
+                <button type="button" class="btn-quick" onclick="setAllValues('P3', 'Yes')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+</svg>
+                  <span>Mark All Yes</span>
+                </button>
+                <button type="button" class="btn-quick" onclick="setAllValues('P3', 'N/A')">
+                  <span>Set All N/A</span>
+                </button>
               </div>
               <div id="part3Questions">
                 <!-- 9 items dynamically generated -->
@@ -1914,44 +2376,44 @@
         <div id="step-5" class="wizard-step" style="display: none;">
           <div class="card">
             <div class="card-title">
-              <span>📋 Evaluation Summary & Recommendation</span>
+              <div class="card-title-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+</svg>
+                <span>Evaluation Summary & Recommendation</span>
+              </div>
             </div>
 
             <!-- Live Calculated Score Recap -->
-            <div class="eval-scores-row" style="margin-bottom: 18px; padding: 12px;">
+            <div class="eval-scores-row" style="margin-bottom: 20px; padding: 14px; border-radius: 12px; background: var(--bg-surface-dark);">
               <div>
                 <span style="color: var(--text-muted); font-size: 0.75rem; display: block;">PART I SCORE</span>
-                <strong id="summaryP1Score" style="font-size: 1.1rem; color: var(--primary);">100.0%</strong>
+                <strong id="summaryP1Score" style="font-size: 1.15rem; color: #14B8A6;">100.0%</strong>
               </div>
               <div>
                 <span style="color: var(--text-muted); font-size: 0.75rem; display: block;">PART II SCORE</span>
-                <strong id="summaryP2Score" style="font-size: 1.1rem; color: var(--primary);">100.0%</strong>
+                <strong id="summaryP2Score" style="font-size: 1.15rem; color: #10B981;">100.0%</strong>
               </div>
               <div>
                 <span style="color: var(--text-muted); font-size: 0.75rem; display: block;">ASSIGNED ROLE</span>
-                <strong id="summaryRoleBadge" style="font-size: 1.1rem; color: var(--accent);">Pharmacist</strong>
+                <strong id="summaryRoleBadge" style="font-size: 1.15rem; color: #F59E0B;">Pharmacist</strong>
               </div>
             </div>
 
             <div class="form-group">
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                 <label class="form-label" style="margin-bottom: 0;">Observations & Remarks</label>
-                <span id="remarksCounter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">0 /
-                  500 chars</span>
+                <span id="remarksCounter" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">0 / 500 chars</span>
               </div>
 
               <!-- Quick One-Tap Clinical Observation Chips -->
               <div class="quick-tags-scroll">
-                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('📦 Packaging sealed and intact.')">+
-                  Sealed & Intact</button>
-                <button type="button" class="quick-tag-chip"
-                  onclick="addRemarkTag('🏷️ Labels clear, legible, and compliant.')">+ Clear Labels</button>
-                <button type="button" class="quick-tag-chip"
-                  onclick="addRemarkTag('💧 No leakage or defect observed.')">+ No Leakage</button>
-                <button type="button" class="quick-tag-chip"
-                  onclick="addRemarkTag('✨ Good container integrity and finish.')">+ Good Integrity</button>
-                <button type="button" class="quick-tag-chip"
-                  onclick="addRemarkTag('⚠️ Minor outer carton dent, inner unit intact.')">+ Carton Dent</button>
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('Packaging sealed and intact.')">+ Sealed & Intact</button>
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('Labels clear, legible, and compliant.')">+ Clear Labels</button>
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('No leakage or defect observed.')">+ No Leakage</button>
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('Good container integrity and finish.')">+ Good Integrity</button>
+                <button type="button" class="quick-tag-chip" onclick="addRemarkTag('Minor outer carton dent, inner unit intact.')">+ Carton Dent</button>
               </div>
 
               <textarea id="field_Remarks" name="Remarks" class="form-control remarks-textarea" rows="5"
@@ -1963,11 +2425,18 @@
               <label class="form-label">Final Recommendation <span class="req">*</span></label>
               <div class="rec-grid">
                 <div class="rec-card recommended selected" onclick="selectRecommendation('Recommended', this)">
-                  <div class="rec-icon">✅</div>
+                  <div class="rec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <path d="m9 12 2 2 4-4"></path>
+</svg></div>
                   <div class="rec-label">Recommended</div>
                 </div>
                 <div class="rec-card not-recommended" onclick="selectRecommendation('Not Recommended', this)">
-                  <div class="rec-icon">❌</div>
+                  <div class="rec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <line x1="15" y1="9" x2="9" y2="15"></line>
+  <line x1="9" y1="9" x2="15" y2="15"></line>
+</svg></div>
                   <div class="rec-label">Not Recommended</div>
                 </div>
               </div>
@@ -1985,7 +2454,14 @@
                 </div>
                 <div class="consent-content">
                   <div class="consent-header">
-                    <span class="consent-title">🛡️ Data Privacy Notice & Consent <span class="req">*</span></span>
+                    <span class="consent-title">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+  <path d="m9 12 2 2 4-4"></path>
+</svg>
+                      <span>Data Privacy Notice & Consent</span>
+                      <span class="req">*</span>
+                    </span>
                     <span class="consent-status-pill pill-required" id="pill_Data_Privacy_Consent">Required</span>
                   </div>
                   <div class="consent-body">
@@ -2006,7 +2482,15 @@
                 </div>
                 <div class="consent-content">
                   <div class="consent-header">
-                    <span class="consent-title">✍️ Accuracy & Electronic Signature Agreement <span class="req">*</span></span>
+                    <span class="consent-title">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 2 4 4-10 10H8v-4L18 2z"></path>
+  <path d="M14 6l4 4"></path>
+  <path d="M3 22h18"></path>
+</svg>
+                      <span>Accuracy & Electronic Signature Agreement</span>
+                      <span class="req">*</span>
+                    </span>
                     <span class="consent-status-pill pill-required" id="pill_Accuracy_Consent">Required</span>
                   </div>
                   <div class="consent-body">
@@ -2022,7 +2506,14 @@
               <div class="signature-container" id="signatureContainer">
                 <canvas id="signaturePad"></canvas>
                 <div class="signature-tools">
-                  <span class="signature-hint">✍️ Sign with finger (mobile) or mouse (PC)</span>
+                  <span class="signature-hint">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 2 4 4-10 10H8v-4L18 2z"></path>
+  <path d="M14 6l4 4"></path>
+  <path d="M3 22h18"></path>
+</svg>
+                    <span>Sign with finger (mobile) or mouse (PC)</span>
+                  </span>
                   <button type="button" class="btn-quick" onclick="clearSignature()">Clear Pad</button>
                 </div>
               </div>
@@ -2032,7 +2523,11 @@
             <div class="stepper-actions">
               <button type="button" class="btn btn-secondary" onclick="goToStep(4)">← Back to Part III</button>
               <button type="submit" id="btnSubmit" class="btn btn-submit">
-                <span>🚀 Submit Official Evaluation</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="22" y1="2" x2="11" y2="13"></line>
+  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+</svg>
+                <span>Submit Official Evaluation</span>
               </button>
             </div>
           </div>
@@ -2045,11 +2540,17 @@
     <div id="view-end-user" class="view-panel">
       <div class="card">
         <div class="card-title">
-          <span>👨‍⚕️ End-user Evaluations</span>
-          <span class="badge badge-neutral" id="endUserCount">0 items</span>
+          <div class="card-title-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4.5 3v5a4 4 0 0 0 8 0V3"></path>
+  <path d="M8.5 12v3a4 4 0 0 0 4 4h1a3 3 0 0 0 3-3v-2.5"></path>
+  <circle cx="16.5" cy="13.5" r="2.5" fill="currentColor"></circle>
+</svg>
+            <span>End-user Evaluations</span>
+          </div>
         </div>
         <div class="filter-bar">
-          <input type="text" class="form-control" placeholder="Search by medicine, brand or supplier..."
+          <input type="text" class="form-control" placeholder="Search drug, brand, or supplier..."
             oninput="filterDeck('End-user', this.value)">
         </div>
         <div class="deck-grid" id="deck-End-user">
@@ -2062,11 +2563,20 @@
     <div id="view-nurse" class="view-panel">
       <div class="card">
         <div class="card-title">
-          <span>👩‍⚕️ Nurse Evaluations</span>
-          <span class="badge badge-neutral" id="nurseCount">0 items</span>
+          <div class="card-title-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 2 4 4"></path>
+  <path d="m17 7 3-3"></path>
+  <path d="M19 9 8.7 19.3c-.4.4-1 .6-1.6.6H3v-4.1c0-.6.2-1.2.6-1.6L15 4l4 5Z"></path>
+  <path d="m9 11 4 4"></path>
+  <path d="m5 19-3 3"></path>
+  <path d="m14 4 6 6"></path>
+</svg>
+            <span>Nurse Evaluations</span>
+          </div>
         </div>
         <div class="filter-bar">
-          <input type="text" class="form-control" placeholder="Search by medicine, brand or supplier..."
+          <input type="text" class="form-control" placeholder="Search drug, brand, or supplier..."
             oninput="filterDeck('Nurse', this.value)">
         </div>
         <div class="deck-grid" id="deck-Nurse">
@@ -2079,11 +2589,16 @@
     <div id="view-pharmacist" class="view-panel">
       <div class="card">
         <div class="card-title">
-          <span>💊 Pharmacist Evaluations</span>
-          <span class="badge badge-neutral" id="pharmacistCount">0 items</span>
+          <div class="card-title-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+  <path d="m8.5 8.5 7 7"></path>
+</svg>
+            <span>Pharmacist Evaluations</span>
+          </div>
         </div>
         <div class="filter-bar">
-          <input type="text" class="form-control" placeholder="Search by medicine, brand or supplier..."
+          <input type="text" class="form-control" placeholder="Search drug, brand, or supplier..."
             oninput="filterDeck('Pharmacist', this.value)">
         </div>
         <div class="deck-grid" id="deck-Pharmacist">
@@ -2096,11 +2611,26 @@
     <div id="view-summary" class="view-panel">
       <div class="card">
         <div class="card-title">
-          <span>📊 Consolidated Consensus Summary</span>
-          <button class="btn-quick" onclick="loadInitialData()">🔄 Refresh Data</button>
+          <div class="card-title-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="18" y1="20" x2="18" y2="10"></line>
+  <line x1="12" y1="20" x2="12" y2="4"></line>
+  <line x1="6" y1="20" x2="6" y2="14"></line>
+  <line x1="2" y1="20" x2="22" y2="20"></line>
+</svg>
+            <span>Consolidated Consensus Summary</span>
+          </div>
+          <button class="btn-quick" onclick="loadInitialData()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M23 4v6h-6"></path>
+  <path d="M1 20v-6h6"></path>
+  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+</svg>
+            <span>Refresh Data</span>
+          </button>
         </div>
         <div class="filter-bar">
-          <input type="text" class="form-control" placeholder="Search consolidated products..."
+          <input type="text" class="form-control" placeholder="Search consensus by drug, brand, or supplier..."
             oninput="filterSummary(this.value)">
         </div>
         <div id="summaryTableContainer">
@@ -2111,26 +2641,50 @@
 
   </div>
 
-  <!-- Mobile Bottom Navigation Bar -->
+  <!-- Mobile Floating Glassmorphic Dock Navigation -->
   <div class="mobile-nav">
-    <button class="mobile-nav-btn active" onclick="switchTab('new-eval')">
-      <span class="icon">📝</span>
+    <button class="mobile-nav-btn active" onclick="switchTab('new-eval')" title="New Evaluation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+  <polyline points="14 2 14 8 20 8"></polyline>
+  <line x1="12" y1="18" x2="12" y2="12"></line>
+  <line x1="9" y1="15" x2="15" y2="15"></line>
+</svg>
       <span>New Eval</span>
     </button>
-    <button class="mobile-nav-btn" id="mNavEndUser" onclick="switchTab('end-user')">
-      <span class="icon">👨‍⚕️</span>
+    <button class="mobile-nav-btn" id="mNavEndUser" onclick="switchTab('end-user')" title="End-user Evaluations">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4.5 3v5a4 4 0 0 0 8 0V3"></path>
+  <path d="M8.5 12v3a4 4 0 0 0 4 4h1a3 3 0 0 0 3-3v-2.5"></path>
+  <circle cx="16.5" cy="13.5" r="2.5" fill="currentColor"></circle>
+</svg>
       <span>End-user</span>
     </button>
-    <button class="mobile-nav-btn" id="mNavNurse" onclick="switchTab('nurse')">
-      <span class="icon">👩‍⚕️</span>
+    <button class="mobile-nav-btn" id="mNavNurse" onclick="switchTab('nurse')" title="Nurse Evaluations">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 2 4 4"></path>
+  <path d="m17 7 3-3"></path>
+  <path d="M19 9 8.7 19.3c-.4.4-1 .6-1.6.6H3v-4.1c0-.6.2-1.2.6-1.6L15 4l4 5Z"></path>
+  <path d="m9 11 4 4"></path>
+  <path d="m5 19-3 3"></path>
+  <path d="m14 4 6 6"></path>
+</svg>
       <span>Nurse</span>
     </button>
-    <button class="mobile-nav-btn" id="mNavPharma" onclick="switchTab('pharmacist')">
-      <span class="icon">💊</span>
+    <button class="mobile-nav-btn" id="mNavPharma" onclick="switchTab('pharmacist')" title="Pharmacist Evaluations">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+  <path d="m8.5 8.5 7 7"></path>
+</svg>
       <span>Pharma</span>
     </button>
-    <button class="mobile-nav-btn" onclick="switchTab('summary')">
-      <span class="icon">📊</span>
+    <button class="mobile-nav-btn" onclick="switchTab('summary')" title="Consolidated Summary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="18" y1="20" x2="18" y2="10"></line>
+  <line x1="12" y1="20" x2="12" y2="4"></line>
+  <line x1="6" y1="20" x2="6" y2="14"></line>
+  <line x1="2" y1="20" x2="22" y2="20"></line>
+</svg>
       <span>Summary</span>
     </button>
   </div>
@@ -2139,7 +2693,7 @@
   <div id="detailModal" class="modal-overlay" onclick="closeModal(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <div class="modal-header">
-        <h3 id="modalTitle" style="color: var(--primary); font-size: 1.1rem; font-weight: 800;">Evaluation Details</h3>
+        <h3 id="modalTitle" style="color: #14B8A6; font-size: 1.1rem; font-weight: 800;">Evaluation Details</h3>
         <button class="modal-close" onclick="closeModal()">&times;</button>
       </div>
       <div id="modalBody">
@@ -2153,14 +2707,14 @@
     <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 480px;">
       <div class="modal-header">
         <div>
-          <h3 style="color: var(--primary); font-size: 1.1rem; font-weight: 800;">Evaluator Profile</h3>
+          <h3 style="color: #14B8A6; font-size: 1.1rem; font-weight: 800;">Evaluator Profile</h3>
           <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Synchronized with Evaluator_Accounts sheet</p>
         </div>
         <button class="modal-close" onclick="closeAccountModal()">&times;</button>
       </div>
-      
+
       <!-- Current Active Account Banner -->
-      <div id="currentAccountBanner" style="background: #F8FAFC; border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+      <div id="currentAccountBanner" style="background: var(--bg-surface-dark); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
         <!-- Injected dynamically -->
       </div>
 
@@ -2173,10 +2727,20 @@
 
       <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); display: flex; gap: 10px;">
         <button type="button" class="btn btn-outline" style="flex: 1; font-size: 0.85rem;" onclick="promptSwitchEmail()">
-          🔑 Switch with Email
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="7.5" cy="15.5" r="5.5"></circle>
+  <path d="m21 2-9.6 9.6"></path>
+  <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+</svg>
+          <span>Switch Email</span>
         </button>
-        <button type="button" class="btn btn-outline" style="flex: 1; font-size: 0.85rem; color: var(--danger); border-color: #FECACA;" onclick="logoutEvaluator()">
-          🚪 Sign Out
+        <button type="button" class="btn btn-outline" style="flex: 1; font-size: 0.85rem; color: var(--danger); border-color: rgba(239, 68, 68, 0.4);" onclick="logoutEvaluator()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+  <polyline points="16 17 21 12 16 7"></polyline>
+  <line x1="21" y1="12" x2="9" y2="12"></line>
+</svg>
+          <span>Sign Out</span>
         </button>
       </div>
     </div>
@@ -2190,8 +2754,11 @@
       </div>
 
       <div style="text-align: center; margin-bottom: 18px;">
-        <div class="auth-gate-icon">🔐</div>
-        <h2 style="color: var(--primary); font-size: 1.25rem; font-weight: 800; margin-bottom: 6px;">Evaluator Sign-In</h2>
+        <div class="auth-gate-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+  <path d="m9 12 2 2 4-4"></path>
+</svg></div>
+        <h2 style="color: #F8FAFC; font-size: 1.25rem; font-weight: 800; margin-bottom: 6px;">Evaluator Sign-In</h2>
         <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">
           Official PPMP Technical Evaluation Portal.<br>
           Enter your registered email to unlock your assigned role.
@@ -2209,19 +2776,30 @@
             <input type="email" id="authGateEmail" class="form-control" placeholder="e.g. menardarellano@gmail.com"
               required autocomplete="email" autocapitalize="none" autocorrect="off"
               style="padding-left: 38px; font-size: 0.95rem;">
-            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1rem; color: var(--text-muted);">✉️</span>
+            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: var(--text-muted);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+  <polyline points="22,6 12,13 2,6"></polyline>
+</svg></span>
           </div>
         </div>
 
         <button type="submit" id="authGateSubmitBtn" class="btn btn-primary" style="padding: 12px; font-weight: 700; font-size: 0.95rem; width: 100%;">
-          <span>🔑 Verify & Access Portal</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="7.5" cy="15.5" r="5.5"></circle>
+  <path d="m21 2-9.6 9.6"></path>
+  <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+</svg>
+          <span>Verify & Access Portal</span>
         </button>
       </form>
 
       <div class="auth-gate-tip">
-        <span style="font-size: 1.1rem; line-height: 1;">📱</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+  <line x1="12" y1="18" x2="12.01" y2="18"></line>
+</svg>
         <div>
-          <strong style="color: var(--primary); display: block; margin-bottom: 2px;">Mobile 1-Tap Access</strong>
+          <strong style="color: #14B8A6; display: block; margin-bottom: 2px;">Mobile 1-Tap Access</strong>
           <span>If you received an invitation email, open the link directly on your phone to be authenticated automatically without typing.</span>
         </div>
       </div>
@@ -2233,12 +2811,13 @@
     <div class="modal-content picker-modal-content" onclick="event.stopPropagation()">
       <div class="picker-modal-header">
         <div class="picker-header-title">
-          <span id="pickerIcon" class="picker-title-icon">💊</span>
+          <div id="pickerIcon" class="picker-title-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+  <path d="m8.5 8.5 7 7"></path>
+</svg></div>
           <div>
-            <h3 id="pickerTitle" style="color: var(--primary); font-size: 1.1rem; font-weight: 800; margin: 0;">Select
-              Generic Medicine</h3>
-            <p id="pickerSubtitle" style="font-size: 0.75rem; color: var(--text-muted); margin: 2px 0 0 0;">Tap an item
-              to select or search below</p>
+            <h3 id="pickerTitle" style="color: #F8FAFC; font-size: 1.1rem; font-weight: 800; margin: 0;">Select Generic Medicine</h3>
+            <p id="pickerSubtitle" style="font-size: 0.75rem; color: var(--text-muted); margin: 2px 0 0 0;">Tap an item to select or search below</p>
           </div>
         </div>
         <button type="button" class="modal-close" onclick="closeSearchablePicker()">&times;</button>
@@ -2246,7 +2825,10 @@
 
       <!-- Live Search Box with Clear Button -->
       <div class="picker-search-bar">
-        <span class="picker-search-icon">🔍</span>
+        <span class="picker-search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="11" cy="11" r="8"></circle>
+  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg></span>
         <input type="text" id="pickerSearchInput" class="form-control picker-search-field" placeholder="Search..."
           autocomplete="off" oninput="filterPickerItems()">
         <button type="button" id="pickerSearchClearBtn" class="picker-search-clear" onclick="clearPickerSearch()"
@@ -2267,7 +2849,12 @@
       <div class="picker-footer-action">
         <button type="button" class="btn btn-outline" id="pickerCustomBtn" onclick="enableCustomInputFromPicker()"
           style="width: 100%; font-size: 0.85rem; padding: 10px;">
-          ✏️ Enter Unlisted / Custom Name
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m18 2 4 4-10 10H8v-4L18 2z"></path>
+  <path d="M14 6l4 4"></path>
+  <path d="M3 22h18"></path>
+</svg>
+          <span>Enter Unlisted / Custom Name</span>
         </button>
       </div>
     </div>
@@ -2281,7 +2868,10 @@
     <div class="progress-modal-card">
       <div class="progress-modal-icon-wrapper">
         <div class="progress-modal-spinner" id="progressSpinner"></div>
-        <div class="progress-modal-icon" id="progressIcon">🚀</div>
+        <div class="progress-modal-icon" id="progressIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="22" y1="2" x2="11" y2="13"></line>
+  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+</svg></div>
       </div>
       <h3 class="progress-modal-title" id="progressTitle">Transmitting Evaluation</h3>
       <p class="progress-modal-subtitle" id="progressSubtitle">Securing evaluation data to cloud registry...</p>
@@ -2296,15 +2886,15 @@
 
       <div class="progress-checklist">
         <div class="progress-check-item in-progress" id="stepItem1">
-          <span class="chk-icon" id="stepIcon1">⏳</span>
+          <span class="chk-icon" id="stepIcon1"></span>
           <span>Optimizing & packaging digital signature</span>
         </div>
         <div class="progress-check-item" id="stepItem2">
-          <span class="chk-icon" id="stepIcon2">⚪</span>
+          <span class="chk-icon" id="stepIcon2"></span>
           <span>Generating RFC UUID & saving evaluation</span>
         </div>
         <div class="progress-check-item" id="stepItem3">
-          <span class="chk-icon" id="stepIcon3">⚪</span>
+          <span class="chk-icon" id="stepIcon3"></span>
           <span>Synchronizing consensus & hospital metrics</span>
         </div>
       </div>
@@ -2313,6 +2903,52 @@
 
   <!-- APPLICATION LOGIC SCRIPT -->
   <script>
+
+    // Inline SVG Icon Constants for Dynamic UI Rendering
+    const SVG_PILL = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path>
+  <path d="m8.5 8.5 7 7"></path>
+</svg>`;
+    const SVG_BUILDING = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+  <path d="M9 22v-4h6v4"></path>
+  <path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"></path>
+</svg>`;
+    const SVG_SEARCH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="11" cy="11" r="8"></circle>
+  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>`;
+    const SVG_DOCUMENT_PLUS = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+  <polyline points="14 2 14 8 20 8"></polyline>
+  <line x1="12" y1="18" x2="12" y2="12"></line>
+  <line x1="9" y1="15" x2="15" y2="15"></line>
+</svg>`;
+    const SVG_BAR_CHART = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="18" y1="20" x2="18" y2="10"></line>
+  <line x1="12" y1="20" x2="12" y2="4"></line>
+  <line x1="6" y1="20" x2="6" y2="14"></line>
+  <line x1="2" y1="20" x2="22" y2="20"></line>
+</svg>`;
+    const SVG_ROCKET = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <line x1="22" y1="2" x2="11" y2="13"></line>
+  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+</svg>`;
+    const SVG_CHECK_CIRCLE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <path d="m9 12 2 2 4-4"></path>
+</svg>`;
+    const SVG_X_CIRCLE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"></circle>
+  <line x1="15" y1="9" x2="9" y2="15"></line>
+  <line x1="9" y1="9" x2="15" y2="15"></line>
+</svg>`;
+    const SVG_KEY = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="7.5" cy="15.5" r="5.5"></circle>
+  <path d="m21 2-9.6 9.6"></path>
+  <path d="m15.5 7.5 3 3L22 7l-3-3"></path>
+</svg>`;
+
     // Server-injected URL parameter (via doGet HtmlTemplate)
     const SERVER_PARAM_EMAIL = "<?= typeof paramEmail !== 'undefined' ? paramEmail : '' ?>";
 
@@ -2407,17 +3043,17 @@
       const customBtn = document.getElementById("pickerCustomBtn");
 
       if (type === "medicine") {
-        iconEl.innerText = "💊";
+        iconEl.innerHTML = SVG_PILL;
         titleEl.innerText = "Select Generic Medicine";
         subtitleEl.innerText = "Tap a medicine to select or search below";
-        searchInput.placeholder = "🔍 Search generic medicine or category...";
-        customBtn.innerText = "✏️ Enter Unlisted / Custom Medicine";
+        searchInput.placeholder = "Search generic medicine or category...";
+        customBtn.innerHTML = `<span>Enter Unlisted / Custom Medicine</span>`;
       } else {
-        iconEl.innerText = "🏢";
+        iconEl.innerHTML = SVG_BUILDING;
         titleEl.innerText = "Select Supplier / Bidder";
         subtitleEl.innerText = "Tap a bidder to select or search below";
-        searchInput.placeholder = "🔍 Search supplier / bidder...";
-        customBtn.innerText = "✏️ Enter Unlisted / Custom Supplier";
+        searchInput.placeholder = "Search supplier / bidder...";
+        customBtn.innerHTML = `<span>Enter Unlisted / Custom Supplier</span>`;
       }
 
       searchInput.value = "";
@@ -2473,9 +3109,9 @@
         if (filtered.length === 0) {
           container.innerHTML = `
             <div class="picker-empty-state">
-              <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
-              <div style="font-weight: 700; color: #1E293B;">No medicine found</div>
-              <p style="font-size: 0.8rem; margin: 4px 0 12px 0;">No registered medicines matched "${escapeHtml(query)}"</p>
+              <div style="width: 44px; height: 44px; margin: 0 auto 10px auto; color: #14B8A6;">${SVG_SEARCH}</div>
+              <div style="font-weight: 700; color: #F8FAFC;">No medicine found</div>
+              <p style="font-size: 0.8rem; margin: 4px 0 12px 0; color: var(--text-muted);">No registered medicines matched "${escapeHtml(query)}"</p>
               ${query ? `<button type="button" class="btn btn-outline" onclick="selectPickerItem('${escapeHtml(query).replace(/'/g, "\\'")}')">Use "${escapeHtml(query)}" as medicine</button>` : ""}
             </div>
           `;
@@ -2489,7 +3125,7 @@
           const escapedName = escapeHtml(m.name || "");
           const escapedNameAttr = (m.name || "").replace(/'/g, "\\'");
           const categoryHtml = m.category ? `<span class="picker-item-badge">${escapeHtml(m.category)}</span>` : "";
-          const procHtml = m.procurement ? `<span class="picker-item-badge" style="background: #FEF3C7; color: #92400E;">${escapeHtml(m.procurement)}</span>` : "";
+          const procHtml = m.procurement ? `<span class="picker-item-badge" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B; border: 1px solid rgba(245, 158, 11, 0.35);">${escapeHtml(m.procurement)}</span>` : "";
 
           return `
             <div class="picker-item-row ${isSelected ? 'selected' : ''}" onclick="selectPickerItem('${escapedNameAttr}')">
@@ -2511,9 +3147,9 @@
         if (filtered.length === 0) {
           container.innerHTML = `
             <div class="picker-empty-state">
-              <div style="font-size: 2rem; margin-bottom: 8px;">🏢</div>
-              <div style="font-weight: 700; color: #1E293B;">No supplier found</div>
-              <p style="font-size: 0.8rem; margin: 4px 0 12px 0;">No registered suppliers matched "${escapeHtml(query)}"</p>
+              <div style="width: 44px; height: 44px; margin: 0 auto 10px auto; color: #14B8A6;">${SVG_BUILDING}</div>
+              <div style="font-weight: 700; color: #F8FAFC;">No supplier found</div>
+              <p style="font-size: 0.8rem; margin: 4px 0 12px 0; color: var(--text-muted);">No registered suppliers matched "${escapeHtml(query)}"</p>
               ${query ? `<button type="button" class="btn btn-outline" onclick="selectPickerItem('${escapeHtml(query).replace(/'/g, "\\'")}')">Use "${escapeHtml(query)}" as supplier</button>` : ""}
             </div>
           `;
@@ -2804,18 +3440,19 @@
         bannerEl.innerHTML = `
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem;">
+              <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #0D9488 0%, #10B981 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.05rem; box-shadow: 0 0 12px rgba(13, 148, 136, 0.35);">
                 ${(currentAccount.name || "U").charAt(0).toUpperCase()}
               </div>
               <div>
-                <strong style="color: var(--primary); font-size: 0.95rem; display: block;">${escapeHtml(currentAccount.name)}</strong>
+                <strong style="color: #F8FAFC; font-size: 0.95rem; display: block;">${escapeHtml(currentAccount.name)}</strong>
                 <span style="font-size: 0.78rem; color: var(--text-muted);">${escapeHtml(currentAccount.email || currentAccount.accountId)}</span>
               </div>
             </div>
             <span class="badge ${roleClass}">${escapeHtml(currentAccount.role)}</span>
           </div>
-          <div style="margin-top: 10px; font-size: 0.75rem; color: #047857; display: flex; align-items: center; gap: 5px;">
-            <span>✓</span> <span>Device authenticated & role locked</span>
+          <div style="margin-top: 10px; font-size: 0.75rem; color: #34D399; display: flex; align-items: center; gap: 6px;">
+            <span style="display: flex; width: 14px; height: 14px;">${SVG_CHECK_CIRCLE}</span>
+            <span>Device authenticated & role locked</span>
           </div>
         `;
       }
@@ -2830,7 +3467,7 @@
           return `
             <div class="account-item-card ${isCurrent ? 'current' : ''}" onclick="selectAccountFromPicker('${escapeHtml(acc.accountId || acc.email)}')">
               <div>
-                <strong style="color: var(--primary); font-size: 0.9rem;">${escapeHtml(acc.name || acc.accountId)}</strong>
+                <strong style="color: #F8FAFC; font-size: 0.9rem;">${escapeHtml(acc.name || acc.accountId)}</strong>
                 <div style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(acc.email || acc.accountId)}</div>
               </div>
               <span class="badge ${roleClass}">
@@ -2895,7 +3532,7 @@
       const btn = document.getElementById("authGateSubmitBtn");
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = "<span>🔑 Verify & Access Portal</span>";
+        btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;">${SVG_KEY} <span>Verify & Access Portal</span></span>`;
       }
 
       modal.classList.add("active");
@@ -2950,7 +3587,7 @@
       if (matched) {
         setTimeout(() => {
           btn.disabled = false;
-          btn.innerHTML = "<span>🔑 Verify & Access Portal</span>";
+          btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;">${SVG_KEY} <span>Verify & Access Portal</span></span>`;
           completeAuthentication(matched);
         }, 300);
         return;
@@ -2961,7 +3598,7 @@
         google.script.run
           .withSuccessHandler(function(res) {
             btn.disabled = false;
-            btn.innerHTML = "<span>🔑 Verify & Access Portal</span>";
+            btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;">${SVG_KEY} <span>Verify & Access Portal</span></span>`;
             if (res && res.success && res.account) {
               if (!registeredAccounts.some(a => a.accountId === res.account.accountId)) {
                 registeredAccounts.push(res.account);
@@ -2973,14 +3610,14 @@
           })
           .withFailureHandler(function(err) {
             btn.disabled = false;
-            btn.innerHTML = "<span>🔑 Verify & Access Portal</span>";
+            btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;">${SVG_KEY} <span>Verify & Access Portal</span></span>`;
             showAuthError("Server verification error: " + err.toString());
           })
           .verifyEvaluatorEmail(rawEmail);
       } else {
         setTimeout(() => {
           btn.disabled = false;
-          btn.innerHTML = "<span>🔑 Verify & Access Portal</span>";
+          btn.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;">${SVG_KEY} <span>Verify & Access Portal</span></span>`;
           showAuthError(`Access Denied: The email '${rawEmail}' is not registered in the Evaluator Accounts roster.`);
         }, 500);
       }
@@ -3147,7 +3784,7 @@
         ctx.lineWidth = 2.5;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        ctx.strokeStyle = "#1B365D";
+        ctx.strokeStyle = "#14B8A6";
         ctx.lineTo(x, y);
         ctx.stroke();
       }
@@ -3183,7 +3820,7 @@
     function drawSignatureGuide() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
-      ctx.strokeStyle = "#E2E8F0";
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
       ctx.setLineDash([4, 4]);
       ctx.beginPath();
       ctx.moveTo(20, 140);
@@ -3403,7 +4040,7 @@
 
       // Reset modal UI elements
       if (spinner) spinner.style.display = "block";
-      if (icon) icon.innerText = "🚀";
+      if (icon) icon.innerHTML = SVG_ROCKET;
       if (title) {
         title.innerText = "Transmitting Evaluation";
         title.style.color = "var(--primary)";
@@ -3424,11 +4061,11 @@
       const ic3 = document.getElementById("stepIcon3");
 
       if (s1) s1.className = "progress-check-item in-progress";
-      if (ic1) ic1.innerText = "⏳";
+      // ic1 state updated by CSS class
       if (s2) s2.className = "progress-check-item";
-      if (ic2) ic2.innerText = "⚪";
+      // ic2 state updated by CSS class
       if (s3) s3.className = "progress-check-item";
-      if (ic3) ic3.innerText = "⚪";
+      // ic3 state updated by CSS class
 
       modal.classList.add("active");
 
@@ -3442,9 +4079,9 @@
         } else if (stage === 1 && currentPercent >= 45) {
           stage = 2;
           if (s1) s1.className = "progress-check-item done";
-          if (ic1) ic1.innerText = "✅";
+          // ic1 state updated by CSS class
           if (s2) s2.className = "progress-check-item in-progress";
-          if (ic2) ic2.innerText = "⏳";
+          // ic2 state updated by CSS class
           if (stepText) stepText.innerText = "Step 2 of 3: Generating RFC UUID & saving record...";
           if (sub) sub.innerText = "Committing atomic evaluation row to Google Sheets...";
         } else if (stage === 2 && currentPercent < 78) {
@@ -3452,9 +4089,9 @@
         } else if (stage === 2 && currentPercent >= 78) {
           stage = 3;
           if (s2) s2.className = "progress-check-item done";
-          if (ic2) ic2.innerText = "✅";
+          // ic2 state updated by CSS class
           if (s3) s3.className = "progress-check-item in-progress";
-          if (ic3) ic3.innerText = "⏳";
+          // ic3 state updated by CSS class
           if (stepText) stepText.innerText = "Step 3 of 3: Synchronizing consensus & hospital metrics...";
           if (sub) sub.innerText = "Refreshing clinical consensus matrix...";
         } else if (stage === 3 && currentPercent < 92) {
@@ -3490,14 +4127,14 @@
         if (percentText) percentText.innerText = "100%";
         if (stepText) stepText.innerText = "Complete: All records successfully synced!";
         if (s1) s1.className = "progress-check-item done";
-        if (ic1) ic1.innerText = "✅";
+        // ic1 state updated by CSS class
         if (s2) s2.className = "progress-check-item done";
-        if (ic2) ic2.innerText = "✅";
+        // ic2 state updated by CSS class
         if (s3) s3.className = "progress-check-item done";
-        if (ic3) ic3.innerText = "✅";
+        // ic3 state updated by CSS class
 
         if (spinner) spinner.style.display = "none";
-        if (icon) icon.innerText = "✅";
+        if (icon) icon.innerHTML = SVG_CHECK_CIRCLE;
         if (title) {
           title.innerText = "Evaluation Recorded!";
           title.style.color = "#047857";
@@ -3516,7 +4153,7 @@
         }
         if (percentText) percentText.innerText = "Error";
         if (spinner) spinner.style.display = "none";
-        if (icon) icon.innerText = "❌";
+        if (icon) icon.innerHTML = SVG_X_CIRCLE;
         if (title) {
           title.innerText = "Submission Failed";
           title.style.color = "#DC2626";
@@ -3613,7 +4250,7 @@
     function onSubmitSuccess(res) {
       const btnSubmit = document.getElementById("btnSubmit");
       btnSubmit.disabled = false;
-      btnSubmit.innerHTML = `<span>🚀 Submit Official Evaluation</span>`;
+      btnSubmit.innerHTML = `${SVG_ROCKET} <span>Submit Official Evaluation</span>`;
 
       if (res && res.success) {
         // Complete the modal progress bar with checkmark animation
@@ -3652,7 +4289,7 @@
     function onSubmitError(err) {
       const btnSubmit = document.getElementById("btnSubmit");
       btnSubmit.disabled = false;
-      btnSubmit.innerHTML = `<span>🚀 Submit Official Evaluation</span>`;
+      btnSubmit.innerHTML = `${SVG_ROCKET} <span>Submit Official Evaluation</span>`;
       completeSubmissionProgress(false, null, err.toString());
       showToast("⚠️ Submission Failed: " + err);
     }
@@ -3676,9 +4313,9 @@
       if (filtered.length === 0) {
         container.innerHTML = `
           <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px; color: var(--text-muted);">
-            <div style="font-size: 2.2rem; margin-bottom: 8px;">📑</div>
-            <p style="font-weight: 700;">No evaluations found</p>
-            <p style="font-size: 0.8rem;">Evaluations submitted by ${role} will appear here.</p>
+            <div style="width: 44px; height: 44px; margin: 0 auto 10px auto; color: #14B8A6;">${SVG_DOCUMENT_PLUS}</div>
+            <p style="font-weight: 700; color: #F8FAFC;">No evaluations found</p>
+            <p style="font-size: 0.8rem; margin-top: 4px;">Evaluations submitted by ${role} will appear here.</p>
           </div>
         `;
         return;
@@ -3722,9 +4359,9 @@
       if (filtered.length === 0) {
         container.innerHTML = `
           <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-            <div style="font-size: 2.2rem; margin-bottom: 8px;">📊</div>
-            <p style="font-weight: 700;">No consolidated items yet</p>
-            <p style="font-size: 0.8rem;">Submit evaluations across all 3 roles to view consensus.</p>
+            <div style="width: 44px; height: 44px; margin: 0 auto 10px auto; color: #14B8A6;">${SVG_BAR_CHART}</div>
+            <p style="font-weight: 700; color: #F8FAFC;">No consolidated items yet</p>
+            <p style="font-size: 0.8rem; margin-top: 4px;">Submit evaluations across all 3 roles to view consensus.</p>
           </div>
         `;
         return;
@@ -3736,16 +4373,16 @@
             <div class="eval-card" style="cursor: default;">
               <div class="eval-card-header">
                 <div>
-                  <h4 style="font-size: 1rem; color: var(--primary); font-weight: 800;">${escapeHtml(row.Generic_Name)}</h4>
-                  <div style="font-size: 0.8rem; color: var(--text-muted);">
-                    Brand: <strong>${escapeHtml(row.Brand_Name) || "None"}</strong> • Supplier: <strong>${escapeHtml(row.Supplier) || "N/A"}</strong> • Price: ₱${Number(row.Price || 0).toFixed(2)}
+                  <h4 style="font-size: 1.05rem; color: #14B8A6; font-weight: 800;">${escapeHtml(row.Generic_Name)}</h4>
+                  <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 3px;">
+                    Brand: <strong style="color: #F8FAFC;">${escapeHtml(row.Brand_Name) || "None"}</strong> • Supplier: <strong style="color: #F8FAFC;">${escapeHtml(row.Supplier) || "N/A"}</strong> • Price: <strong style="color: #10B981;">₱${Number(row.Price || 0).toFixed(2)}</strong>
                   </div>
                 </div>
                 <span class="badge ${getConsensusBadgeClass(row.Consensus_Status)}">
                   ${escapeHtml(row.Consensus_Status) || "Pending"}
                 </span>
               </div>
-              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; background: #F8FAFC; padding: 10px; border-radius: 8px; text-align: center; font-size: 0.75rem;">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 10px; border-radius: 10px; text-align: center; font-size: 0.75rem;">
                 <div>
                   <div style="color: var(--text-muted); margin-bottom: 2px;">End-user</div>
                   <strong style="color: ${row.EndUser_Recommendation === 'Recommended' ? 'var(--success)' : (row.EndUser_Recommendation ? 'var(--danger)' : '#64748B')}">
@@ -3864,6 +4501,7 @@
         toast.style.display = "none";
       }, 3500);
     }
+  
   </script>
 </body>
 
