@@ -1222,7 +1222,7 @@ function mirrorToEvaluatorSheet(sheetName, rowValues) {
  * Rebuilds the Consolidated_Summary sheet.
  * Groups by Generic_Name + Brand_Name + Supplier + Manufacturer and aggregates responses from all 3 evaluators.
  */
-function refreshConsolidatedSummary() {
+function refreshConsolidatedSummary(fastMode) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var masterSheet = ss.getSheetByName(SHEET_EVALUATIONS_MASTER);
   var summarySheet = getOrCreateSheet(ss, SHEET_SUMMARY);
@@ -1231,7 +1231,7 @@ function refreshConsolidatedSummary() {
     if (summarySheet.getLastRow() > 1) {
       summarySheet.getRange(2, 1, summarySheet.getLastRow() - 1, SUMMARY_HEADERS.length).clear();
     }
-    return;
+    return [];
   }
   
   var masterData = masterSheet.getDataRange().getValues();
@@ -1303,6 +1303,7 @@ function refreshConsolidatedSummary() {
   var nowStr = Utilities.formatDate(new Date(), "GMT+8", "yyyy-MM-dd HH:mm:ss");
   var summaryRows = [];
   var statusColors = [];
+  var summaryList = [];
   
   Object.keys(grouped).forEach(function(k) {
     var item = grouped[k];
@@ -1347,40 +1348,55 @@ function refreshConsolidatedSummary() {
       bgColor = "#FCF3CF";
     }
     
-    summaryRows.push([
+    var rowArr = [
       item.generic, item.brand, item.supplier, item.manufacturer, (item.price || ""),
       e1.recommendation, e2.recommendation, e3.recommendation,
       e1.p1Score, e1.p2Score,
       e2.p1Score, e2.p2Score,
       e3.p1Score, e3.p2Score,
       consensusStatus, consensusDetail, nowStr
-    ]);
-    
+    ];
+    summaryRows.push(rowArr);
     statusColors.push(bgColor);
+
+    var obj = {};
+    for (var c = 0; c < SUMMARY_HEADERS.length; c++) {
+      obj[SUMMARY_HEADERS[c]] = rowArr[c];
+    }
+    summaryList.push(obj);
   });
   
-  if (summarySheet.getLastRow() > 1) {
-    summarySheet.getRange(2, 1, summarySheet.getLastRow() - 1, SUMMARY_HEADERS.length).clear();
-  }
-  
+  var prevLastRow = summarySheet.getLastRow();
+
   if (summaryRows.length > 0) {
     var targetRange = summarySheet.getRange(2, 1, summaryRows.length, SUMMARY_HEADERS.length);
     targetRange.setValues(summaryRows);
     
-    var colorMatrix = [];
-    for (var r = 0; r < statusColors.length; r++) {
-      var rowColor = statusColors[r];
-      var rowCols = [];
-      for (var c = 0; c < SUMMARY_HEADERS.length; c++) {
-        rowCols.push(rowColor);
-      }
-      colorMatrix.push(rowCols);
+    // Clear extra rows if table shrank
+    if (prevLastRow > summaryRows.length + 1) {
+      summarySheet.getRange(summaryRows.length + 2, 1, prevLastRow - (summaryRows.length + 1), SUMMARY_HEADERS.length).clear();
     }
-    targetRange.setBackgrounds(colorMatrix);
-    
-    summarySheet.getRange(2, 5, summaryRows.length, 1).setNumberFormat("₱#,##0.00").setHorizontalAlignment("right");
-    summarySheet.getRange(2, 6, summaryRows.length, 12).setHorizontalAlignment("center");
+
+    if (!fastMode) {
+      var colorMatrix = [];
+      for (var r = 0; r < statusColors.length; r++) {
+        var rowColor = statusColors[r];
+        var rowCols = [];
+        for (var c = 0; c < SUMMARY_HEADERS.length; c++) {
+          rowCols.push(rowColor);
+        }
+        colorMatrix.push(rowCols);
+      }
+      targetRange.setBackgrounds(colorMatrix);
+      
+      summarySheet.getRange(2, 5, summaryRows.length, 1).setNumberFormat("₱#,##0.00").setHorizontalAlignment("right");
+      summarySheet.getRange(2, 6, summaryRows.length, 12).setHorizontalAlignment("center");
+    }
+  } else if (prevLastRow > 1) {
+    summarySheet.getRange(2, 1, prevLastRow - 1, SUMMARY_HEADERS.length).clear();
   }
+
+  return summaryList;
 }
 
 /**
@@ -2157,7 +2173,7 @@ function appendOrUpdateHorizontalReportRow(rowValues) {
     var rowRange = sheet.getRange(rowNum, 1, 1, formattedRow.length);
     rowRange.setValues([formattedRow]);
     
-    sheet.setRowHeight(rowNum, 26);
+    // Streamlined row styling (2 quick calls instead of 10)
     var bg = (itemNumber % 2 === 1) ? "#FFFFFF" : "#F8FAFC";
     rowRange.setBackground(bg);
     
@@ -2167,15 +2183,9 @@ function appendOrUpdateHorizontalReportRow(rowValues) {
     } else if (rec.indexOf("Not Recommended") !== -1) {
       recBg = "#FADBD8";
     }
-    sheet.getRange(rowNum, 37).setBackground(recBg).setFontWeight("bold");
-    
-    sheet.getRange(rowNum, 1).setHorizontalAlignment("center");
-    sheet.getRange(rowNum, 6).setNumberFormat("₱#,##0.00").setHorizontalAlignment("right");
-    sheet.getRange(rowNum, 7).setHorizontalAlignment("center");
-    sheet.getRange(rowNum, 9, 1, 26).setHorizontalAlignment("center").setFontSize(11);
-    sheet.getRange(rowNum, 35, 1, 3).setHorizontalAlignment("center");
-    sheet.getRange(rowNum, 39).setHorizontalAlignment("center");
-    rowRange.setBorder(true, true, true, true, true, true, "#CBD5E1", SpreadsheetApp.BorderStyle.SOLID);
+    if (recBg !== "#FFFFFF") {
+      sheet.getRange(rowNum, 37).setBackground(recBg);
+    }
   } catch (eH) {
     Logger.log("Error in appendOrUpdateHorizontalReportRow: " + eH.toString());
   }
@@ -2882,14 +2892,15 @@ function submitEvaluationFromApp(payload) {
       }
     }
     
-    // Fast batch Consolidated Summary update
+    // Fast batch Consolidated Summary update (avoids redundant disk read & heavy style loops)
+    var summaryList = null;
     try {
-      refreshConsolidatedSummary();
+      summaryList = refreshConsolidatedSummary(true);
     } catch (eSum) {
       Logger.log("Silent summary refresh error: " + eSum.toString());
     }
     
-    // Fast single-row append to Horizontal report (~0.2s)
+    // Fast single-row append to Horizontal report (~0.1s)
     try {
       appendOrUpdateHorizontalReportRow(row);
     } catch (eSync) {
@@ -2911,7 +2922,7 @@ function submitEvaluationFromApp(payload) {
       success: true,
       evaluationId: evalId,
       newEvaluation: savedRecord,
-      summary: getConsolidatedSummaryList(),
+      summary: (summaryList && summaryList.length > 0) ? summaryList : getConsolidatedSummaryList(),
       message: "Evaluation recorded successfully with Unique ID: " + evalId
     };
   } catch (err) {

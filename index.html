@@ -451,7 +451,7 @@
     /* Illuminated Stepper Pipeline */
     .stepper {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
       position: relative;
       margin: 12px 0 22px 0;
@@ -462,26 +462,27 @@
       box-shadow: var(--shadow);
     }
 
-    .stepper::before {
-      content: '';
-      position: absolute;
-      top: 35px;
-      left: 36px;
-      right: 36px;
+    .step-connector {
+      flex: 1;
       height: 3px;
       background: rgba(255, 255, 255, 0.08);
-      z-index: 1;
+      margin: 18px 8px 0 8px;
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+      align-self: flex-start;
     }
 
-    .stepper-progress {
-      position: absolute;
-      top: 35px;
-      left: 36px;
-      height: 3px;
+    .step-connector-fill {
+      width: 0%;
+      height: 100%;
       background: linear-gradient(90deg, #0D9488 0%, #10B981 100%);
-      z-index: 2;
       transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 0 12px rgba(13, 148, 136, 0.50);
+      box-shadow: 0 0 8px rgba(13, 148, 136, 0.50);
+    }
+
+    .step-connector.completed .step-connector-fill {
+      width: 100%;
     }
 
     .step-item {
@@ -491,6 +492,17 @@
       flex-direction: column;
       align-items: center;
       cursor: pointer;
+      flex-shrink: 0;
+      width: 76px;
+    }
+
+    @media (max-width: 480px) {
+      .step-item {
+        width: 52px;
+      }
+      .step-connector {
+        margin: 18px 4px 0 4px;
+      }
     }
 
     .step-circle {
@@ -2060,22 +2072,33 @@
 
       <!-- Stepper Header -->
       <div class="stepper">
-        <div class="stepper-progress" id="stepperProgress" style="width: 0%;"></div>
         <div class="step-item active" onclick="goToStep(1)">
           <div class="step-circle" id="circle-1">1</div>
           <span class="step-label">Basic Info</span>
+        </div>
+        <div class="step-connector" id="connector-1">
+          <div class="step-connector-fill"></div>
         </div>
         <div class="step-item" onclick="goToStep(2)">
           <div class="step-circle" id="circle-2">2</div>
           <span class="step-label" id="stepLabelPart1">Part I (19)</span>
         </div>
+        <div class="step-connector" id="connector-2">
+          <div class="step-connector-fill"></div>
+        </div>
         <div class="step-item" onclick="goToStep(3)">
           <div class="step-circle" id="circle-3">3</div>
           <span class="step-label" id="stepLabelPart2">Part II (6)</span>
         </div>
+        <div class="step-connector" id="connector-3">
+          <div class="step-connector-fill"></div>
+        </div>
         <div class="step-item" onclick="goToStep(4)">
           <div class="step-circle" id="circle-4">4</div>
           <span class="step-label">Part III</span>
+        </div>
+        <div class="step-connector" id="connector-4">
+          <div class="step-connector-fill"></div>
         </div>
         <div class="step-item" onclick="goToStep(5)">
           <div class="step-circle" id="circle-5">5</div>
@@ -3698,20 +3721,35 @@
       for (let s = 1; s <= 5; s++) {
         const stepDiv = document.getElementById(`step-${s}`);
         const circle = document.getElementById(`circle-${s}`);
-        const stepItem = circle.parentElement;
+        const stepItem = circle ? circle.parentElement : null;
 
-        if (s === step) {
-          stepDiv.style.display = "block";
-          stepItem.className = "step-item active";
-        } else if (s < step) {
-          stepDiv.style.display = "none";
-          stepItem.className = "step-item completed";
-        } else {
-          stepDiv.style.display = "none";
-          stepItem.className = "step-item";
+        if (stepDiv) {
+          stepDiv.style.display = (s === step) ? "block" : "none";
+        }
+        if (stepItem) {
+          if (s === step) {
+            stepItem.className = "step-item active";
+          } else if (s < step) {
+            stepItem.className = "step-item completed";
+          } else {
+            stepItem.className = "step-item";
+          }
         }
       }
-      document.getElementById("stepperProgress").style.width = ((step - 1) / 4 * 100) + "%";
+
+      // Update segmented connectors
+      for (let c = 1; c <= 4; c++) {
+        const conn = document.getElementById(`connector-${c}`);
+        if (conn) {
+          conn.classList.toggle("completed", c < step);
+        }
+      }
+
+      const legacyProg = document.getElementById("stepperProgress");
+      if (legacyProg) {
+        legacyProg.style.width = ((step - 1) / 4 * 100) + "%";
+      }
+
       window.scrollTo({ top: 0, behavior: "smooth" });
 
       if (step === 5) {
@@ -4002,9 +4040,12 @@
       const cEnd = allEvaluations.filter(e => e.Evaluator === "End-user" || e.Evaluator === "Evaluator 1").length;
       const cNurse = allEvaluations.filter(e => e.Evaluator === "Nurse" || e.Evaluator === "Evaluator 2").length;
       const cPharma = allEvaluations.filter(e => e.Evaluator === "Pharmacist" || e.Evaluator === "Evaluator 3").length;
-      document.getElementById("endUserCount").innerText = `${cEnd} records`;
-      document.getElementById("nurseCount").innerText = `${cNurse} records`;
-      document.getElementById("pharmacistCount").innerText = `${cPharma} records`;
+      const elEnd = document.getElementById("endUserCount");
+      if (elEnd) elEnd.innerText = `${cEnd} records`;
+      const elNurse = document.getElementById("nurseCount");
+      if (elNurse) elNurse.innerText = `${cNurse} records`;
+      const elPharma = document.getElementById("pharmacistCount");
+      if (elPharma) elPharma.innerText = `${cPharma} records`;
     }
 
     // Fullscreen Animated Submission Progress Modal Controller
@@ -4068,7 +4109,7 @@
           if (stepText) stepText.innerText = "Step 2 of 3: Generating RFC UUID & saving record...";
           if (sub) sub.innerText = "Committing atomic evaluation row to Google Sheets...";
         } else if (stage === 2 && currentPercent < 78) {
-          currentPercent += 5;
+          currentPercent += 6;
         } else if (stage === 2 && currentPercent >= 78) {
           stage = 3;
           if (s2) s2.className = "progress-check-item done";
@@ -4077,12 +4118,12 @@
           // ic3 state updated by CSS class
           if (stepText) stepText.innerText = "Step 3 of 3: Synchronizing consensus & hospital metrics...";
           if (sub) sub.innerText = "Refreshing clinical consensus matrix...";
-        } else if (stage === 3 && currentPercent < 92) {
+        } else if (stage === 3 && currentPercent < 95) {
           currentPercent += 2;
         }
         if (fill) fill.style.width = currentPercent + "%";
         if (percentText) percentText.innerText = Math.min(currentPercent, 95) + "%";
-      }, 300);
+      }, 200);
     }
 
     function completeSubmissionProgress(success, evalId, errorMsg) {
@@ -4232,8 +4273,10 @@
 
     function onSubmitSuccess(res) {
       const btnSubmit = document.getElementById("btnSubmit");
-      btnSubmit.disabled = false;
-      btnSubmit.innerHTML = `${SVG_ROCKET} <span>Submit Official Evaluation</span>`;
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = `${SVG_ROCKET} <span>Submit Official Evaluation</span>`;
+      }
 
       if (res && res.success) {
         // Complete the modal progress bar with checkmark animation
@@ -4247,25 +4290,43 @@
         if (res.summary && Array.isArray(res.summary)) {
           allSummary = res.summary;
         }
-        updateCounts();
 
-        // Reset form ready for next evaluation
-        document.getElementById("evalForm").reset();
-        clearSignature();
-        syncConsentTile("Data_Privacy_Consent");
-        syncConsentTile("Accuracy_Consent");
-        updateRemarksCounter();
-        setReconstitution(false);
-        setAllValues("P1", "Yes");
-        setAllValues("P2", "Yes");
+        try {
+          updateCounts();
+        } catch (eCounts) {
+          console.warn("updateCounts error:", eCounts);
+        }
 
-        // Re-apply locked account identity
-        if (currentAccount) applyUserAccount(currentAccount);
+        // Reset form ready for next evaluation & return unconditionally to Step 1 (Main Page)
+        try {
+          const evalForm = document.getElementById("evalForm");
+          if (evalForm) evalForm.reset();
+          clearSignature();
+          syncConsentTile("Data_Privacy_Consent");
+          syncConsentTile("Accuracy_Consent");
+          updateRemarksCounter();
+          setReconstitution(false);
+          setAllValues("P1", "Yes");
+          setAllValues("P2", "Yes");
 
-        goToStep(1);
+          // Re-apply locked account identity
+          if (currentAccount) applyUserAccount(currentAccount);
+
+          // Force return to New Evaluation Wizard view & Step 1
+          if (typeof switchTab === "function") {
+            switchTab("new-eval");
+          }
+          goToStep(1);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } catch (eReset) {
+          console.error("Post-submission form reset error:", eReset);
+          if (typeof switchTab === "function") switchTab("new-eval");
+          goToStep(1);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
       } else {
-        completeSubmissionProgress(false, null, res.error);
-        showToast("⚠️ " + (res.error || "Submission failed. Please retry."));
+        completeSubmissionProgress(false, null, res ? res.error : "Unknown error");
+        showToast("⚠️ " + ((res && res.error) || "Submission failed. Please retry."));
       }
     }
 
