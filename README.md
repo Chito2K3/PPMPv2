@@ -77,7 +77,7 @@ An enterprise-grade, AppSheet-powered mobile pharmacy product evaluation system 
 ### Phase 4: AppSheet Mobile App Connection
 
 1. In your Google Sheet top menu, click **Extensions** → **AppSheet** → **Create an app**.
-2. Follow the comprehensive setup blueprint in [`AppSheet_Setup_Guide.md`](file:///c:/Users/chito/OneDrive/Desktop/PPMP/AppSheet_Setup_Guide.md) to configure your 5-page mobile evaluation form, views, and format rules.
+2. Follow the comprehensive setup blueprint in [`AppSheet_Setup_Guide.md`](file:///c:/Users/chito/OneDrive/Desktop/PPMP%20V2/AppSheet_Setup_Guide.md) to configure your 5-page mobile evaluation form, views, and format rules.
 
 ---
 
